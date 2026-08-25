@@ -98,7 +98,7 @@ export function SessionChatSurface({
 	onConversationWorkChange?: (state: ConversationWorkState) => void;
 }) {
 	const {
-		snapshot,
+		snapshot: queriedSnapshot,
 		isLoading,
 		unavailable,
 		error,
@@ -106,6 +106,10 @@ export function SessionChatSurface({
 		isLoadingOlder,
 		loadOlder,
 	} = useConversation(session.id);
+	// Route props can move to the destination before the old query observer drops
+	// its data. Treat that snapshot as unknown everywhere, especially at the work
+	// boundary that decides whether switching to Terminal needs user consent.
+	const snapshot = queriedSnapshot?.sessionId === session.id ? queriedSnapshot : undefined;
 	const commands = useConversationCommands(session.id);
 	const { acknowledgeAcceptedSend, pendingAcceptedSendTurnId } = commands;
 	const conversationWorkKnown = Boolean(snapshot);
@@ -234,9 +238,8 @@ export function SessionChatSurface({
 		switchPresentation?.lockAgentTerminal && !switchPresentation.allowSourceInput,
 	);
 	const renderShellFallback = Boolean(shellTarget && session);
-	const snapshotSessionMismatch = Boolean(snapshot && snapshot.sessionId !== session.id);
 	const renderSnapshot =
-		(snapshotSessionMismatch ? undefined : snapshot) ??
+		snapshot ??
 		(renderShellFallback
 			? unavailableConversationSnapshot(session)
 			: undefined);
