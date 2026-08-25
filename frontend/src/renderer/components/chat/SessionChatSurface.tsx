@@ -42,6 +42,12 @@ import { AgentSwitchProgressTrack } from "../AgentSwitchProgressTrack";
 import { TerminalSwitchAgentButton } from "../TerminalSwitchAgentButton";
 import { ChatWorkspace } from "./ChatWorkspace";
 
+export interface ConversationWorkState {
+	controllerBusy: boolean;
+	hasRunningTurn: boolean;
+	queuedTurnCount: number;
+}
+
 export function SessionChatSurface({
 	session,
 	reviewerTerminal,
@@ -62,6 +68,7 @@ export function SessionChatSurface({
 	onOpenFile,
 	headerActions,
 	controllerTransitioning,
+	onConversationWorkChange,
 }: {
 	session: WorkspaceSession;
 	reviewerTerminal?: { handleId: string; harness: string };
@@ -87,6 +94,8 @@ export function SessionChatSurface({
 	headerActions?: ReactNode;
 	/** The target controller is being installed by an interface handoff. */
 	controllerTransitioning?: boolean;
+	/** Reports accepted Chat work that must inform an interface-switch policy choice. */
+	onConversationWorkChange?: (state: ConversationWorkState) => void;
 }) {
 	const {
 		snapshot,
@@ -97,6 +106,14 @@ export function SessionChatSurface({
 		isLoadingOlder,
 		loadOlder,
 	} = useConversation(session.id);
+	const conversationWorkKnown = Boolean(snapshot);
+	const controllerBusy = snapshot?.controller?.state === "busy";
+	const hasRunningTurn = Boolean(snapshot?.turns.some((turn) => turn.state === "running"));
+	const queuedTurnCount = snapshot?.turns.filter((turn) => turn.state === "queued").length ?? 0;
+	useEffect(() => {
+		if (!conversationWorkKnown) return;
+		onConversationWorkChange?.({ controllerBusy, hasRunningTurn, queuedTurnCount });
+	}, [controllerBusy, conversationWorkKnown, hasRunningTurn, onConversationWorkChange, queuedTurnCount]);
 	const commands = useConversationCommands(session.id);
 	const configOptions = useConversationConfigOptions(
 		session.id,
