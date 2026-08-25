@@ -115,6 +115,7 @@ var shippedMigrations = map[int64]string{
 	109: "0109_session_latest_user_prompt_at.sql",
 	110: "0110_approximate_conversation_branches.sql",
 	111: "0111_conversation_steer_delivery.sql",
+	112: "0112_conversation_edit_delivery.sql",
 }
 
 // burnedVersion reports version numbers that must never be (re)used: they
