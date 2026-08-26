@@ -247,6 +247,7 @@ func Run() error {
 			return chatsvc.ConversationRows{
 				Conversation:               rows.Conversation,
 				Turns:                      rows.Turns,
+				QueuedTurns:                rows.QueuedTurns,
 				Messages:                   rows.Messages,
 				Activities:                 rows.Activities,
 				BranchPoints:               rows.BranchPoints,
@@ -261,6 +262,7 @@ func Run() error {
 			return chatsvc.ConversationRows{
 				Conversation:               rows.Conversation,
 				Turns:                      rows.Turns,
+				QueuedTurns:                rows.QueuedTurns,
 				Messages:                   rows.Messages,
 				Activities:                 rows.Activities,
 				BranchPoints:               rows.BranchPoints,

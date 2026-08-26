@@ -556,7 +556,7 @@ func (s *Service) ResolveInput(
 }
 
 // Interrupt cancels a session's in-flight turn.
-func (s *Service) Interrupt(ctx context.Context, id domain.SessionID) error {
+func (s *Service) Interrupt(ctx context.Context, id domain.SessionID, expectedQueuedTurnIDs []string) error {
 	if _, err := s.requireChatSession(ctx, id); err != nil {
 		return err
 	}
@@ -564,7 +564,7 @@ func (s *Service) Interrupt(ctx context.Context, id domain.SessionID) error {
 	if err != nil {
 		return err
 	}
-	return controller.Interrupt(ctx)
+	return controller.Interrupt(ctx, expectedQueuedTurnIDs)
 }
 
 // ArmChatHandoff closes source intake and queue dispatch at
@@ -677,6 +677,7 @@ type Snapshot struct {
 	Mode                       domain.SessionMode
 	Controller                 ports.ChatControllerState
 	Turns                      []domain.ConversationTurn
+	QueuedTurns                []domain.QueuedTurn
 	Messages                   []domain.ConversationMessage
 	Activities                 []domain.ConversationActivity
 	BranchPoints               []domain.ConversationBranchPoint
@@ -718,6 +719,7 @@ type SnapshotPageReader interface {
 type ConversationRows struct {
 	Conversation               domain.ConversationRecord
 	Turns                      []domain.ConversationTurn
+	QueuedTurns                []domain.QueuedTurn
 	Messages                   []domain.ConversationMessage
 	Activities                 []domain.ConversationActivity
 	BranchPoints               []domain.ConversationBranchPoint
@@ -773,6 +775,7 @@ func (s *Service) Snapshot(ctx context.Context, id domain.SessionID) (Snapshot, 
 		Mode:                       domain.NormalizeSessionMode(record.Mode),
 		Controller:                 state,
 		Turns:                      rows.Turns,
+		QueuedTurns:                rows.QueuedTurns,
 		Messages:                   rows.Messages,
 		Activities:                 rows.Activities,
 		BranchPoints:               rows.BranchPoints,
@@ -824,6 +827,7 @@ func (s *Service) SnapshotPage(ctx context.Context, id domain.SessionID, beforeS
 		Mode:                       domain.NormalizeSessionMode(record.Mode),
 		Controller:                 state,
 		Turns:                      rows.Turns,
+		QueuedTurns:                rows.QueuedTurns,
 		Messages:                   rows.Messages,
 		Activities:                 rows.Activities,
 		BranchPoints:               rows.BranchPoints,

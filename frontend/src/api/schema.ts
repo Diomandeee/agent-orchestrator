@@ -2166,6 +2166,12 @@ export interface components {
             status: "pending" | "in_progress" | "completed";
             text: string;
         };
+        ConversationQueuedTurnResponse: {
+            /** @enum {string} */
+            origin?: "human" | "automation" | "daemon" | "provider";
+            text: string;
+            turnId: string;
+        };
         ConversationRateLimitsPayload: {
             planLabel?: string;
             /** Format: int64 */
@@ -2216,6 +2222,7 @@ export interface components {
             modelReroute?: components["schemas"]["ConversationModelReroutePayload"];
             /** Format: int64 */
             oldestSequence?: number;
+            queuedTurns: components["schemas"]["ConversationQueuedTurnResponse"][];
             rateLimits?: components["schemas"]["ConversationRateLimitsPayload"];
             sessionId: string;
             settings: components["schemas"]["ConversationTurnSettingsPayload"];
@@ -2387,6 +2394,9 @@ export interface components {
              * @enum {string}
              */
             target: "tmux" | "gh" | "claude" | "codex" | "opencode" | "copilot";
+        };
+        InterruptConversationRequest: {
+            queuedTurnIds: string[];
         };
         KillReviewResponse: {
             reviewerHandleId: string;
@@ -6569,7 +6579,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InterruptConversationRequest"];
+            };
+        };
         responses: {
             /** @description No Content */
             204: {

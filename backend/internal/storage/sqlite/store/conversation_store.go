@@ -1217,6 +1217,28 @@ func (s *Store) NextQueuedTurn(ctx context.Context, conversationID string) (doma
 	}, nil
 }
 
+// ListQueuedTurns returns the complete durable queue in dispatch order. It is
+// deliberately separate from the paginated conversation snapshot: Stop binds
+// its confirmation to this exact set, and queue controls must include work that
+// is not present in the currently loaded timeline page.
+func (s *Store) ListQueuedTurns(ctx context.Context, conversationID string) ([]domain.QueuedTurn, error) {
+	rows, err := s.qr.SelectQueuedConversationTurns(ctx, conversationID)
+	if err != nil {
+		return nil, fmt.Errorf("select queued turns for %s: %w", conversationID, err)
+	}
+	queued := make([]domain.QueuedTurn, 0, len(rows))
+	for _, row := range rows {
+		queued = append(queued, domain.QueuedTurn{
+			TurnID:              row.ID,
+			Text:                row.Text,
+			ClientMessageID:     row.ClientMessageID,
+			Origin:              row.Origin,
+			DeliveryContentJSON: row.DeliveryContentJson,
+		})
+	}
+	return queued, nil
+}
+
 // ReserveQueuedTurnForPromotion atomically removes one selected queued turn from
 // automatic drain and returns the durable content that must be steered.
 func (s *Store) ReserveQueuedTurnForPromotion(
@@ -1957,6 +1979,7 @@ func (s *Store) ApplyProviderTitle(
 type ConversationSnapshot struct {
 	Conversation               domain.ConversationRecord
 	Turns                      []domain.ConversationTurn
+	QueuedTurns                []domain.QueuedTurn
 	Messages                   []domain.ConversationMessage
 	Activities                 []domain.ConversationActivity
 	BranchPoints               []domain.ConversationBranchPoint
@@ -1985,6 +2008,10 @@ func (s *Store) LoadConversationSnapshotPage(
 	if err != nil {
 		return ConversationSnapshot{}, fmt.Errorf("select conversation %s: %w", conversationID, err)
 	}
+	queuedTurns, err := s.ListQueuedTurns(ctx, conversationID)
+	if err != nil {
+		return ConversationSnapshot{}, err
+	}
 	if limit <= 0 {
 		limit = DefaultConversationPageSize
 	}
@@ -2002,6 +2029,7 @@ func (s *Store) LoadConversationSnapshotPage(
 	if beforeSequence <= visibleAfterSequence {
 		snapshot := ConversationSnapshot{
 			Conversation:               conversationToDomain(conv),
+			QueuedTurns:                queuedTurns,
 			BranchPoints:               presentation.branchPoints,
 			BranchedFromEarlierMessage: presentation.branchedFromEarlierMessage,
 			OldestSequence:             visibleAfterSequence,
@@ -2070,6 +2098,7 @@ func (s *Store) LoadConversationSnapshotPage(
 
 	snapshot := ConversationSnapshot{
 		Conversation:               conversationToDomain(conv),
+		QueuedTurns:                queuedTurns,
 		BranchPoints:               presentation.branchPoints,
 		BranchedFromEarlierMessage: presentation.branchedFromEarlierMessage,
 		OldestSequence:             oldest,
@@ -2175,6 +2204,10 @@ func (s *Store) LoadConversationSnapshot(
 	if err != nil {
 		return ConversationSnapshot{}, fmt.Errorf("select conversation %s: %w", conversationID, err)
 	}
+	queuedTurns, err := s.ListQueuedTurns(ctx, conversationID)
+	if err != nil {
+		return ConversationSnapshot{}, err
+	}
 
 	turnRows, err := s.qr.SelectConversationTurns(ctx, conversationID)
 	if err != nil {
@@ -2199,6 +2232,7 @@ func (s *Store) LoadConversationSnapshot(
 	presentation := s.conversationHistoryPresentation(ctx, conversationID)
 	snapshot := ConversationSnapshot{
 		Conversation:               conversationToDomain(conv),
+		QueuedTurns:                queuedTurns,
 		BranchPoints:               presentation.branchPoints,
 		BranchedFromEarlierMessage: presentation.branchedFromEarlierMessage,
 	}
