@@ -1,0 +1,97 @@
+{
+  "schema_version": "uctm.ao-integration-endpoints.v0",
+  "status": "planned_not_implemented",
+  "ao_namespace": "/api/v1/uctm",
+  "transport": {
+    "ao_primary_listener": "loopback_only",
+    "uctm_service_base_url_env": "UCTM_API_BASE_URL",
+    "uctm_service_token_env": "UCTM_API_TOKEN",
+    "base_url_default": null,
+    "dns_allowed_in_v0": false,
+    "public_bind_allowed": false,
+    "mobile_lan_mount_in_v0": false
+  },
+  "modes": {
+    "off": "No UCTM service calls. Routes return an explicit disabled state.",
+    "read_only": "Fetch and display current UCTM projections only.",
+    "shadow": "Read plus bounded pointer/hash source-occurrence and context proposals; no live prompt mutation.",
+    "human_gated": "Explicit desktop-only human proposals after separate qualification; not enabled by this contract."
+  },
+  "ao_endpoints": [
+    {"method": "GET", "path": "/api/v1/uctm/status", "phase": "v0", "effect": "read"},
+    {"method": "GET", "path": "/api/v1/uctm/program", "phase": "v0", "effect": "read"},
+    {"method": "GET", "path": "/api/v1/uctm/lanes", "phase": "v0", "effect": "read"},
+    {"method": "GET", "path": "/api/v1/uctm/gates", "phase": "v0", "effect": "read"},
+    {"method": "GET", "path": "/api/v1/uctm/receipts", "phase": "v0", "effect": "read"},
+    {"method": "GET", "path": "/api/v1/uctm/families", "phase": "v0", "effect": "read"},
+    {"method": "GET", "path": "/api/v1/uctm/adjudication/queue", "phase": "v0", "effect": "read"},
+    {"method": "GET", "path": "/api/v1/uctm/evaluations", "phase": "v0", "effect": "read"},
+    {"method": "POST", "path": "/api/v1/uctm/source-occurrences", "phase": "v1", "effect": "proposal_only"},
+    {"method": "POST", "path": "/api/v1/uctm/context-proposals", "phase": "v1", "effect": "proposal_only"},
+    {"method": "POST", "path": "/api/v1/uctm/adjudication-proposals", "phase": "v1", "effect": "proposal_only"},
+    {"method": "POST", "path": "/api/v1/uctm/gate-proposals", "phase": "v1", "effect": "proposal_only"},
+    {"method": "POST", "path": "/api/v1/uctm/adjudication/{candidateId}/decision", "phase": "v2", "effect": "human_gated_not_authorized"},
+    {"method": "POST", "path": "/api/v1/uctm/training-requests", "phase": "v2", "effect": "human_gated_proposal_only"}
+  ],
+  "uctm_service_endpoints": [
+    {"method": "GET", "path": "/v1/status"},
+    {"method": "GET", "path": "/v1/program"},
+    {"method": "GET", "path": "/v1/lanes"},
+    {"method": "GET", "path": "/v1/gates"},
+    {"method": "GET", "path": "/v1/receipts"},
+    {"method": "GET", "path": "/v1/families"},
+    {"method": "GET", "path": "/v1/adjudication/queue"},
+    {"method": "GET", "path": "/v1/evaluations"},
+    {"method": "GET", "path": "/v1/events"},
+    {"method": "POST", "path": "/v1/source-occurrences/ao"},
+    {"method": "POST", "path": "/v1/context-proposals"},
+    {"method": "POST", "path": "/v1/adjudication-proposals"},
+    {"method": "POST", "path": "/v1/gate-proposals"}
+  ],
+  "required_response_metadata": [
+    "schema_version",
+    "source_commit_or_freeze_id",
+    "generated_at",
+    "historical_or_current",
+    "authority_ceiling",
+    "receipt_ref",
+    "content_hash_or_etag"
+  ],
+  "ao_storage_projection": {
+    "tables": ["uctm_projection_records", "uctm_event_cursors"],
+    "source_of_truth": false,
+    "raw_prompt_or_response_text_allowed": false,
+    "cdc_via_existing_change_log": true,
+    "new_sse_system_required": false
+  },
+  "authority_invariants": [
+    "AO projection rows are never canonical UCTM truth.",
+    "AO operational status is never a UCTM semantic label.",
+    "UCTM proposals cannot call AO tools, merge pull requests, spawn or kill agents, deploy, or send external messages.",
+    "AO cannot record human UCTM gate receipts without the separately qualified human-action contract.",
+    "No UCTM route is mounted on the mobile LAN listener in v0 or v1.",
+    "No raw conversation history crosses the boundary by default.",
+    "Unknown response fields are rejected at the adapter boundary.",
+    "Service failure derives stale or unknown state, never healthy state."
+  ],
+  "implementation_ownership": {
+    "domain": "backend/internal/domain/uctm.go",
+    "port": "backend/internal/ports/uctm.go",
+    "service": "backend/internal/service/uctm/",
+    "adapter": "backend/internal/adapters/uctm/",
+    "controller": "backend/internal/httpd/controllers/uctm.go",
+    "daemon_wiring": "backend/internal/daemon/uctm_wiring.go",
+    "migration": "backend/internal/storage/sqlite/migrations/NNNN_uctm_projection.sql",
+    "query": "backend/internal/storage/sqlite/queries/uctm.sql",
+    "frontend_route": "frontend/src/renderer/routes/_shell.projects.$projectId_.uctm.tsx",
+    "frontend_components": "frontend/src/renderer/components/uctm/"
+  },
+  "safe_claim": "The endpoint and package ownership contract is specified but no route, transport, schema, migration, projection, or UI has been implemented.",
+  "forbidden_claims": [
+    "AO UCTM API is live",
+    "UCTM Studio is integrated",
+    "human adjudication is enabled",
+    "training requests can execute",
+    "mobile UCTM access is available"
+  ]
+}
