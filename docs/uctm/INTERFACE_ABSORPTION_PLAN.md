@@ -5,7 +5,7 @@
 **Upstream:** `Untrivial-ai/agent-orchestrator`  
 **Fork:** `Diomandeee/agent-orchestrator`  
 **Integration branch:** `codex/uctm-interface-v0`  
-**Pinned Go-rewrite commit:** `5eb10e3698bdbf0735b84c6aa4d3f06ea8d83ff2`  
+**Pinned Go-rewrite base commit:** `5eb10e3698bdbf0735b84c6aa4d3f06ea8d83ff2`  
 **License:** Apache-2.0  
 **Proposed product name:** **UCTM Studio**
 
@@ -37,13 +37,19 @@ Remote state:
 - Fork: `https://github.com/Diomandeee/agent-orchestrator`
 - Parent/source: `https://github.com/Untrivial-ai/agent-orchestrator`
 - Fork `main`: upstream `main` at `5eb10e3698bdbf0735b84c6aa4d3f06ea8d83ff2`
-- Integration branch: `codex/uctm-interface-v0` at the same exact commit
+- Integration branch: `codex/uctm-interface-v0`, based on that exact commit, with documentation-only UCTM planning commits above it
 - No local clone
 - No dependency installation
 - No build or test
 - No desktop installation
 - No daemon launch
 - No database or migration change
+
+Documentation-only commits placed on the fork branch:
+
+- `ce7bd6d3beb8484a001836cb83ea4ae9bc528bb2` — interface absorption plan
+- `a73ee9f7f19f019acdcd58375b1fcb0266744390` — fork manifest
+- `35134d289c0dfde75d627c85cb51657a66ec9194` — endpoint contract
 
 The integration branch was briefly considered against release `v0.9.2`, then deliberately repinned to current Go-rewrite `main`. The reason is structural, not preference: `v0.9.2` is the legacy TypeScript/pnpm generation, while the desired interface architecture is the current Go daemon plus Electron/React rewrite. Mixing those generations would make the endpoint and package plan false.
 
@@ -492,7 +498,7 @@ Status: **complete**.
 - Remote fork exists.
 - Parent/source verified.
 - Upstream and fork main matched at fork time.
-- Integration branch exists at exact Go-rewrite commit `5eb10e3`.
+- Integration branch is based on exact Go-rewrite commit `5eb10e3` and contains documentation only.
 - No local clone/build/install.
 
 ### AO-F1 — Capacity and local source qualification
