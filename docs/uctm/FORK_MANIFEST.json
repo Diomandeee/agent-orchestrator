@@ -20,7 +20,7 @@
     "main_commit_at_fork": "5eb10e3698bdbf0735b84c6aa4d3f06ea8d83ff2",
     "integration_branch": "codex/uctm-interface-v0",
     "integration_branch_base_commit": "5eb10e3698bdbf0735b84c6aa4d3f06ea8d83ff2",
-    "documentation_commits": [
+    "initial_documentation_commits": [
       "ce7bd6d3beb8484a001836cb83ea4ae9bc528bb2",
       "a73ee9f7f19f019acdcd58375b1fcb0266744390",
       "35134d289c0dfde75d627c85cb51657a66ec9194"
