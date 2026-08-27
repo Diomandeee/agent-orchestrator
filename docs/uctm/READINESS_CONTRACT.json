@@ -1,0 +1,152 @@
+{
+  "schema_version": "uctm.ao-fork-readiness.v0",
+  "evaluated_at_utc": "2026-08-27T13:14:18Z",
+  "authority": "advisory_and_source_fork_only",
+  "fork": "https://github.com/Diomandeee/agent-orchestrator",
+  "branch": "codex/uctm-interface-v0",
+  "upstream_base_commit": "5eb10e3698bdbf0735b84c6aa4d3f06ea8d83ff2",
+  "domains": [
+    {
+      "domain": "license_and_forkability",
+      "status": "ready",
+      "evidence": [
+        "Upstream repository is public.",
+        "GitHub reports Apache-2.0.",
+        "Upstream LICENSE and README identify Apache License 2.0."
+      ],
+      "blockers": [],
+      "safe_claim": "The source is legally forkable under Apache-2.0 subject to license, notice, attribution, modification, and trademark boundaries.",
+      "forbidden_claims": [
+        "Upstream endorses UCTM Studio",
+        "Upstream product marks are granted by the source license"
+      ]
+    },
+    {
+      "domain": "remote_fork",
+      "status": "ready",
+      "evidence": [
+        "Diomandeee/agent-orchestrator exists and is a GitHub fork of Untrivial-ai/agent-orchestrator.",
+        "Fork main matched upstream main at creation.",
+        "codex/uctm-interface-v0 is based on the pinned Go-rewrite commit.",
+        "UCTM plan, manifest, and endpoint contract are committed under docs/uctm."
+      ],
+      "blockers": [],
+      "safe_claim": "A verified remote fork and documentation-only UCTM integration branch exist.",
+      "forbidden_claims": [
+        "The fork has local build proof",
+        "The fork implements UCTM"
+      ]
+    },
+    {
+      "domain": "source_architecture_fit",
+      "status": "ready_provisional",
+      "evidence": [
+        "Official current architecture and source tree expose Go domain, ports, services, adapters, daemon wiring, HTTP/OpenAPI, SQLite/CDC, Electron routes, and tests.",
+        "AO already owns project, orchestrator, worker, worktree, agent, PR, CI, review, terminal, browser, and mobile projections needed by the proposed interface."
+      ],
+      "blockers": [
+        "No local checkout or codemap.",
+        "Dynamic dispatch and runtime wiring have not been executed locally.",
+        "Current main is moving and must remain exact-pin qualified."
+      ],
+      "safe_claim": "The current source architecture is a strong candidate for a UCTM operator interface.",
+      "forbidden_claims": [
+        "Every required seam is verified",
+        "The web-only audit is a complete call graph"
+      ]
+    },
+    {
+      "domain": "local_source_qualification",
+      "status": "blocked",
+      "evidence": [
+        "Available storage at readback is 1,845,308 KiB / approximately 1.760 GiB.",
+        "GitHub reports the upstream repository itself at approximately 186,985 KB before worktree, dependency, build, browser, and test artifacts."
+      ],
+      "blockers": [
+        "Below UCTM 20 GiB clone/build qualification floor.",
+        "No local clone.",
+        "No codemap.",
+        "No dependency installation.",
+        "No build or test."
+      ],
+      "safe_claim": "Local source qualification has not started and remains capacity-blocked.",
+      "forbidden_claims": [
+        "Source builds locally",
+        "Tests pass locally",
+        "Codemap is current"
+      ]
+    },
+    {
+      "domain": "uctm_endpoint_implementation",
+      "status": "not_started",
+      "evidence": [
+        "Endpoint and package ownership contract exists in docs only."
+      ],
+      "blockers": [
+        "AO-F1 source qualification absent.",
+        "No UCTM Go port, service, adapter, controller, migration, query, OpenAPI route, generated client, or React view."
+      ],
+      "safe_claim": "UCTM integration endpoints are planned but not implemented.",
+      "forbidden_claims": [
+        "UCTM API routes exist in AO",
+        "UCTM Studio is integrated"
+      ]
+    },
+    {
+      "domain": "uctm_interface_runtime",
+      "status": "not_started",
+      "evidence": [],
+      "blockers": [
+        "No clone/build/install.",
+        "No fork-specific AO data directory.",
+        "No UCTM service transport.",
+        "No daemon or desktop probe."
+      ],
+      "safe_claim": "No UCTM Studio runtime exists.",
+      "forbidden_claims": [
+        "UCTM Studio is installed",
+        "Daemon is healthy",
+        "Interface is usable"
+      ]
+    },
+    {
+      "domain": "human_adjudication_and_effects",
+      "status": "blocked",
+      "evidence": [
+        "Planned v0 interface is read-only; v1 is proposal-only."
+      ],
+      "blockers": [
+        "No human-action contract.",
+        "No lane-30 decision receipt flow.",
+        "No independent authority/security review."
+      ],
+      "safe_claim": "The fork does not authorize adjudication, training, merge, deployment, agent control, or external effects through UCTM.",
+      "forbidden_claims": [
+        "Human adjudication enabled",
+        "Training requests execute",
+        "UCTM can merge PRs",
+        "UCTM can spawn or kill AO sessions"
+      ]
+    },
+    {
+      "domain": "production",
+      "status": "blocked",
+      "evidence": [],
+      "blockers": [
+        "All local source, endpoint, runtime, privacy, rollback, and human-action gates remain open."
+      ],
+      "safe_claim": "Production readiness has not been evaluated.",
+      "forbidden_claims": [
+        "Production-ready",
+        "Release-ready",
+        "Deployment-authorized"
+      ]
+    }
+  ],
+  "next_gate": {
+    "id": "AO-F1",
+    "name": "Capacity and local source qualification",
+    "status": "BLOCKED",
+    "unlock_condition": "Fresh capacity receipt at or above the UCTM 20 GiB floor"
+  }
+}
