@@ -1,0 +1,93 @@
+{
+  "schema_version": "uctm.ao-fork-manifest.v0",
+  "created_at_utc": "2026-08-27T13:14:18Z",
+  "authority": "source_fork_and_plan_only",
+  "upstream": {
+    "repository": "Untrivial-ai/agent-orchestrator",
+    "url": "https://github.com/Untrivial-ai/agent-orchestrator",
+    "default_branch": "main",
+    "pinned_commit": "5eb10e3698bdbf0735b84c6aa4d3f06ea8d83ff2",
+    "repository_size_kb_reported_by_github": 186985,
+    "license": "Apache-2.0"
+  },
+  "fork": {
+    "repository": "Diomandeee/agent-orchestrator",
+    "url": "https://github.com/Diomandeee/agent-orchestrator",
+    "parent": "Untrivial-ai/agent-orchestrator",
+    "source": "Untrivial-ai/agent-orchestrator",
+    "created_at_utc": "2026-08-27T13:11:38Z",
+    "default_branch": "main",
+    "main_commit_at_fork": "5eb10e3698bdbf0735b84c6aa4d3f06ea8d83ff2",
+    "integration_branch": "codex/uctm-interface-v0",
+    "integration_branch_commit": "5eb10e3698bdbf0735b84c6aa4d3f06ea8d83ff2"
+  },
+  "product": {
+    "proposed_name": "UCTM Studio",
+    "role": "operator interface and fleet workspace over the independent UCTM spine",
+    "upstream_brand_used_as_product": false,
+    "fork_notice_required": true,
+    "license_and_notice_preservation_required": true
+  },
+  "generation_correction": {
+    "legacy_tag": "v0.9.2",
+    "legacy_tag_commit": "96ea22a77476c7a2c040eca7828df0204264e3eb",
+    "disposition": "not_the_interface_baseline",
+    "reason": "v0.9.2 is the legacy TypeScript/pnpm generation. The desired UCTM interface targets the current Go daemon plus Electron/React rewrite."
+  },
+  "local_state": {
+    "cloned": false,
+    "codemap_generated": false,
+    "dependencies_installed": false,
+    "built": false,
+    "tested": false,
+    "desktop_installed": false,
+    "daemon_started": false,
+    "database_created_or_migrated": false,
+    "available_kib_at_readback": 1845308,
+    "available_bytes_at_readback": 1889595392,
+    "available_gib_binary_at_readback": 1.760,
+    "capacity_floor_kib": 20971520,
+    "capacity_shortfall_kib": 19126212,
+    "capacity_gate": "BLOCKED"
+  },
+  "source_review": {
+    "mode": "official_remote_source_and_documentation_only",
+    "codemap_status": "BLOCKED_NO_LOCAL_CLONE",
+    "reviewed_surfaces": [
+      "README and download surface",
+      "Apache-2.0 license",
+      "Go daemon architecture",
+      "backend package ownership",
+      "HTTP and CLI routes",
+      "SQLite migrations, queries, and CDC",
+      "agent, runtime, workspace, SCM, review, terminal, and browser adapters",
+      "Electron and React frontend routes and components",
+      "mobile and network boundaries",
+      "privacy and telemetry controls",
+      "build and test requirements",
+      "current status and shipped capabilities"
+    ]
+  },
+  "readiness": {
+    "remote_fork": "READY",
+    "remote_integration_branch": "READY",
+    "source_architecture_fit": "READY_PROVISIONAL",
+    "local_source_qualification": "BLOCKED",
+    "local_build": "NOT_STARTED",
+    "uctm_endpoint_implementation": "NOT_STARTED",
+    "uctm_interface_runtime": "NOT_STARTED",
+    "production": "BLOCKED"
+  },
+  "safe_claim": "A verified Apache-2.0 GitHub fork and exact Go-rewrite integration branch exist, and the source-grounded UCTM interface plan is complete. No local fork runtime has been cloned, built, installed, or qualified.",
+  "forbidden_claims": [
+    "AO is installed",
+    "the fork builds",
+    "the fork tests pass",
+    "the codemap is complete",
+    "UCTM endpoints are implemented",
+    "UCTM Studio is running",
+    "Agent Orchestrator owns UCTM authority",
+    "the interface is production-ready"
+  ],
+  "next_gate": "AO-F1 capacity and local source qualification"
+}
