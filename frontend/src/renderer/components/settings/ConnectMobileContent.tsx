@@ -78,6 +78,7 @@ export async function fetchMobileStatus(): Promise<MobileStatus> {
 
 export function ConnectMobileContent({ active }: { active: boolean }) {
 	const { t } = useTranslation();
+	const isUCTMStudio = import.meta.env.VITE_UCTM_STUDIO === "1";
 	const queryClient = useQueryClient();
 	const [copied, setCopied] = useState(false);
 	const copiedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -85,7 +86,7 @@ export function ConnectMobileContent({ active }: { active: boolean }) {
 	const [mode, setMode] = useState<SetupMode>("lan");
 	const platformOptions = [
 		{ value: "ios", label: t("mobile.ios"), icon: <AppleIcon className="size-4 shrink-0 !text-settings-title" /> },
-		{ value: "android", label: t("mobile.android"), icon: <AndroidIcon className="size-4 shrink-0 !text-settings-title" /> },
+		...(!isUCTMStudio ? [{ value: "android" as const, label: t("mobile.android"), icon: <AndroidIcon className="size-4 shrink-0 !text-settings-title" /> }] : []),
 	] satisfies SettingsOption<MobilePlatform>[];
 	const modeOptions = [
 		{ value: "lan", label: t("mobile.lan") },
@@ -230,7 +231,9 @@ export function ConnectMobileContent({ active }: { active: boolean }) {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<p className="text-xs leading-4 text-settings-muted">{t("mobile.description")}</p>
+			<p className="text-xs leading-4 text-settings-muted">
+				{isUCTMStudio ? "Pair UCTM Mobile with this Studio daemon over your local network or secure Tailscale connection." : t("mobile.description")}
+			</p>
 
 			<div className="flex flex-col gap-6 sm:flex-row sm:items-start">
 				{/* Left: platform + connection pickers above one combined walkthrough. */}
@@ -264,8 +267,10 @@ export function ConnectMobileContent({ active }: { active: boolean }) {
 					<ol className="settings-mobile-steps mt-4 !text-[13px] !leading-6 !text-[color-mix(in_oklch,var(--color-settings-label)_75%,var(--color-text-settings-muted))]">
 						{platform === "ios" ? (
 							<>
-								<li>{t("mobile.ios.step1")}</li>
-								<li>
+								<li>{isUCTMStudio ? "Use the separate UCTM Mobile app installed from this Mac, not the old AO TestFlight app." : t("mobile.ios.step1")}</li>
+								{isUCTMStudio ? (
+									<li>Open UCTM on your iPhone, then scan the pairing code shown here.</li>
+								) : <li>
 									{t("mobile.ios.step2")}{" "}
 									<TooltipProvider delayDuration={0}>
 										<Tooltip>
@@ -287,7 +292,7 @@ export function ConnectMobileContent({ active }: { active: boolean }) {
 										</TooltipContent>
 										</Tooltip>
 									</TooltipProvider>
-								</li>
+								</li>}
 							</>
 						) : (
 							<>
@@ -321,7 +326,7 @@ export function ConnectMobileContent({ active }: { active: boolean }) {
 						) : (
 							<li>{t("mobile.tailscale.step1")}</li>
 						)}
-						<li>{platform === "ios" ? t("mobile.ios.step3") : t("mobile.android.step3")}</li>
+						<li>{isUCTMStudio ? "Scan the pairing QR below in UCTM Mobile." : platform === "ios" ? t("mobile.ios.step3") : t("mobile.android.step3")}</li>
 						{showRealQR && (
 							<>
 								<li data-testid="mobile-pairing-address">

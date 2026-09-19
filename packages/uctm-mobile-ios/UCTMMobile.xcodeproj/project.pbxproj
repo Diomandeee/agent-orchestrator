@@ -1,0 +1,517 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1056CF3569E26B0B25691ACE /* PairingScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9A0FDC5AE2A88D6BC20CCA /* PairingScanner.swift */; };
+		4A4D45F8CA68012C0924BEB3 /* UCTMMobileApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C4A003A28BC0198257DA88D /* UCTMMobileApp.swift */; };
+		5FBA75D3A5324F822B553326 /* SessionBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C99B481D328C31C4737ECD /* SessionBoard.swift */; };
+		61EC234A11919B633E9E7E2A /* PairingJourneyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E79B89FE013C55CCCE811B3 /* PairingJourneyTests.swift */; };
+		A1B5E2DCCC0364F2B850A479 /* SessionBoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA86A33714F4893F5922224 /* SessionBoardTests.swift */; };
+		B96916F8512910A25B5148C8 /* ConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5BC50AA6C476CC1F0F34815 /* ConnectionTests.swift */; };
+		BDA011A560628EA04AACE28F /* StudioAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FCF9F891CDB69E735F3AFF /* StudioAPI.swift */; };
+		CFEBBE5B9775A58086B78FEF /* LiveConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34387ABD8AF5302CB9F3A165 /* LiveConnectionTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		067A01EFD19D0CA2C3BD2BD0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75F3798CFB19B4552BC33844 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 519D92DBA4A51C06843A1565;
+			remoteInfo = UCTMMobile;
+		};
+		76F1508E8161232DAF99839A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75F3798CFB19B4552BC33844 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 519D92DBA4A51C06843A1565;
+			remoteInfo = UCTMMobile;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		09F185FD7903E72EE6A6FC5E /* UCTMMobile.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = UCTMMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E79B89FE013C55CCCE811B3 /* PairingJourneyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingJourneyTests.swift; sourceTree = "<group>"; };
+		32C99B481D328C31C4737ECD /* SessionBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionBoard.swift; sourceTree = "<group>"; };
+		34387ABD8AF5302CB9F3A165 /* LiveConnectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveConnectionTests.swift; sourceTree = "<group>"; };
+		5C4A003A28BC0198257DA88D /* UCTMMobileApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UCTMMobileApp.swift; sourceTree = "<group>"; };
+		62FCF9F891CDB69E735F3AFF /* StudioAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudioAPI.swift; sourceTree = "<group>"; };
+		7FDE8D74DED96E3CF4C5DF86 /* UCTMMobileTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = UCTMMobileTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5BC50AA6C476CC1F0F34815 /* ConnectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionTests.swift; sourceTree = "<group>"; };
+		CB9A0FDC5AE2A88D6BC20CCA /* PairingScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingScanner.swift; sourceTree = "<group>"; };
+		EDA86A33714F4893F5922224 /* SessionBoardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionBoardTests.swift; sourceTree = "<group>"; };
+		F5FDCBF1C3D6C16064786740 /* UCTMMobileUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = UCTMMobileUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		019D2E11CF6DA2551EDA9ACD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				09F185FD7903E72EE6A6FC5E /* UCTMMobile.app */,
+				7FDE8D74DED96E3CF4C5DF86 /* UCTMMobileTests.xctest */,
+				F5FDCBF1C3D6C16064786740 /* UCTMMobileUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7F71D46A64B24BAC7C8BE6B8 = {
+			isa = PBXGroup;
+			children = (
+				DEF1D906D481210D1CCD917E /* Sources */,
+				9850AE15D7C817682A5A616A /* Tests */,
+				9419A623AC868BAEC31F837B /* TestsUI */,
+				019D2E11CF6DA2551EDA9ACD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9419A623AC868BAEC31F837B /* TestsUI */ = {
+			isa = PBXGroup;
+			children = (
+				2E79B89FE013C55CCCE811B3 /* PairingJourneyTests.swift */,
+			);
+			path = TestsUI;
+			sourceTree = "<group>";
+		};
+		9850AE15D7C817682A5A616A /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				A5BC50AA6C476CC1F0F34815 /* ConnectionTests.swift */,
+				34387ABD8AF5302CB9F3A165 /* LiveConnectionTests.swift */,
+				EDA86A33714F4893F5922224 /* SessionBoardTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		DEF1D906D481210D1CCD917E /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				CB9A0FDC5AE2A88D6BC20CCA /* PairingScanner.swift */,
+				32C99B481D328C31C4737ECD /* SessionBoard.swift */,
+				62FCF9F891CDB69E735F3AFF /* StudioAPI.swift */,
+				5C4A003A28BC0198257DA88D /* UCTMMobileApp.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		34334335ED0EBB7193E5382B /* UCTMMobileTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7727603098E466B3235AB17C /* Build configuration list for PBXNativeTarget "UCTMMobileTests" */;
+			buildPhases = (
+				6C7C985D3735C7315533B6C3 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				30E519EA9517BE5F47B15B24 /* PBXTargetDependency */,
+			);
+			name = UCTMMobileTests;
+			packageProductDependencies = (
+			);
+			productName = UCTMMobileTests;
+			productReference = 7FDE8D74DED96E3CF4C5DF86 /* UCTMMobileTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		519D92DBA4A51C06843A1565 /* UCTMMobile */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 38C277F2A0ECD7F196C7721A /* Build configuration list for PBXNativeTarget "UCTMMobile" */;
+			buildPhases = (
+				6384B7C74351B73EF6F32C24 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UCTMMobile;
+			packageProductDependencies = (
+			);
+			productName = UCTMMobile;
+			productReference = 09F185FD7903E72EE6A6FC5E /* UCTMMobile.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7DB5FC1664E262AC0E5E8140 /* UCTMMobileUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1621EEBE58E7F24AD885C0CB /* Build configuration list for PBXNativeTarget "UCTMMobileUITests" */;
+			buildPhases = (
+				AC0A2BEFC4F03B4A07B28405 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				440D41ED6D885AB510AACF65 /* PBXTargetDependency */,
+			);
+			name = UCTMMobileUITests;
+			packageProductDependencies = (
+			);
+			productName = UCTMMobileUITests;
+			productReference = F5FDCBF1C3D6C16064786740 /* UCTMMobileUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		75F3798CFB19B4552BC33844 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					34334335ED0EBB7193E5382B = {
+						DevelopmentTeam = 8643C988C4;
+					};
+					519D92DBA4A51C06843A1565 = {
+						DevelopmentTeam = 8643C988C4;
+						ProvisioningStyle = Automatic;
+					};
+					7DB5FC1664E262AC0E5E8140 = {
+						DevelopmentTeam = 8643C988C4;
+						TestTargetID = 519D92DBA4A51C06843A1565;
+					};
+				};
+			};
+			buildConfigurationList = F68E61FE128D333CE72CE5BA /* Build configuration list for PBXProject "UCTMMobile" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 7F71D46A64B24BAC7C8BE6B8;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 019D2E11CF6DA2551EDA9ACD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				519D92DBA4A51C06843A1565 /* UCTMMobile */,
+				34334335ED0EBB7193E5382B /* UCTMMobileTests */,
+				7DB5FC1664E262AC0E5E8140 /* UCTMMobileUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6384B7C74351B73EF6F32C24 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1056CF3569E26B0B25691ACE /* PairingScanner.swift in Sources */,
+				5FBA75D3A5324F822B553326 /* SessionBoard.swift in Sources */,
+				BDA011A560628EA04AACE28F /* StudioAPI.swift in Sources */,
+				4A4D45F8CA68012C0924BEB3 /* UCTMMobileApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6C7C985D3735C7315533B6C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B96916F8512910A25B5148C8 /* ConnectionTests.swift in Sources */,
+				CFEBBE5B9775A58086B78FEF /* LiveConnectionTests.swift in Sources */,
+				A1B5E2DCCC0364F2B850A479 /* SessionBoardTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC0A2BEFC4F03B4A07B28405 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61EC234A11919B633E9E7E2A /* PairingJourneyTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		30E519EA9517BE5F47B15B24 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 519D92DBA4A51C06843A1565 /* UCTMMobile */;
+			targetProxy = 76F1508E8161232DAF99839A /* PBXContainerItemProxy */;
+		};
+		440D41ED6D885AB510AACF65 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 519D92DBA4A51C06843A1565 /* UCTMMobile */;
+			targetProxy = 067A01EFD19D0CA2C3BD2BD0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0E1DE14B4F79BE5AFC0A52DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8643C988C4;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		51D6368DF2CBABDA156F5799 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mohameddiomande.uctmstudio.mobile.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UCTMMobile.app/UCTMMobile";
+			};
+			name = Release;
+		};
+		6528659BD420C7852278C1BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 8643C988C4;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		6CE507EED7BE9D74BC8A8A9A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Config/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mohameddiomande.uctmstudio.mobile;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8D378C77E2D93D1AAB8F5B5E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mohameddiomande.uctmstudio.mobile.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = UCTMMobile;
+			};
+			name = Debug;
+		};
+		C3A0214251C0D145D5B68080 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Config/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mohameddiomande.uctmstudio.mobile;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F1043548F87DE9DB394EDD6B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mohameddiomande.uctmstudio.mobile.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = UCTMMobile;
+			};
+			name = Release;
+		};
+		FE34D31EB81291E6191CEB50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mohameddiomande.uctmstudio.mobile.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UCTMMobile.app/UCTMMobile";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1621EEBE58E7F24AD885C0CB /* Build configuration list for PBXNativeTarget "UCTMMobileUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8D378C77E2D93D1AAB8F5B5E /* Debug */,
+				F1043548F87DE9DB394EDD6B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		38C277F2A0ECD7F196C7721A /* Build configuration list for PBXNativeTarget "UCTMMobile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3A0214251C0D145D5B68080 /* Debug */,
+				6CE507EED7BE9D74BC8A8A9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7727603098E466B3235AB17C /* Build configuration list for PBXNativeTarget "UCTMMobileTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE34D31EB81291E6191CEB50 /* Debug */,
+				51D6368DF2CBABDA156F5799 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F68E61FE128D333CE72CE5BA /* Build configuration list for PBXProject "UCTMMobile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6528659BD420C7852278C1BE /* Debug */,
+				0E1DE14B4F79BE5AFC0A52DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 75F3798CFB19B4552BC33844 /* Project object */;
+}

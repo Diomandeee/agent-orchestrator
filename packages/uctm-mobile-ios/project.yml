@@ -1,0 +1,58 @@
+name: UCTMMobile
+options:
+  bundleIdPrefix: com.mohameddiomande
+settings:
+  base:
+    SWIFT_VERSION: 5.9
+    IPHONEOS_DEPLOYMENT_TARGET: 17.0
+    TARGETED_DEVICE_FAMILY: 1
+    DEVELOPMENT_TEAM: 8643C988C4
+targets:
+  UCTMMobile:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mohameddiomande.uctmstudio.mobile
+        CODE_SIGN_STYLE: Automatic
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Config/Info.plist
+        ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: NO
+  UCTMMobileTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+    dependencies:
+      - target: UCTMMobile
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mohameddiomande.uctmstudio.mobile.tests
+        GENERATE_INFOPLIST_FILE: YES
+  UCTMMobileUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: TestsUI
+    dependencies:
+      - target: UCTMMobile
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mohameddiomande.uctmstudio.mobile.uitests
+        GENERATE_INFOPLIST_FILE: YES
+
+# The tests are wired into the app scheme so `xcodebuild test -scheme UCTMMobile`
+# runs them; xcodegen only emits the test target's own scheme otherwise.
+schemes:
+  UCTMMobile:
+    build:
+      targets:
+        UCTMMobile: all
+        UCTMMobileTests: [test]
+        UCTMMobileUITests: [test]
+    test:
+      targets:
+        - UCTMMobileTests
+        - UCTMMobileUITests
