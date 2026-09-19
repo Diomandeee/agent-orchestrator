@@ -88,6 +88,11 @@ describe("buildCommands grouping", () => {
 		expect(map.get("current-new-task")?.group).toBe("current");
 		expect(map.get("current-open-orchestrator")?.group).toBe("current");
 		expect(map.get("current-project-settings")?.group).toBe("current");
+		expect(map.get("current-project-uctm")?.group).toBe("current");
+		expect(map.get("current-project-uctm")?.action).toEqual({
+			kind: "navigate",
+			target: { to: "/projects/$projectId/uctm", params: { projectId: "proj-1" } },
+		});
 		expect(map.get("current-copy-branch")?.group).toBe("current");
 		expect(map.get("current-copy-branch")?.action).toEqual({ kind: "copy-branch", branch: "feature/w-pr" });
 	});
@@ -100,6 +105,7 @@ describe("buildCommands grouping", () => {
 		expect(newTask?.action).toBeUndefined();
 		expect(byId(items).has("current-open-orchestrator")).toBe(false);
 		expect(byId(items).has("current-project-settings")).toBe(false);
+		expect(byId(items).has("current-project-uctm")).toBe(false);
 	});
 
 	it("disables New task and Open orchestrator while the project orchestrator is restarting", () => {

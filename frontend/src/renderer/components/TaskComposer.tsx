@@ -216,7 +216,10 @@ export function TaskComposer({
 	const catalogDefaultOption = modelCatalogQuery.data?.models?.find((item) => item.isDefault)?.id ?? "";
 	const catalogUsesModes = modelCatalogQuery.data?.selectionMode === "mode";
 	const defaultModelForSelectedAgent =
-		projectModelForSelectedAgent || (catalogUsesModes ? "" : catalogDefaultOption);
+		projectModelForSelectedAgent ||
+		(import.meta.env.VITE_UCTM_STUDIO === "1" && selectedAgent === "codex"
+			? ""
+			: catalogUsesModes ? "" : catalogDefaultOption);
 	const defaultModeForSelectedAgent = projectModeForSelectedAgent || (catalogUsesModes ? catalogDefaultOption : "");
 
 	const selectedAgentLabel =
@@ -409,7 +412,9 @@ function TaskModelPicker({
 	const [customAgentId, setCustomAgentId] = useState<string | null>(null);
 
 	// Says what happens with no override, rather than labelling it "Agent default".
-	const noOverrideLabel = agentLabel
+	const noOverrideLabel = import.meta.env.VITE_UCTM_STUDIO === "1" && agentId === "codex"
+		? "DeepSeek Flash (Codex default)"
+		: agentLabel
 		? t("newTask.letAgentChoose", { agent: agentLabel })
 		: t("settings.models.agentDefault");
 

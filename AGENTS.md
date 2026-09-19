@@ -2,6 +2,64 @@
 
 Operational guidance for coding agents working in this repository. Keep changes small, match the current rewrite architecture, and prefer the documented daemon/API boundaries over behavior from the old TypeScript implementation.
 
+## Before you read anything else
+
+The UCTM workstream keeps its receipts, contracts and plans under `docs/uctm/`,
+and they are indexed. `docs/uctm/ORIENTATION.v0.json` points at each one with a
+digest, plus the checkout's content-addressed dirty set and the other sessions'
+workspaces as pointers, so orienting is one read instead of twenty.
+
+```bash
+node scripts/uctm-orient.mjs --check   # exit 0: nothing moved. exit 1: read only the paths it prints. exit 3: a dimension could not be read here
+node scripts/uctm-orient.mjs --where   # which session root this run actually read, vs the one the packet recorded
+node scripts/uctm-orient.mjs --write   # regenerate after you change an indexed artifact
+node scripts/uctm-graph.mjs --impact PATH   # which indexed documents cite that path, and must re-read
+node scripts/uctm-graph.mjs --stale         # re-hash every file the graph names; exit 1 lists the movers
+node scripts/uctm-graph.mjs --check --strict # exit 4 if a code path or test the receipts name has moved
+```
+
+Record the `orientation_id` when you finish orienting. While it still matches,
+re-reading the receipts buys nothing. `docs/uctm/TEST_BASELINE.v0.json` lists the
+test failures that were already red, so a red test does not have to be
+re-diagnosed to find out whether it is yours.
+
+**Exit 3 is not a failure, and it is not drift.** It means this shell could not
+read the other sessions' workspaces, so that dimension is reported as unknown
+rather than as deleted — the packet says `workers_root_state`, and `--where`
+prints every root candidate it tried. An AO worker shell has `$HOME` rewritten to
+the harness home, so if the root looks wrong, name the right one with
+`--workers-root <dir>` or `UCTM_WORKERS_ROOT=<dir>`. `--write` refuses (exit 2)
+rather than persist a packet holding fewer session pointers than the one it would
+replace, and an unreadable or missing root is never reported as an empty one.
+
+`docs/uctm/GRAPH.v0.json` is the evidence kernel: the same world as an
+occurrence graph, where a node's `id` survives a content change and its
+`occurrence` does not, so "what moved, and who has to re-read because of it?" is
+a query. It is a pure function of the packet, and both files are derived indexes:
+they exclude each other by construction, so re-writing one never reports the
+other as drift.
+
+It also resolves the repository paths and Go test names the indexed receipts
+write — `backend/internal/…/build.go`, `TestBuild_MatchesEmbedded` — so a file
+someone else just edited can name the claims that have to be re-read:
+`--impact <path-or-test-name>` is that query. Two rules make it trustworthy:
+**a `cites` edge means the document wrote that name** (a file reached through a
+test it declares is not cited directly), and **existence is identity, content is
+observation** — adding or removing a named file moves the graph id, editing one
+only moves `observations.observed_id`. That split is why `--check` alone is a
+*structural* verdict and `--check --strict` or `--stale` is the gate for content.
+If you write a test name in a document this index covers, write one that exists:
+the kernel resolves every `Test*` token it reads, and an invented example is
+recorded as an unresolved name rather than ignored.
+
+Regenerate in order after changing an indexed artifact (the card is what a new
+session is handed at spawn, so it goes last):
+
+```bash
+node scripts/uctm-orient.mjs --write && node scripts/uctm-graph.mjs --write \
+  && node scripts/uctm-graph.mjs --card /Users/mohameddiomande/.ao/uctm-studio/orientation.md
+```
+
 ## Repo layout
 
 - `backend/` — Go rewrite of Agent Orchestrator: Cobra `ao` CLI, loopback HTTP daemon, services, SQLite storage, lifecycle/reaper, runtime/workspace/agent/tracker adapters, terminal mux, and tests.
@@ -117,7 +175,8 @@ This is equivalent to running:
 
 ```bash
 npm run api:spec     # cd backend && go generate ./internal/httpd/apispec/...
-npm run api:ts       # npx openapi-typescript@7.4.4 backend/internal/httpd/apispec/openapi.yaml -o frontend/src/api/schema.ts
+npm run api:ts       # npm --prefix frontend run api:ts (frontend/ declares the one openapi-typescript)
+npm run api:check    # regenerate to a temp file and byte-compare against frontend/src/api/schema.ts; never writes the tree
 ```
 
 **Verify:**

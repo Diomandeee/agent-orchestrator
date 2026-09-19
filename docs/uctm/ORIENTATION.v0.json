@@ -1,0 +1,1661 @@
+{
+  "generated_at": "2026-09-19T13:52:52.584Z",
+  "orientation_id": "sha256:430a2a3dd1a9f262916e5385425f0af7e76131d4fe9d731b5c9de44eeae5b35b",
+  "schema": "uctm.orientation.v0",
+  "how_to_use": "Record orientation_id when you finish orienting. On return, run `node scripts/uctm-orient.mjs --check`: exit 0 means every dimension here was compared and nothing moved, so do not re-read. Exit 1 prints the exact paths that moved, and you read only those. Exit 3 means a dimension could not be read in this shell -- most often the session root, when $HOME is rewritten -- so the run says `incomplete:` and deliberately does not say `oriented`; run `--where` to see the root it resolved, the root this packet recorded, and every candidate it tried, then name one with --workers-root or UCTM_WORKERS_ROOT. A root that is missing or unreadable is never reported as an empty one, and `--write` refuses rather than drop pointers it could not read. `--write` regenerates; a write over an unchanged world is byte-identical on purpose. A check that exits 0 has oriented you even when `orientation_id` differs from the one recorded here: the id also covers the worktree's dirty digest, so an edit to any source file moves it without moving a receipt. `--check` names that case and still exits 0, so key on the exit code and the reason string rather than on id equality -- an id that moved is not by itself a reason to re-read. `--write` records the whole fleet as it stands at that instant, including another session's in-flight edit, so a temporary experiment surfaces as drift once it is undone; point a negative control at a new file instead of editing one the packet already records.",
+  "worktree": {
+    "branch": "codex/uctm-interface-v0",
+    "head": "26f88b09d93cbe39a7099783f98253021b2bc9b8",
+    "dirty_count": 108,
+    "dirty_id": "sha256:62f61ed27eddeb4d9203c9bd8503ccab97cc371fba6e8230fc477d1115e12f0e",
+    "dirty": [
+      {
+        "status": "M",
+        "path": ".github/workflows/go.yml",
+        "sha256": "569c687fed83784c333737054e3caac45b77b2f01eddb7be16743963b1d71c51"
+      },
+      {
+        "status": "M",
+        "path": "AGENTS.md",
+        "sha256": "fc62f607c6f57c26abacf7f35c6d055e15ba8764d19e5fb268f384969e4c6ab6"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/adapters/agent/codex/codex_test.go",
+        "sha256": "793a71a08b96080f2e5f91154e45c54cbb7508ed0f8e10e197f2387bbf03ef6a"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/adapters/agent/codex/codex.go",
+        "sha256": "fed7aa2721198d6c86f8146753f790b28a10a512466eb825f3f847fd3fe4df67"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/adapters/agent/muse/auth_test.go",
+        "sha256": "13b592f96166d3e6ac2b34a6165109f69dbe08037e8478ff00984bcc3aca9bc5"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/adapters/agent/muse/auth.go",
+        "sha256": "f090ed5f120c4c15e7ff86bc8e4d1c998fc9409ee94e6ff94b3a0a2d88b56536"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/adapters/chatdriver/codexappserver/conversation.go",
+        "sha256": "be500bd77d02e30655c0e897a39904f78d65c837736b4be2cae1dbf43a00ebf7"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/adapters/chatdriver/codexappserver/driver_test.go",
+        "sha256": "28c79ca6e07ed36b1518416210586a74d059477e904c4891fd6f27a47bacb2f4"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/adapters/chatdriver/codexappserver/driver.go",
+        "sha256": "c3014db9b61d96e61751838e2acaf89bf6bdbc77dc29dfbebe93a6a5b22fa84d"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/adapters/chatdriver/codexappserver/live_test.go",
+        "sha256": "e7670f1f1a961ef068759b34849e17775c9430e91a15551979995175909737a1"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/adapters/chatdriver/codexappserver/live_uctm_test.go",
+        "sha256": "b03d81bae382e32ea8fd8f60e9a76f3e0e128201ca2d8f6685f86e5e0e704684"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/adapters/chatdriver/codexappserver/uctm_context_test.go",
+        "sha256": "1e082d8872dc518de022d093c7f24535342298525a2850edc2dcdc0cbea2e73f"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/adapters/chatdriver/codexappserver/uctm_context.go",
+        "sha256": "416d7ee817befd6c4b8ca4ceed0554e29c02168b081f6ff4cea2514b2a5613d3"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/adapters/chatdriver/codexappserver/uctm_handshake_test.go",
+        "sha256": "79ff9160026566b1b19ab4baf54d6113983139ea6f7a4fc630c071c2d86bc063"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/adapters/uctm/"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/config/config_test.go",
+        "sha256": "557bf7def69f0f8afb3fac89fb4677099e65cd71961af8fb23136bb9116308cd"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/config/config.go",
+        "sha256": "04a3ef0d862fb7ff657fba6e7e9fc5300eeed9f1e20f9920e011a51a2ffec2b5"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/daemon/daemon.go",
+        "sha256": "fce68e2182551896d8e7d20b424de57a2417617e5acbd19ff5e233ee009d9623"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/daemon/uctm_wiring_test.go",
+        "sha256": "2b61bd53d1e138f36804c577a9c47ffa8826802ae97d27a51054cd3c7137b04f"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/daemon/uctm_wiring.go",
+        "sha256": "6de60bddf4cd19729e33b348c0655d4b58c8c7f344f05fdb484275d98749fa9c"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/domain/uctm_test.go",
+        "sha256": "da0b811ddc2c487b1836df84daab646339f6b9ef41a9fe34053e5282f5b07367"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/domain/uctm.go",
+        "sha256": "0c4aedc6231b8cd065ecc3c8d112745a6dc5b0ea1a8576ee2822ec5ffdf7f01e"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/httpd/api.go",
+        "sha256": "fc0f2b03721788dca36b771feb0c3502caa24cf530cae4c57dcc06aa5dd1d9ce"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/httpd/apispec/openapi.yaml",
+        "sha256": "e040107a85eb1d3e2ce40a044c6eba4d2fa3285335ad07bec711c027f3b2b8cd"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/httpd/apispec/specgen/build.go",
+        "sha256": "5d762da8ac6a9421ccb31b6c2379b58dd6db34e9565c800a9900ea97a46a1a1a"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/httpd/controllers/dto.go",
+        "sha256": "5d64e9f595f5a6cc5d5845766d801c77ba0533929768bab9916564e099d1f0ab"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/httpd/controllers/sessions_test.go",
+        "sha256": "146c3398d93b8c6579c0255154ac74f6771873c87b787f488ac1c7eb8519c85c"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/httpd/controllers/sessions.go",
+        "sha256": "6de76e284349f52912a2f08d3c155d83500a8965b361d560396b29a7db1a854d"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/httpd/controllers/uctm_test.go",
+        "sha256": "18fea9ea6729b9b42dd508b5eafa3035b7e42c9dc23bfcafd224a9403826eaf8"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/httpd/controllers/uctm.go",
+        "sha256": "d030c0ab1c6c6e6cfcdc8c6918f3f52f9ec3c874037ca08e93746ae537090900"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/httpd/lan_listener_test.go",
+        "sha256": "89e717a5655a77909171a183cf0ebe2ad71b2488c21b095d33ba0338c0678b54"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/httpd/lan_listener.go",
+        "sha256": "b6f26133d09e91ef5a8ab4b0a21737a8e5225080eb9289d199f8a7eaf2b63821"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/httpd/uctm_lan_test.go",
+        "sha256": "67c70c2bb8bf2e3ea0b6789849e4c1b202f4f14c1681ff6f46ae8c3b717ca69e"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/ports/uctm.go",
+        "sha256": "e2cd6dfd15f1cec55f659b56de028b7c53a59c69e0b581c1e99e09b37caea483"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/service/session/lineage_live_test.go",
+        "sha256": "3c70802cef43f86b795a6242e7eb4be6fedfefae0ac29b27f86b1c82298de2ee"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/service/session/lineage_test.go",
+        "sha256": "b6a862a4a984a34bb0962472bef5a964775ea9ec51a4b7094e92d982d9629719"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/service/session/lineage.go",
+        "sha256": "1eef45adc9622458f672a55237f60d7909b97cee8ff7ed91ada9c0a78aa462b6"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/service/uctm/"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/session_manager/manager.go",
+        "sha256": "a614401b422e05da218b2f625efa264de14f02be4a38213056b2cef41c698990"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/session_manager/orientation_card_test.go",
+        "sha256": "ddd86ea8c4aa26b0f63d1c77b1ca2e433a15e332ba0172f5bac4cdd66eab6916"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/session_manager/uctm_context_test.go",
+        "sha256": "d58e19014365c7ca6657566ceab8e252ade863c35abbc3d879fbba9400ebacd9"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/storage/sqlite/gen/models.go",
+        "sha256": "0d0fc567f1f330b9e8a02393a44f5c04f31cd8c251cda663a50a92fa9973853d"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/storage/sqlite/gen/uctm.sql.go",
+        "sha256": "dcb79c44fe2045b15972c20950b59984e075ad4ecb3012d1b766af050f61d84a"
+      },
+      {
+        "status": "M",
+        "path": "backend/internal/storage/sqlite/migrate_burned_versions_test.go",
+        "sha256": "4793310b23d18a98e0329f950b1a1fdf678ee45c07b9086fe6d3ba0db513dceb"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/storage/sqlite/migrations/0111_uctm_projection.sql",
+        "sha256": "9a8b65d285be7aebfb96cb406dcc45946a0e1b99d3edd2dd4a0f392d009ce5f6"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/storage/sqlite/queries/uctm.sql",
+        "sha256": "c3bf55e61aaf34813c901f03fbe3a77510be449232d5ec68c3082e8868e8b723"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/storage/sqlite/store/uctm_projection_store_test.go",
+        "sha256": "2177378e27e7d2954582625763172dd29df9a3ef211141364df92ee04e9b3518"
+      },
+      {
+        "status": "??",
+        "path": "backend/internal/storage/sqlite/store/uctm_projection_store.go",
+        "sha256": "ad7afd4ebfbb87baa440b557405543f8e2f68351bb9561eb931a98f678809c13"
+      },
+      {
+        "status": "M",
+        "path": "backend/pkg/agentruntime/command_test.go",
+        "sha256": "7858260db2fbfa08ab2bd2ae4bd675e76c3af4395dc030026109daa6e49b37f0"
+      },
+      {
+        "status": "M",
+        "path": "backend/pkg/agentruntime/command.go",
+        "sha256": "aff477a9abc3108cdb6fbac453a5f7337c45d273cfc0ef53c449877ec66847f5"
+      },
+      {
+        "status": "M",
+        "path": "backend/sqlc.yaml",
+        "sha256": "bcdb9401857365beee8a7a409c415136331a518095fee19d746c0b0ed894058c"
+      },
+      {
+        "status": "??",
+        "path": "bridge/"
+      },
+      {
+        "status": "??",
+        "path": "data/"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/AO_F2_READONLY_PROJECTION_2026-09-19.md",
+        "sha256": "2c28bcd4c4bd3754fdc6edf741a0ae2ad8351741f74603f84a93965d47cf8de2"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/AO_F3_1_SPINE_SERVICE_2026-09-19.md",
+        "sha256": "6c7f38bfd8a4b47923527e28365e30916487a2cd07d2df9e8083fb98bf6a2128"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/AO_F3_FRONTEND_PROJECTION_2026-09-19.md",
+        "sha256": "16112cc0851664938e332aa50fb4f0c267a594aef507625b8d8fdd3d2ed927d0"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/AO_F4_ORIENTATION_AT_SPAWN_2026-09-19.md",
+        "sha256": "6a3b8d682754228e4b7c55d9e3a1c8f6ce138085eee53462f52e8572110b924e"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/AO_F5_KERNEL_CODE_EDGES_2026-09-19.md",
+        "sha256": "3ab62152d84b2ac42255d6a4edf1675192f81c98bdbad3088acdb7c94928560a"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/AO_ORIENTATION_INDEX_2026-09-19.md",
+        "sha256": "ff6abe45ff23a99f30b7dd9d22bd1cda6330a2817b2d78daf6473297fd57b4f0"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/CONNECTION_PLAN_2026-09-18.md",
+        "sha256": "8fdae8bec0395b6c4a3e2e85ae06e21bfdf2e229d58823f58998d8141e081a65"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/CONTEXT_PIPELINE_GATE_2026-09-18.md",
+        "sha256": "db2fb0b72b6df409b75873241c4bfc465590bd195912853af781863879df8a40"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/CONTEXT_PIPELINE_GATE_2026-09-18.md.pre-reconcile-20260918",
+        "sha256": "dc6d458540201410917362d0c831aac0cb5c4978416947d3bc3bb3f6205a2fdb"
+      },
+      {
+        "status": "M",
+        "path": "docs/uctm/INTEGRATION_ENDPOINTS.v0.json",
+        "sha256": "fd77ae80bfb4a8f1fceb8163bfcc89ff42dddfdbef6e5b34d62ac1df96778703"
+      },
+      {
+        "status": "M",
+        "path": "docs/uctm/INTERFACE_ABSORPTION_PLAN.md",
+        "sha256": "b1abe4e9534ac69e27133423fbd6c3c7aad566a95041e22075ea10bde062b944"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/LOCAL_HOST_QUALIFICATION_2026-09-18.md",
+        "sha256": "8fad94746917ac209fa8c6d748f1505b8794cb76dbcb313c17e1f770bbb79bd7"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/MOBILE_PORT_LINEAGE_2026-09-19.md",
+        "sha256": "ed890b8d140ec7b593ea57ab900838b70e51359ab85cdd3e916b1f4607a0b9bd"
+      },
+      {
+        "status": "M",
+        "path": "docs/uctm/READINESS_CONTRACT.json",
+        "sha256": "84a78055e38e7156527d7808590efb599da24f572425892fb6cccafa78e5986f"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/RECALL_ENFORCEMENT_ACTIVATION_2026-09-18.md",
+        "sha256": "2154160b055fd0c1c07af810789a40da182d133f0e5d60a2c128cefae4e1b9ab"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/TEST_BASELINE.v0.json",
+        "sha256": "554357db54784ac33eee3273ee0baf19e8efc91ff46d3e93838874360b4817fb"
+      },
+      {
+        "status": "??",
+        "path": "frontend/e2e/uctm-view.spec.ts",
+        "sha256": "151945b1e2ae4aaf3dd4965e7879a4c7e811092a835c00b9e8447efffb8b4419"
+      },
+      {
+        "status": "M",
+        "path": "frontend/index.html",
+        "sha256": "cb84d52cc54164b6985d14efe072837ade9fda7844f4a304fd4bbda70bdac065"
+      },
+      {
+        "status": "M",
+        "path": "frontend/package.json",
+        "sha256": "94e6348d4134fb780839210c57ca45b4e8b4f16fd59d0ecf519d93cb38b6b768"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/api/schema.ts",
+        "sha256": "bab40c184a416d4b44aa83bbd2664dd85dfc8214d1966da6d28ca22321cd1324"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/main.ts",
+        "sha256": "0680b79222dcef0bcfb913b86be3efe8d64706c75dabb5507bb40d80dd1f3114"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/main/sentry-main.ts",
+        "sha256": "faa29c53ba2837f4676b9d0130f990e9d996544ffdb219e5d43a14ad32bcbec6"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/components/CommandPalette.tsx",
+        "sha256": "c46b428c5cc43bd5721bf0db9a524a488c34ca0670edf5efe7b7059760040259"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/components/settings/ConnectMobileContent.tsx",
+        "sha256": "5d00bcd3513b70ffe89fdb0ddcf1d4688ffc5965cff5c5c6a28140993a6eb9e7"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/components/Sidebar.tsx",
+        "sha256": "8ed13d8ead303cd64a94d119d369b078a0f3aadfbbb807d9251e5efccbcd075b"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/components/TaskComposer.tsx",
+        "sha256": "1627fb104e3de92aaedd3909850949a3d46536e2609c3d4a9875533896e615ce"
+      },
+      {
+        "status": "??",
+        "path": "frontend/src/renderer/components/uctm/"
+      },
+      {
+        "status": "??",
+        "path": "frontend/src/renderer/hooks/useUctmProjection.ts",
+        "sha256": "b20951a5bbe1004c41020370c0259260a823c0fba07027cefae882e4f3c63ca6"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/i18n/de.json",
+        "sha256": "7801b426ab97e37d33ff87df897ec526189e3e6bb3e43857ad647c274eaa9b88"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/i18n/en.json",
+        "sha256": "60da48e46bb372640b06af7822b581286582738808dfbb46dcb6f3c5dd5dee56"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/i18n/es.json",
+        "sha256": "9380565ab7c6fd2987e2cc90e4ec62c44fa8aea4155bdeb58afcc46afc0f86c1"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/i18n/fr.json",
+        "sha256": "de4d0ccf27836ff9e90bf97bdd34fad27a67e11396a2f0c51ddbf299cc62ee00"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/i18n/ja.json",
+        "sha256": "8351f32f6c76db3a696ffacca317290949693c3f88b4dc4e4c87fcb3b79d2510"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/i18n/ko.json",
+        "sha256": "9c117c2341b9403139cb4c8ed2a56edd265154be810f22217da715f6ab40a036"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/i18n/pt-BR.json",
+        "sha256": "b3e755a1c143bc2abd8a9f21620890119d41aa9d6944c1b3add3c3909efa666b"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/i18n/zh-CN.json",
+        "sha256": "adaa30e16de33fca22986e7c502ea5ec3dc23e8980bc3ef2b6150b10cbaebe70"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/lib/api-client.ts",
+        "sha256": "7331f158ac89e642f96d5289efa549535c2f1bb64129872f43563e12b7685275"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/lib/command-palette.test.ts",
+        "sha256": "fec3ef72d8ea8dd9fc203f7fb778fe438d1b06a0f0bba8199a34a6089b4f6b07"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/lib/command-palette.ts",
+        "sha256": "be8e81de8a753d656a8a45cbf7a580fb5456bab7c390e809aa78d84967e0b919"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/lib/sentry.ts",
+        "sha256": "550d7d5b880d893a4793cbf32a714c34cc24d532786955ba0d67aca0fbb64e11"
+      },
+      {
+        "status": "??",
+        "path": "frontend/src/renderer/lib/uctm-projection.test.ts",
+        "sha256": "5ae1074b23995698a81c783bfa21c31d575192a9c7b6b3519e914beeb2db5dfe"
+      },
+      {
+        "status": "??",
+        "path": "frontend/src/renderer/lib/uctm-projection.ts",
+        "sha256": "7c445fe311958c9d8c04f0a8c988c18494bda7f6443be40b75a3b95183dc2c4b"
+      },
+      {
+        "status": "??",
+        "path": "frontend/src/renderer/routes/_shell.projects.$projectId_.uctm.tsx",
+        "sha256": "c3c374df4d6cfd4b7fa913c6e2ae35038a3949babaf1c21fbb54204f944866b8"
+      },
+      {
+        "status": "M",
+        "path": "frontend/src/renderer/routeTree.gen.ts",
+        "sha256": "db228444fc324953ef5467894e41ebbade485ba659e1dd01692ebc1644c96af1"
+      },
+      {
+        "status": "M",
+        "path": "package-lock.json",
+        "sha256": "aa37b2bcf3eca932d83eb6dbe686ee3d8b08cb614ccadd634efb36fe2378af36"
+      },
+      {
+        "status": "M",
+        "path": "package.json",
+        "sha256": "73f48e32d134aeb627caf3afd03998c9dbe003a0f9cec75bb3fb01bc0810f906"
+      },
+      {
+        "status": "??",
+        "path": "packages/uctm-mobile-ios/"
+      },
+      {
+        "status": "??",
+        "path": "scripts/rationale_worm.py",
+        "sha256": "50379f0868606d508a2162d127d02f7504bda7914a2d5d48f964682af99d22b4"
+      },
+      {
+        "status": "??",
+        "path": "scripts/uctm-cli-stdout.test.mjs",
+        "sha256": "5f304a6a268928330c4fbd8179924fcfee3fbedb932601323243f638f5e4c00a"
+      },
+      {
+        "status": "??",
+        "path": "scripts/uctm-graph.mjs",
+        "sha256": "1381b22de1a187fa0ff73cfabbd1d4c0778d3bf9dece02e7949d990e8a31a866"
+      },
+      {
+        "status": "??",
+        "path": "scripts/uctm-graph.test.mjs",
+        "sha256": "202e5039dae7120d81c8ba2c07e4babe82eae870b4c71d8aef9ac5394e460add"
+      },
+      {
+        "status": "??",
+        "path": "scripts/uctm-kernel-root-and-temp.test.mjs",
+        "sha256": "e7d619f55b1f6ee61928f9e36324e6f43684841b4d567620059a9ba6f9f9185e"
+      },
+      {
+        "status": "??",
+        "path": "scripts/uctm-orient-partial-scan.test.mjs",
+        "sha256": "41f8e36eba53fea3315026136c30ab5d33bd81cb8076c418c33760d25e1f65a5"
+      },
+      {
+        "status": "??",
+        "path": "scripts/uctm-orient.mjs",
+        "sha256": "27e8a210e24208b8a1b7a9af75a8e77243aab22b7ecc037b27c5ab58091066ac"
+      },
+      {
+        "status": "??",
+        "path": "scripts/uctm-orient.test.mjs",
+        "sha256": "ed89c1896f578a9321ff5f7a16cee7dfb7f3f7d17dbfe38409afcc8b1737a811"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "path": "docs/uctm/AO_F2_READONLY_PROJECTION_2026-09-19.md",
+      "role": "receipt",
+      "bytes": 8061,
+      "sha256": "2c28bcd4c4bd3754fdc6edf741a0ae2ad8351741f74603f84a93965d47cf8de2",
+      "title": "AO-F2 — read-only UCTM projection surface",
+      "status": "implemented and verified locally; no UCTM service is wired and the integration is off by default."
+    },
+    {
+      "path": "docs/uctm/AO_F3_1_SPINE_SERVICE_2026-09-19.md",
+      "role": "receipt",
+      "bytes": 9542,
+      "sha256": "6c7f38bfd8a4b47923527e28365e30916487a2cd07d2df9e8083fb98bf6a2128",
+      "title": "AO-F3.1 — UCTM spine read-only projection service, and the first live read",
+      "status": "the spine service exists and is verified; the Studio read surface has read real UCTM facts once, on a second daemon instance. The deployed desktop runtime is unchanged and `UCTM_MODE` is still unset where Studio launches.",
+      "next_gate": [
+        "Human decision: rebuild and redeploy the Studio daemon, then decide whether",
+        "AO-F3 is now implemented",
+        "Then the projection change_log CDC increment, which finally has a live"
+      ]
+    },
+    {
+      "path": "docs/uctm/AO_F3_FRONTEND_PROJECTION_2026-09-19.md",
+      "role": "receipt",
+      "bytes": 15355,
+      "sha256": "16112cc0851664938e332aa50fb4f0c267a594aef507625b8d8fdd3d2ed927d0",
+      "title": "AO-F3 — the project-scoped UCTM view, and what it refuses to say",
+      "status": "implemented and verified against a live spine service on a throwaway daemon. The deployed desktop runtime still serves neither the route's data nor the transport, so the view is reachable but reads a disabled integration in the real app.",
+      "next_gate": [
+        "Human decision: rebuild and redeploy the Studio daemon, then decide whether",
+        "Decide the text-accent fix at the theme level, with the other sixteen call",
+        "Then the projection change_log CDC increment, whose only consumer (a live"
+      ]
+    },
+    {
+      "path": "docs/uctm/AO_F4_ORIENTATION_AT_SPAWN_2026-09-19.md",
+      "role": "receipt",
+      "bytes": 23292,
+      "sha256": "6a3b8d682754228e4b7c55d9e3a1c8f6ce138085eee53462f52e8572110b924e",
+      "title": "AO-F4 — orientation at spawn: the evidence kernel, and a session that starts oriented",
+      "status": "implemented and verified locally. The orientation index now has an occurrence graph (`docs/uctm/GRAPH.v0.json`), a bounded spawn card, and an injection path in the daemon's prompt assembly. Nothing was deployed: the Studio daemon binary was not rebuilt or restarted, no route was added, and no authority was widened.",
+      "next_gate": [
+        "Mohamed: rebuild/redeploy the Studio daemon so the injection ships, and",
+        "Record the observed orientation_id per session, so --since is answered from",
+        "Extend the kernel's edge extraction beyond documents and session artifacts —"
+      ]
+    },
+    {
+      "path": "docs/uctm/AO_F5_KERNEL_CODE_EDGES_2026-09-19.md",
+      "role": "receipt",
+      "bytes": 17123,
+      "sha256": "3ab62152d84b2ac42255d6a4edf1675192f81c98bdbad3088acdb7c94928560a",
+      "title": "AO-F5 — the evidence-to-code hop: which claims does this file change invalidate?",
+      "status": "implemented and verified locally. The evidence kernel now resolves the repository paths and Go test names the indexed receipts write, so a file another session just edited names the claims that have to be re-read. Nothing was deployed, no route was added, and no authority was widened.",
+      "next_gate": [
+        "The same hop for the frontend suites: vitest describe/it names and Playwright",
+        "Attach a *result* to a test node — the last run and its outcome — so \"this",
+        "Let a claim name a *line*: build.go:158 already appears in these receipts,"
+      ]
+    },
+    {
+      "path": "docs/uctm/AO_ORIENTATION_INDEX_2026-09-19.md",
+      "role": "receipt",
+      "bytes": 16834,
+      "sha256": "ff6abe45ff23a99f30b7dd9d22bd1cda6330a2817b2d78daf6473297fd57b4f0",
+      "title": "Orientation index — re-orienting by digest instead of by re-reading",
+      "status": "implemented and verified. `docs/uctm/ORIENTATION.v0.json` is generated from the durable artifacts, content-addressed, and idempotent. Nothing consumes it automatically yet: no daemon route and no spawn-time injection.",
+      "next_gate": [
+        "Serve the packet from the daemon as a projection (GET /api/v1/uctm/…) or",
+        "Record the observed id per session, so --since can be answered from a",
+        "Extend the same treatment to the *product*: Studio's first-run orientation"
+      ]
+    },
+    {
+      "path": "docs/uctm/CONNECTION_PLAN_2026-09-18.md",
+      "role": "plan",
+      "bytes": 25748,
+      "sha256": "8fdae8bec0395b6c4a3e2e85ae06e21bfdf2e229d58823f58998d8141e081a65",
+      "title": "UCTM Studio connection plan — 2026-09-18"
+    },
+    {
+      "path": "docs/uctm/CONTEXT_PIPELINE_GATE_2026-09-18.md",
+      "role": "gate",
+      "bytes": 10006,
+      "sha256": "db2fb0b72b6df409b75873241c4bfc465590bd195912853af781863879df8a40",
+      "title": "UCTM Studio historical-context integration gate",
+      "status": "synthetic end-to-end qualified; live personal-history recall not activated. The existing curated context card is independent of historical recovery. The native Rust CEF service and the Studio `/recall` adapter are installed and running, but there is no grant for protected-history search or model egress. `evidence_context_connected` remains false."
+    },
+    {
+      "path": "docs/uctm/FORK_MANIFEST.json",
+      "role": "reference",
+      "bytes": 3869,
+      "sha256": "9512eea2c44c2523fae968c4927d99ca5369f3a04bd9ddb261b8549280276ab1",
+      "safe_claim": "A verified Apache-2.0 GitHub fork and exact Go-rewrite integration branch exist, and the source-grounded UCTM interface plan is complete. No local fork runtime has been cloned, built, installed, or qualified.",
+      "forbidden_claims": [
+        "AO is installed",
+        "the fork builds",
+        "the fork tests pass",
+        "the codemap is complete",
+        "UCTM endpoints are implemented",
+        "UCTM Studio is running",
+        "Agent Orchestrator owns UCTM authority",
+        "the interface is production-ready"
+      ]
+    },
+    {
+      "path": "docs/uctm/INTEGRATION_ENDPOINTS.v0.json",
+      "role": "contract",
+      "bytes": 12025,
+      "sha256": "fd77ae80bfb4a8f1fceb8163bfcc89ff42dddfdbef6e5b34d62ac1df96778703",
+      "status": "read_only_implemented_service_available_local_frontend_view_implemented",
+      "safe_claim": "The v0 read-only UCTM projection surface is implemented in the core daemon (routes, port, adapter, service, projection storage, OpenAPI), a read-only projection service now exists in the UCTM supervisor, and the desktop frontend has a project-scoped UCTM view that renders all eight kinds without proposing, approving, training, merging, deploying, spawning, or sending. One end-to-end read on a second daemon instance returned real spine facts with verified response metadata, and the view was rendered against it in a real browser. Separately, and without touching the projection surface, the workstream's own orientation index now has an occurrence graph and a bounded spawn card that the session manager injects under UCTM_STUDIO=1; both are files and prompt text, not routes, and neither is a daemon endpoint or a spine connection. The projection surface defaults to off, no launcher wires UCTM_MODE, the deployed daemon is unchanged, no proposal or human-gated route exists, and no UCTM fact reaches a model.",
+      "forbidden_claims": [
+        "AO UCTM API is live",
+        "A UCTM service is connected",
+        "UCTM Studio is integrated",
+        "human adjudication is enabled",
+        "training requests can execute",
+        "mobile UCTM access is available"
+      ],
+      "authority_invariants": [
+        "AO projection rows are never canonical UCTM truth.",
+        "AO operational status is never a UCTM semantic label.",
+        "UCTM proposals cannot call AO tools, merge pull requests, spawn or kill agents, deploy, or send external messages.",
+        "AO cannot record human UCTM gate receipts without the separately qualified human-action contract.",
+        "No UCTM route is mounted on the mobile LAN listener in v0 or v1.",
+        "No raw conversation history crosses the boundary by default.",
+        "Unknown response fields are rejected at the adapter boundary.",
+        "Service failure derives stale or unknown state, never healthy state.",
+        "A generated client is stale or current, never \"uncommitted\". The schema-vs-spec check regenerates to a temporary path and compares bytes, so it answers one question and does not go red on legitimate uncommitted work.",
+        "Exactly one generator produces each generated artifact. A second entry point resolving a different openapi-typescript version turns one check into two verdicts, which is worse than no check.",
+        "A generated spec and the code that builds it change as a pair. openapi.yaml and specgen/build.go are never committed apart: the second commit breaks TestBuild_MatchesEmbedded, and the failure reads as a stale spec rather than as half a pair.",
+        "An index that describes this repository is not the repository. A named file's existence is part of its identity, so adding or removing one moves the address a session compares; its content is only an observation, so editing one does not. That is why the orientation graph's --check is a structural verdict and --check --strict is the gate that includes content.",
+        "A path this process cannot read is never reported as an absent one, and never as a checked one. `cannot look` and `not there` are different facts, so the index vocabulary keeps them apart: a permission failure on the workers root or a session workspace inside it is `unreadable` or `partial`, a verdict that could not compare every named path is `incomplete` with exit 3, and `missing` is reserved for a path that was looked for and was not there. No bare catch may file both under the same word, because the deeper defect is not the wrong label -- it is a caller reading a clean verdict about a dimension nobody read."
+      ]
+    },
+    {
+      "path": "docs/uctm/INTERFACE_ABSORPTION_PLAN.md",
+      "role": "plan",
+      "bytes": 24172,
+      "sha256": "b1abe4e9534ac69e27133423fbd6c3c7aad566a95041e22075ea10bde062b944",
+      "title": "UCTM Studio: Agent Orchestrator Fork and Interface Absorption Plan",
+      "status": "remote fork created; architecture and endpoint plan complete; local clone/build/codemap blocked by capacity Upstream: `Untrivial-ai/agent-orchestrator` Fork: `Diomandeee/agent-orchestrator` Integration branch: `codex/uctm-interface-v0` Pinned Go-rewrite base commit: `5eb10e3698bdbf0735b84c6aa4d3f06ea8d83ff2` License: Apache-2.0 Proposed product name: UCTM Studio",
+      "statuses": [
+        {
+          "section": "UCTM Studio: Agent Orchestrator Fork and Interface Absorption Plan",
+          "status": "remote fork created; architecture and endpoint plan complete; local clone/build/codemap blocked by capacity Upstream: `Untrivial-ai/agent-orchestrator` Fork: `Diomandeee/agent-orchestrator` Integration branch: `codex/uctm-interface-v0` Pinned Go-rewrite base commit: `5eb10e3698bdbf0735b84c6aa4d3f06ea8d83ff2` License: Apache-2.0 Proposed product name: UCTM Studio"
+        },
+        {
+          "section": "13. Projection storage",
+          "status": "authority_ceiling receipt_ref payload_json observed_at expires_at"
+        },
+        {
+          "section": "AO-F0 — Remote fork and pin",
+          "status": "complete."
+        },
+        {
+          "section": "AO-F1 — Capacity and local source qualification",
+          "status": "blocked."
+        },
+        {
+          "section": "AO-F2 — Read-only UCTM port and adapter",
+          "status": "implemented, service unwired (2026-09-19). Receipt: `AO_F2_READONLY_PROJECTION_2026-09-19.md`."
+        },
+        {
+          "section": "AO-F3 — UCTM Studio frontend",
+          "status": "implemented (2026-09-19). Receipt: `AO_F3_FRONTEND_PROJECTION_2026-09-19.md`. The view is read-only by construction and is not yet served by the deployed daemon."
+        }
+      ]
+    },
+    {
+      "path": "docs/uctm/LOCAL_HOST_QUALIFICATION_2026-09-18.md",
+      "role": "gate",
+      "bytes": 7123,
+      "sha256": "8fad94746917ac209fa8c6d748f1505b8794cb76dbcb313c17e1f770bbb79bd7",
+      "title": "UCTM Studio local coding-host qualification — 2026-09-18",
+      "status": "coding UI qualified on this Mac; full UCTM architecture partial."
+    },
+    {
+      "path": "docs/uctm/MOBILE_PORT_LINEAGE_2026-09-19.md",
+      "role": "reference",
+      "bytes": 9156,
+      "sha256": "ed890b8d140ec7b593ea57ab900838b70e51359ab85cdd3e916b1f4607a0b9bd",
+      "title": "Mobile port lineage: the iOS session board and the AO phone app are one rule set",
+      "status": "verified 2026-09-19; differential corrected and fixed, see the correction below. `packages/uctm-mobile-ios/Sources/SessionBoard.swift` is a deliberate port of three AO phone-app view-model modules, and this document names both sides so the evidence kernel can point at them. Placed because the whole package was invisible to `--impact` before it: the code node set is exactly the repository paths the indexed documents name, and no document named any of them."
+    },
+    {
+      "path": "docs/uctm/READINESS_CONTRACT.json",
+      "role": "contract",
+      "bytes": 12760,
+      "sha256": "84a78055e38e7156527d7808590efb599da24f572425892fb6cccafa78e5986f",
+      "readiness": [
+        {
+          "domain": "license_and_forkability",
+          "status": "ready"
+        },
+        {
+          "domain": "remote_fork",
+          "status": "ready"
+        },
+        {
+          "domain": "source_architecture_fit",
+          "status": "ready_provisional"
+        },
+        {
+          "domain": "local_source_qualification",
+          "status": "blocked"
+        },
+        {
+          "domain": "uctm_endpoint_implementation",
+          "status": "read_only_partial"
+        },
+        {
+          "domain": "uctm_interface_runtime",
+          "status": "not_started"
+        },
+        {
+          "domain": "human_adjudication_and_effects",
+          "status": "blocked"
+        },
+        {
+          "domain": "production",
+          "status": "blocked"
+        }
+      ]
+    },
+    {
+      "path": "docs/uctm/RECALL_ENFORCEMENT_ACTIVATION_2026-09-18.md",
+      "role": "gate",
+      "bytes": 6931,
+      "sha256": "2154160b055fd0c1c07af810789a40da182d133f0e5d60a2c128cefae4e1b9ab",
+      "title": "UCTM recall enforcement activation - 2026-09-18 (M1)"
+    },
+    {
+      "path": "docs/uctm/TEST_BASELINE.v0.json",
+      "role": "baseline",
+      "bytes": 2123,
+      "sha256": "554357db54784ac33eee3273ee0baf19e8efc91ff46d3e93838874360b4817fb",
+      "known_failures": {
+        "go": [
+          "internal/adapters/agent/codex: TestResolveCodexBinaryFindsNVMInstallWhenPathIsSparse (fails when a live AO_CODEX_BIN or bridge/codex is present)",
+          "internal/adapters/agent/crush: TestCrushLocalAuthStatusDoesNotUseProviderCatalog",
+          "internal/adapters/runtime/tmux: TestRuntimeIntegrationSupervisedExitKeepsInteractiveShell",
+          "internal/cli: 5 TestSpawn* cases (the fixture daemon answers HTTP 404)"
+        ],
+        "frontend": [
+          "src/landing/** - markdown-twins generator, download CTA, Android beta surfaces, launch analytics (9 files)",
+          "src/renderer/components/TaskComposer.test.tsx - 4 cases, model-catalog copy drift",
+          "src/renderer/components/ConnectMobileModal.test.tsx - 2 cases",
+          "src/renderer/i18n/renderer-coverage.test.ts - hardcoded English at components/settings/ConnectMobileContent.tsx:272"
+        ]
+      }
+    }
+  ],
+  "sessions": [
+    {
+      "session": "scratch-1",
+      "artifacts": [],
+      "pointed_bytes": 0
+    },
+    {
+      "session": "scratch-10",
+      "artifacts": [
+        {
+          "path": "ABSTENTION_BENCH_RECEIPT_2026-09-19.md",
+          "bytes": 7342,
+          "sha256": "8055088be159a4ebb05a9fa6850be12a2998439234010998e622df83f8286e80",
+          "title": "The twin's knowledge boundary, measured — and it does not have one yet",
+          "status": "built, tested, measured against the real corpus Measured at: 2026-09-19T10:04Z–10:05Z"
+        },
+        {
+          "path": "ATOMIC_WRITE_DIRTY_SET_RECEIPT_2026-09-19.md",
+          "bytes": 6090,
+          "sha256": "3435a94e8aa06cbe8a64a2b7fcc8dce722322ee271ce0b43b5b6e39038b34a6d",
+          "title": "The writer's own debris is the one write the dirty-set rule does not explain",
+          "status": null
+        },
+        {
+          "path": "ATTRIBUTION_BLIND_SPOT_RECEIPT_2026-09-19.md",
+          "bytes": 4550,
+          "sha256": "1871a0f509bdcb6d80ac64fb55076dc52744537e08271c30fd7e821872ce254b",
+          "title": "The attribution tool answered \"nobody wrote this\" about a file written minutes earlier",
+          "status": null
+        },
+        {
+          "path": "CITATION_AUDIT_RECEIPT_2026-09-19.md",
+          "bytes": 7514,
+          "sha256": "632f346044e65ed1a28a5b0096aebbc8372d49d25ff754e021bb5627f8105c34",
+          "title": "The citation rule is now a measurement, not an exhortation",
+          "status": null
+        },
+        {
+          "path": "evidence/attribution-and-coverage-finding.md",
+          "bytes": 4477,
+          "sha256": "698d34325c3f40dfac1295aae2bb2d58f6e0f4cf334870731839a77747e773e5",
+          "title": "Who wrote the uncommitted lineage slice — and why the index could not say",
+          "status": "attributed, and the reason it was unattributable is a coverage gap. No transcript text is reproduced here; only paths, counts and identifiers."
+        },
+        {
+          "path": "evidence/citation-audit-2026-09-19T1330Z.json",
+          "bytes": 2086,
+          "sha256": "3a66cb37e5235212bdbc6a7b52b5638e2dbb5e2e1bca0cff25ac35f645e72a38"
+        },
+        {
+          "path": "evidence/citation-audit-2026-09-19T1330Z.txt",
+          "bytes": 2964,
+          "sha256": "af0431d5181e3d77a8c0f43871f8ffd8a2df00df1afe661d90b9f2dcf0619057"
+        },
+        {
+          "path": "evidence/epipe-truncating-reader-2026-09-19T1345Z.md",
+          "bytes": 5936,
+          "sha256": "88a3988d4f1ee357ca2bde5b715ca3ac774f41da0cd69e196ce076c4c3faa779",
+          "title": "A reader that stops early makes the CLI exit 1, with a stack trace",
+          "status": null
+        },
+        {
+          "path": "evidence/input-stability-2026-09-19T1305Z.md",
+          "bytes": 2846,
+          "sha256": "ae5d7d95431efc14a0be9ec42fcaf1299bfca614e52238877252533da75006cc",
+          "title": "input_stability -- measured behaviour of the guard in scripts/verify-orientation.mjs",
+          "status": null
+        },
+        {
+          "path": "evidence/kernel-arms-red-2026-09-19T1312Z.json",
+          "bytes": 13729,
+          "sha256": "be43a1f7d8537200a6a85209073319aaafa80237d208862584276422591911ef"
+        },
+        {
+          "path": "evidence/orientation-check-matrix.err",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "evidence/orientation-check-matrix.json",
+          "bytes": 4138,
+          "sha256": "1d645cddfcd35549eb356b7d859e28553bf7a85260a97e8bbbf72d4fe7412cb6"
+        },
+        {
+          "path": "evidence/orientation-verification-2026-09-19T0945Z.json",
+          "bytes": 4357,
+          "sha256": "458e49f9f514339c36b9ea5b09baa8831c458c5a2309f7e573ee9976c313b6b1"
+        },
+        {
+          "path": "evidence/orientation-verification-2026-09-19T1035Z.json",
+          "bytes": 4357,
+          "sha256": "1183b4771de4befa098329491077f927bd634f1aa99d247e5d6f20e6e7482f95"
+        },
+        {
+          "path": "evidence/orientation-verification-2026-09-19T1038Z.json",
+          "bytes": 4777,
+          "sha256": "5dc39d8929970053123a4b61c651ca324a57ee4a70c40af0a6f52c40bf55b62c"
+        },
+        {
+          "path": "evidence/orientation-verification-2026-09-19T1045Z.json",
+          "bytes": 5211,
+          "sha256": "f5ac51437a9d040842c608a6cf59f3b1e720c1d279e86a77a08d2e90b1b6e3d2"
+        },
+        {
+          "path": "evidence/orientation-verification-2026-09-19T1058Z.json",
+          "bytes": 4449,
+          "sha256": "665548a17bf4595fb7cc530105369777724db4f3cc5df48176f7b38f6ccd8de9"
+        },
+        {
+          "path": "evidence/orientation-verification-2026-09-19T1216Z.json",
+          "bytes": 6031,
+          "sha256": "01860e2d42f239e35b930e3850bc4a85cdb59dd27949a1a559ebd0d5b3f3cd99"
+        },
+        {
+          "path": "evidence/orientation-verification-2026-09-19T1225Z.json",
+          "bytes": 6093,
+          "sha256": "66fbab29039af47fec93196dbb53a834685a094a8e7e01119daedacb69610572"
+        },
+        {
+          "path": "evidence/orientation-verification-2026-09-19T1351Z.json",
+          "bytes": 8025,
+          "sha256": "f124a0daabc92dec0fe3acfb4877f03e9b5ab5b2080e19db1417ae0370f07d5b"
+        },
+        {
+          "path": "evidence/ORIENTATION.v0.pre-fix-030634.json",
+          "bytes": 40821,
+          "sha256": "c7c9e4e42800ec1a04fb0af0508623c2f97fad590229469a61c783a9febe6d25"
+        },
+        {
+          "path": "evidence/retrieval-eval-curve.json",
+          "bytes": 16717,
+          "sha256": "aa718392a6fdb85566d47d761ed9672431b99ab7a69d6d6503d5e132af2ed3eb"
+        },
+        {
+          "path": "evidence/retrieval-eval-window10.json",
+          "bytes": 3860,
+          "sha256": "ce00e9dc98278784ea1d696cf98d919071a0eeed2d5d9201cf7e87434b22579c"
+        },
+        {
+          "path": "evidence/retrieval-eval-window16.json",
+          "bytes": 4877,
+          "sha256": "95d37e0028cc59cbdc180c0a00c88969d08211a2d3fd1068be1298e496e91b5e"
+        },
+        {
+          "path": "evidence/retrieval-eval-window24.json",
+          "bytes": 6116,
+          "sha256": "9d7a25daffcff801e6375f6442fa60f291ca848440a1455f00b2730efdad546f"
+        },
+        {
+          "path": "evidence/retrieval-eval-window6.json",
+          "bytes": 3375,
+          "sha256": "056793e3718529858022d8839b0c6ed539282b5b76691da7bcaa84d1c1ec77a4"
+        },
+        {
+          "path": "evidence/stdout-pipe-truncation-2026-09-19T1100Z.json",
+          "bytes": 997,
+          "sha256": "e2fd02225e0d7fb93c78d8e9c4e0e69fa89b6c25e13dc748dff059b39f9db337"
+        },
+        {
+          "path": "evidence/twin-abstention-bench-2026-09-19T1005Z.json",
+          "bytes": 7498,
+          "sha256": "96b5c57a32bb1c5527bc879a5dac92b2e8bc72145183de6dc6c9d746437fa1ed"
+        },
+        {
+          "path": "evidence/twin-boundary-sweep-2026-09-19.json",
+          "bytes": 3497,
+          "sha256": "eff9990fecc1a41d831156fd0a544c3bb0afbcb6ece23102890dfe4cd57c9a97"
+        },
+        {
+          "path": "evidence/twin-seed-sweep-2026-09-19.json",
+          "bytes": 2615,
+          "sha256": "d90b18d10b68487cd1060fb93dab9413bb3b5c6a7a5b1e1488789357ad1a2815"
+        },
+        {
+          "path": "KERNEL_ROOT_AND_TEMP_FIX_RECEIPT_2026-09-19.md",
+          "bytes": 7027,
+          "sha256": "5902177feb48a0aed052d53606cf55abff879d8eaacd9523a8b96192e8e60794",
+          "title": "Closing the three open kernel defects, red-first",
+          "status": null
+        },
+        {
+          "path": "ledger-20260919.html",
+          "bytes": 10781,
+          "sha256": "89549c437fdd835c995bed51028d3605ae09c0068ec87f7fe3124f02ecb709c4"
+        },
+        {
+          "path": "memory/2026-09-19.md",
+          "volatile": true
+        },
+        {
+          "path": "memory/active-tasks.md",
+          "volatile": true
+        },
+        {
+          "path": "ORIENTATION_CHECK_RECEIPT_2026-09-19.md",
+          "bytes": 23608,
+          "sha256": "80e3d2cb4b648a0a3914fc7c5b9b55e00ac1d137cbec984618ad28ff5c94d128",
+          "title": "Orientation index — independent check, one blocking defect, fixed",
+          "status": "verified; one blocking defect found here, fixed across two sessions. scratch-11 asked for `node scripts/uctm-orient.mjs --check` as a digest comparison. In this session that command could never exit 0: it reported 34 live session pointers as `removed`. The cause was a `$HOME`-derived scan root, not a moved world."
+        },
+        {
+          "path": "PARTIAL_SCAN_RECEIPT_2026-09-19.md",
+          "bytes": 22385,
+          "sha256": "f480aa8f6c76e85d1fbef1e9f311c95b5023923213c41c2f7445c4d46d50bec4",
+          "title": "Partial-scan receipt — the session walk stops throwing, and a partial scan cannot erase",
+          "status": "implemented, tested, independently measured Measured at: 2026-09-19T09:38Z–09:45Z"
+        },
+        {
+          "path": "RETRIEVAL_RECEIPT_2026-09-19.md",
+          "bytes": 5961,
+          "sha256": "a552a5b17b2a26a5f458b05a90de2ba6eee4cae4c4cbcfe4af93f98a44cc94e0",
+          "title": "Retrieval against the evidence index — measured, not asserted",
+          "status": "built and measured. `personal_twin/retrieve.py` answers a query with pointers into the WORM index and re-reads each returned citation from the original record before returning it. 7,869 distinct evidence units; 10,000 returned citations re-read and re-hashed during the benchmark with zero failures. 9 new tests; 127 pass in the full suite."
+        },
+        {
+          "path": "scripts/attribute-patch-edits.mjs",
+          "bytes": 7513,
+          "sha256": "e65b22312cecc1faeb32bc4e830362e73e4546fa5562899c5cf7453f69ead720"
+        },
+        {
+          "path": "scripts/audit-citations.mjs",
+          "bytes": 13558,
+          "sha256": "63fb3a4ad532eb6c3ab437af7053ffb589eac177b67f5405b2fac234a2aa2fc6"
+        },
+        {
+          "path": "scripts/verify-orientation.mjs",
+          "bytes": 43466,
+          "sha256": "9c72385443858525f39ece90b3b688aef9ba60718d0d2551b1cc59477a12bfdf"
+        },
+        {
+          "path": "SOURCE_INPUT_STABILITY_RECEIPT_2026-09-19.md",
+          "bytes": 7427,
+          "sha256": "fb88f5e891076b51e533073936f10dafc84ba5108ba3d7074d38abf6116104bd",
+          "title": "Source input stability -- the verifier now reports whether the bytes it measured held still",
+          "status": "Of = (good) => good ? \"corrected\" : \"open\" graph_foreign_root corrected iff exit === 3 AND artifacts_reported_missing === 0 graph_partial_root corrected iff exit === 3 AND named_partial_anywhere AND stderr non-empty writer_temp_in_dirty_set corrected iff no temp path AND no derived-index path entered the dirty set"
+        },
+        {
+          "path": "STDOUT_PIPE_RECEIPT_2026-09-19.md",
+          "bytes": 12792,
+          "sha256": "1c43419351555a28165155c66b4561ef906086fd1d743914bece5970203a573d",
+          "title": "Receipt: the kernel's `--json` was truncated by a pipe, and reported success",
+          "status": null
+        },
+        {
+          "path": "SUPPORT_SIGNALS_RECEIPT_2026-09-19.md",
+          "bytes": 7696,
+          "sha256": "9985a936db66c4edca3259af1bff5583d02d1e27c7ca3d61734814cb2f4e32af",
+          "title": "The support check: better ranking, worse boundary",
+          "status": "built, tested, measured. The boundary is not solved. Measured at: 2026-09-19T11:10:18Z · Evidence: `docs/bench-support-2026-09-19T1110Z.json`"
+        },
+        {
+          "path": "TWIN_COST_BOUNDARY_RECEIPT_2026-09-19.md",
+          "bytes": 12088,
+          "sha256": "15683b59c6342b809515c98e8abdad965dd7a6cf12c80a085b33fcdfeb890ca5",
+          "title": "A cost-selected boundary on two signals: better AUC, better cost, and a threshold that does not transfer",
+          "status": null
+        },
+        {
+          "path": "TWIN_HALVES_EXCHANGEABLE_RECEIPT_2026-09-19.md",
+          "bytes": 6978,
+          "sha256": "5ce9f2eb821a510573e27f3dae6e83fff6da9ee2d9ae83bbc476350130cfc83d",
+          "title": "The halves ARE exchangeable: the 0.59 absent-class shift was the worst of 13 draws",
+          "status": null
+        },
+        {
+          "path": "VOLATILE_DECLARATION_DECISION_2026-09-19.md",
+          "bytes": 5599,
+          "sha256": "ef3d5b348a44c2e174db88958ad0a10a2238e75ef6e0334a278847c2f215dc18",
+          "title": "Declaring `memory/` volatile: taking the band's purpose over its example",
+          "status": null
+        },
+        {
+          "path": "volatile.json",
+          "bytes": 1112,
+          "sha256": "050180801f1a006660245efb08c9e128dd82f42fb8c860ec8d5ed0402866acdf"
+        }
+      ],
+      "pointed_bytes": 383336
+    },
+    {
+      "session": "scratch-11",
+      "artifacts": [
+        {
+          "path": "evidence/uctm-command-palette-entry.png",
+          "bytes": 113787,
+          "sha256": "cda4553a1e10834b0127213ced1b7a363e0944dfd9f6944cbfe6034c99cc9674"
+        },
+        {
+          "path": "evidence/uctm-view-live-projection.png",
+          "bytes": 197056,
+          "sha256": "2bb55c1f292687dd75eac2498eeaae435a08ac409c2d8394c4eb6ba8bf0d900e"
+        },
+        {
+          "path": "evidence/untracked-exposure-2026-09-19.txt",
+          "bytes": 4146,
+          "sha256": "323d48d7da00b617d5156ee2a5917b2525d5d0661b54989614693ff8d472b43a"
+        },
+        {
+          "path": "PLAN.md",
+          "bytes": 19024,
+          "sha256": "8a63f9b4aa3f301dfe096f6cf24d9cc8f55d0666b0cf7152817323e7f7d56a61",
+          "title": "Status: COMPLETE — see REPORT.md (AO-F3 closed 2026-09-19; §12 adds AO-F5, the",
+          "status": "in progress 2026-09-19. Written offline, before any edit, per §2/§3 of the session doctrine. Nothing below is claimed done until the verification block is filled in."
+        },
+        {
+          "path": "REPORT.md",
+          "bytes": 219446,
+          "sha256": "649c6f5d493ed6039069d8ed866aedfa89f91ce4c01261566c9a6936b243f9b1",
+          "title": "scratch-11 — AO-F3 closed: the UCTM view is now part of Studio",
+          "status": "→class map, so the defect is *transitive* through every surface that renders a file status), `SessionInspector.tsx`, `IntakeFields.tsx`, `CenterPane.tsx`, and `packages/product-ui/src/SessionsBoardView.tsx` — that last one missed by *both* scans until I checked the `@source` directive at `styles.css:5`. It pairs `bg-accent/12` with `text-accent`: 1.048:1 light. - `NotificationCenter.tsx` is not a call site. Its only match is `text-accent-foreground` over `bg-accent-strong` — the correct token. - This card holds zero real usages; the two matches in it are the comment documenting the defect, which is what made my count read one file too wide. - The dark theme is broken too, and dark is the primary theme (`styles.css:13`): `--accent` `oklch(0.274 0.006 286.033)` on `--card` `oklch(0.24 0.008 285.885)` = 1.106:1, against light's 1.054:1. A light-only repair would leave the default theme broken, and the alternate themes from `tokens.css:852` have the same accent-near-card shape. - Reading the source gives the wrong answer here, which is why the compile is the evidence: `--color-accent: var(--primary)` sits at `tokens.css:106` and `:713`, *later* in source order than the `@theme inline` block, but the inline directive bypasses the theme key and emits `var(--accent)` directly."
+        }
+      ],
+      "pointed_bytes": 553459
+    },
+    {
+      "session": "scratch-2",
+      "artifacts": [],
+      "pointed_bytes": 0
+    },
+    {
+      "session": "scratch-4",
+      "artifacts": [
+        {
+          "path": "post-restart-verification.log",
+          "bytes": 6399,
+          "sha256": "5fbb111ab7ff6cf4fa3efe5c491cf312710c48f2ea16c1d614c729af84fdf467"
+        },
+        {
+          "path": "recall-activation-2026-09-18.md",
+          "bytes": 6947,
+          "sha256": "54388442a3fb3b9520500fbafd2d4984e109b53b062b0ce0b72bb5289daed38f",
+          "title": "UCTM live recall activation - 2026-09-18",
+          "status": "path implemented and admitted; delivery receipt pending the queued recall turn. No excerpt or raw-history text is stored in this file."
+        },
+        {
+          "path": "RECALL-ENFORCEMENT-ACTIVATION-2026-09-18.md",
+          "bytes": 6931,
+          "sha256": "2154160b055fd0c1c07af810789a40da182d133f0e5d60a2c128cefae4e1b9ab",
+          "title": "UCTM recall enforcement activation - 2026-09-18 (M1)",
+          "status": null
+        },
+        {
+          "path": "restart-studio-and-verify.sh",
+          "bytes": 5325,
+          "sha256": "ef94a9c8e22df1a462b027847423aeec44653a6d956c64ac2c087048fc7043f1"
+        },
+        {
+          "path": "UCTM-CONNECTION-PLAN-2026-09-18.md",
+          "bytes": 17969,
+          "sha256": "6b4b33c731af20cb3c1e3702e20d5c5452e91fcbd49ebdaff340dc2dab9aa25a",
+          "title": "UCTM Studio connection plan — 2026-09-18",
+          "status": null
+        },
+        {
+          "path": "UCTM-CONTEXT-PIPELINE-GATE-2026-09-18.md",
+          "bytes": 10006,
+          "sha256": "db2fb0b72b6df409b75873241c4bfc465590bd195912853af781863879df8a40",
+          "title": "UCTM Studio historical-context integration gate",
+          "status": "synthetic end-to-end qualified; live personal-history recall not activated. The existing curated context card is independent of historical recovery. The native Rust CEF service and the Studio `/recall` adapter are installed and running, but there is no grant for protected-history search or model egress. `evidence_context_connected` remains false."
+        },
+        {
+          "path": "verify-recall-activation.sh",
+          "bytes": 4709,
+          "sha256": "e2b8b31194682646489b90c8f78a03cd3d5535aa3a30b7414aaca9db1df69081"
+        }
+      ],
+      "pointed_bytes": 58286
+    },
+    {
+      "session": "scratch-5",
+      "skipped_names": [
+        "node_modules"
+      ],
+      "artifacts": [
+        {
+          "path": "continuity/ANCHORS.md",
+          "bytes": 13864,
+          "sha256": "f7e710d086cc48537a2e112768716709fa551e56bcc214b243f2cc3bd4c86002",
+          "title": "Anchor log: an `orientation_id` is a content address, so record the command and the clock",
+          "status": null
+        },
+        {
+          "path": "continuity/baseline.json",
+          "bytes": 5512,
+          "sha256": "002ab6013cf2e6d803cc3b469e6ec8c1f6e5814b9f4094c74fc992f61bf4ed4b"
+        },
+        {
+          "path": "continuity/check_regressions.py",
+          "bytes": 43803,
+          "sha256": "3c1a107c2ee0f9b70d68cd088c69749adff1be40f26217cc6420a2bcbfff7c48"
+        },
+        {
+          "path": "continuity/DATA_INVENTORY.md",
+          "bytes": 4119,
+          "sha256": "6be14f39b84680932e355a92c0e59e6e1187e530271c3fa84bcaa00fc3fbd63e",
+          "title": "Data inventory",
+          "status": null
+        },
+        {
+          "path": "continuity/data_inventory.py",
+          "bytes": 6085,
+          "sha256": "1bceb1696446cb2fef75c8211f0bb69a34a9e22816f2d3cce6b2e4fd94df7af6"
+        },
+        {
+          "path": "continuity/evidence/accent-contrast.mjs",
+          "bytes": 5071,
+          "sha256": "923bb079a09c01eb5c55ce2900b522be343efafe308db8306b7a36a5c032b476"
+        },
+        {
+          "path": "continuity/evidence/api-check-transcript.txt",
+          "bytes": 7073,
+          "sha256": "9a285fba07f26746a4fc11600367241d5c51a5e483607057e8ad35f3b697d5d3"
+        },
+        {
+          "path": "continuity/evidence/authority-invariants-count.txt",
+          "bytes": 5379,
+          "sha256": "ad0341ac0347bfca72dbc230af68b3859bc8d81aac3a3aca2f836345f500896e"
+        },
+        {
+          "path": "continuity/evidence/DIGESTS.json",
+          "bytes": 8484,
+          "sha256": "67688e8629f40d34d602cc9effa282fe3d8c40d7b57b5799e8a91c8aa5fd3c66"
+        },
+        {
+          "path": "continuity/evidence/disk-pressure-2026-09-19.txt",
+          "bytes": 6888,
+          "sha256": "2d39291e08083c23ed2d3fd5c3a1fb5bd5e88ad216ee55738f846486b037a9f9"
+        },
+        {
+          "path": "continuity/evidence/m31.txt",
+          "bytes": 2771,
+          "sha256": "c86287115a1934300795e0f5d1a9fa2045d3c3c8159f81ba4e2042ab6a96af2b"
+        },
+        {
+          "path": "continuity/evidence/m32.txt",
+          "bytes": 3584,
+          "sha256": "61ab7d0104a516a66778581b7a55af1eb352713731f143541f00fdc05db3b5dd"
+        },
+        {
+          "path": "continuity/evidence/m33.txt",
+          "bytes": 2989,
+          "sha256": "2aa9763a45c029f4bc0a67e6d28fa7b9aeed7f8bd9f52e8205ecf657c1fe9269"
+        },
+        {
+          "path": "continuity/evidence/m35.txt",
+          "bytes": 2449,
+          "sha256": "e9aa4fc94356fcf07835c024868753ae596c81d65b5dc2bb3c20a3fb572b6bb7"
+        },
+        {
+          "path": "continuity/evidence/m39.txt",
+          "bytes": 2715,
+          "sha256": "46a66a858ba479798819b38859141e84503175621a808af6d8362a3e26b47a6c"
+        },
+        {
+          "path": "continuity/evidence/m5-collision.txt",
+          "bytes": 3450,
+          "sha256": "0df750ebdb5e41c4b3209cd89196e24d8a90517d52cbda6fa17bf036d8bf9285"
+        },
+        {
+          "path": "continuity/evidence/m50.txt",
+          "bytes": 3175,
+          "sha256": "bc06a8c04838d983622623662a31cceaf86fbb8ee3a14a2108351035877f61b5"
+        },
+        {
+          "path": "continuity/evidence/m63.txt",
+          "bytes": 3191,
+          "sha256": "7cc3124e826f042435936ba33ade4a27bb39ff376586adce1ce9b50e5ae9359f"
+        },
+        {
+          "path": "continuity/evidence/msg-s5c.txt",
+          "bytes": 2708,
+          "sha256": "03b6cb802a7d9caa7bf12f1e34649259167eab9c19595b9efb4f26e9bcfb84d2"
+        },
+        {
+          "path": "continuity/evidence/msg-scratch10.txt",
+          "bytes": 2889,
+          "sha256": "d51955f4c6b0e2b2ea3b5a9221339edad95f01b4a23c1dd1274936d566f6a1a6"
+        },
+        {
+          "path": "continuity/evidence/msg10b.txt",
+          "bytes": 3311,
+          "sha256": "f524e38f7b406934ac76112e9362ac6ae11222635a4723a3c8ebaabdd751596f"
+        },
+        {
+          "path": "continuity/evidence/msg10c.txt",
+          "bytes": 3518,
+          "sha256": "5f2531956d4893d64c26d0ddaa18574519e00b581a3481a41835d462e71a4436"
+        },
+        {
+          "path": "continuity/evidence/msg5.txt",
+          "bytes": 3146,
+          "sha256": "6afe60cf19c9520f41dced21e92f3a69fc2ceb2fe629d5476e07097855b0318c"
+        },
+        {
+          "path": "continuity/evidence/msg5b.txt",
+          "bytes": 3618,
+          "sha256": "9859efd865371a698c33802e330e992a7920e0a4e3b51d749898f165c5448790"
+        },
+        {
+          "path": "continuity/evidence/msg5c.txt",
+          "bytes": 3121,
+          "sha256": "7177f5c063650fe56d971223ca17f6b23206bc31332def6dee604ec92bac6c7f"
+        },
+        {
+          "path": "continuity/evidence/msg5d.txt",
+          "bytes": 3488,
+          "sha256": "56b1072909617b4c2803df64bb6863a8e85d728a931cea34f2cdf7cc0cfa3974"
+        },
+        {
+          "path": "continuity/evidence/nko-inscription-clarinet-check.txt",
+          "bytes": 8188,
+          "sha256": "e5d9000085e84ab41733ea6ea89bcaefeb0963237299e59bab517fad70f8db36"
+        },
+        {
+          "path": "continuity/evidence/nko-inscription-from-spec.clar",
+          "bytes": 7196,
+          "sha256": "722a08e56cf10dcd6520f02a76213cb89988ac9ecbf771086fab0dba0da0c770"
+        },
+        {
+          "path": "continuity/evidence/nko-inscription-vitest.txt",
+          "bytes": 11459,
+          "sha256": "dc5bed07378b056926f5ff37317b82053f5266f15bc9f484609aa425106705f8"
+        },
+        {
+          "path": "continuity/evidence/openapi-before-counters.yaml",
+          "bytes": 270898,
+          "sha256": "660ee08f4f4ee5981bd5810b61adca2289b693d3ce6713e000991dfce26ef325"
+        },
+        {
+          "path": "continuity/evidence/PROVENANCE.md",
+          "bytes": 16566,
+          "sha256": "defd7d2d11ac7145cd1492b03e4c05fe55fdd2cd568bf32aa3941812f7b1efb5",
+          "title": "Evidence provenance",
+          "status": null
+        },
+        {
+          "path": "continuity/evidence/reclassified-verification-2026-09-19.txt",
+          "bytes": 3808,
+          "sha256": "9d68f8c6fe7fe51a23b3f08e96922d7440f5c05ff4c8ddc155f319306d7d4a12"
+        },
+        {
+          "path": "continuity/evidence/scratch6-adversarial.md",
+          "bytes": 12337,
+          "sha256": "622aedf77ee64553bdeef8034dd80d6ebf250cd538a0f05432cddb7bb2654658",
+          "title": "Adversarial review: verify_evidence_pipeline.py",
+          "status": null
+        },
+        {
+          "path": "continuity/evidence/skill-registry.draft-v1.json",
+          "bytes": 4576,
+          "sha256": "d6084b1b3dde1c6841e0ee2b49f9eadddca24d2b06308a9e0bd80abee9eb8a43"
+        },
+        {
+          "path": "continuity/evidence/spec-delta-reconciliation.txt",
+          "bytes": 1505,
+          "sha256": "4f71b2ff3eaa1790a4fa28329ca320f74cfa0fd4010680a8378953fdbca31301"
+        },
+        {
+          "path": "continuity/evidence/voter.json",
+          "bytes": 1738,
+          "sha256": "c7a76acd4a70f80d020334b7ba6747dc79f0cb116123413b93474b460cd524bb"
+        },
+        {
+          "path": "continuity/MISTAKES.md",
+          "bytes": 25788,
+          "sha256": "8c1a077b0d35000900f77b28796d02eb95d800f5a1137f62f323a2951f4279f5",
+          "title": "Mistakes register",
+          "status": "is a second copy of that status, and it will disagree the first time the system changes its word (M25). 8. A declaration must be reachable. A manifest block needs a reader (M24) and a fixup entry needs an input that can match it (M26); an unreachable declaration is indistinguishable from a working one until someone counts. Verify a rename by removing the entry and regenerating: an unchanged output proves the entry was decoration, which is the only way to tell it from one that fires. Cross-session confirmation, same day: run against `scratch-11`'s `schemaNames` map, the same test found a second dead entry (`ControllersUCTMProjectionQuery`) whose removal left the spec byte-identical. Two dead entries in two different maps inside an hour is a pattern, so the operational form of this rule is per map, not per file — prove that at least one entry in a given default-to-clean map actually fires before trusting the rest of that map."
+        },
+        {
+          "path": "continuity/real_turns.json",
+          "bytes": 810,
+          "sha256": "04b21c719f18670828fb519dc959d8c5a3b1db96bbccbe702e723d1352286aa7"
+        },
+        {
+          "path": "harness/contract.py",
+          "bytes": 7328,
+          "sha256": "c6d7eb1f4508ef2221c0503ab56d340f133c34fea82141ba2eb8c6953406a085"
+        },
+        {
+          "path": "harness/manifest.json",
+          "bytes": 24338,
+          "sha256": "295f0ec965c14f2e208e3de578c38943daeea9106927f74c6cb80acf01d41ad1"
+        },
+        {
+          "path": "living-architecture/evidence.json",
+          "volatile": true
+        },
+        {
+          "path": "living-architecture/LIVING_ARCHITECTURE.md",
+          "volatile": true
+        },
+        {
+          "path": "living-architecture/living_architecture.py",
+          "bytes": 52681,
+          "sha256": "0b757ebaae2f30c6cbb2d0bf9f5eadae40d46ea4459e6c1e367da4c501d9d136"
+        },
+        {
+          "path": "PLAN.md",
+          "bytes": 4577,
+          "sha256": "07d03cf21a67c274fc4541d90fe8db334cd98091ae68b248e64631dec52f61e4",
+          "title": "scratch-5 — plan",
+          "status": null
+        },
+        {
+          "path": "README.md",
+          "bytes": 14832,
+          "sha256": "1e0e82a91f56041a1df7c3faf25c76d92555336779ac305e94bc5e4f065c8646",
+          "title": "End-to-end proof workspace",
+          "status": null
+        },
+        {
+          "path": "REPORT.md",
+          "bytes": 44311,
+          "sha256": "f6ae21d833a9038fcc3c1eb96a1ef2a2b574d13357ba53d7d42ba91e148c1f9c",
+          "title": "scratch-5 — Delegation lineage: the endpoint exists, the recorded edge does not",
+          "status": "resolved by removal, not by pinning — read this before the two sub-sections. The fix landed in two steps the same day and only the second is on disk: root `package.json` declares no `openapi-typescript` at all, both root entry points delegate to `frontend/`, and `go.yml` installs the frontend tree and runs the one `api:check` next to the writer it guards. Do not re-add an exact pin to the root manifest. Two pinned copies agree until one is updated alone, which was the defect; one declared copy cannot disagree with itself, which is the stronger form of invariant 10 in `docs/uctm/INTEGRATION_ENDPOINTS.v0.json`. The sub-sections below are kept in order for provenance, so the earlier \"Fixed\" paragraph is history rather than state."
+        },
+        {
+          "path": "settlement-layer/.gitignore",
+          "bytes": 81,
+          "sha256": "f382557ef8c84b26211142561f2daaae64545ff267f3570729cc10e8b992633b"
+        },
+        {
+          "path": "settlement-layer/Clarinet.toml",
+          "bytes": 317,
+          "sha256": "6d131ba6a9b289a47fd52fae32b9a572cbf456a3ba316c987547f3f3afc3b1dc"
+        },
+        {
+          "path": "settlement-layer/contracts/nko-inscription.clar",
+          "bytes": 12261,
+          "sha256": "31140b95e559ad9fe40ce9094e198ee38b4d18e3a14c8d2f4f55eb7418dc0016"
+        },
+        {
+          "path": "settlement-layer/deployments/default.simnet-plan.yaml",
+          "volatile": true
+        },
+        {
+          "path": "settlement-layer/package-lock.json",
+          "bytes": 53377,
+          "sha256": "e92b9fa3975e850352120a778bb88c2520fdb3dc3722b6f7e96800d0a1b085f6"
+        },
+        {
+          "path": "settlement-layer/package.json",
+          "bytes": 467,
+          "sha256": "49c7780447f62643da88b3d7855df7c4f9956ba9bb44f1aa7e1c6ac90fae72db"
+        },
+        {
+          "path": "settlement-layer/README.md",
+          "bytes": 5061,
+          "sha256": "b06a25bb697eb391341511863ba1ddc617a726b33c1320c34df133ddf0e96b7f",
+          "title": "Settlement layer: a compiling reconstruction, not a recovery",
+          "status": null
+        },
+        {
+          "path": "settlement-layer/settings/Devnet.toml",
+          "bytes": 6963,
+          "sha256": "b88808952929c47d8321bf1b58be5d7f17a331a5a74b577d998b2291f8978939"
+        },
+        {
+          "path": "settlement-layer/tests/nko-inscription.test.ts",
+          "bytes": 19481,
+          "sha256": "de00221aae6d3471d73619084d77eccd433333aadcb74b5cc38746fb487444f1"
+        },
+        {
+          "path": "settlement-layer/tsconfig.json",
+          "bytes": 560,
+          "sha256": "61f2e098853687c13ca5c3887f749990143726607954611cb4712aa1aa342d72"
+        },
+        {
+          "path": "settlement-layer/vitest.config.ts",
+          "bytes": 736,
+          "sha256": "16a65cac2e7f6f9eb0ebc9cd7c41b83d6b02501f1dc6542569ca753951392ef9"
+        },
+        {
+          "path": "verification/ACCENT_TEXT_CONTRAST_RECEIPT.md",
+          "bytes": 4477,
+          "sha256": "38e5ac77eb23a2f1160586b12c441753f73d86baaeae31742bbf8ca69ed1da59",
+          "title": "Renderer `text-accent` contrast: the finding, verified a second time",
+          "status": "independently re-verified here on 2026-09-19. The canonical record is the sibling session's AO_F3 receipt and UCTM connection plan item 7 (both `UCTM-Studio`, both outside this workspace); this file exists so the arithmetic has a pinned home and so the checks that closed the obvious escape routes are written down instead of re-run."
+        },
+        {
+          "path": "verification/ADVERSARIAL_REVIEW.md",
+          "bytes": 19138,
+          "sha256": "13ad663410fbb0a92376eba6e08be84e2e23f49917d4516b7f83037c1b48b1a1",
+          "title": "Adversarial review of the evidence-pipeline verifier",
+          "status": null
+        },
+        {
+          "path": "verification/CLARITY_SETTLEMENT_LAYER_RECEIPT.md",
+          "bytes": 9755,
+          "sha256": "e1c28332f43d5017f752a27c6f9e08e878e8faf21f5d0d69fe668012c32e4c77",
+          "title": "Clarity settlement layer: what survives, and what does not",
+          "status": "measured 2026-09-19 with `clarinet 3.14.0` (static check) and the Clarinet simnet through `@stacks/clarinet-sdk` 3.24.0 (behavioural tests). Nothing was written into `~/Desktop/crypto-gpu-fund` (standing rule). Network: `npm install` fetched the test toolchain from the npm registry. No chain endpoint was queried, and no chain claim was made or implied."
+        },
+        {
+          "path": "verification/DELEGATION_LINEAGE_RECEIPT.md",
+          "bytes": 15110,
+          "sha256": "a9f08eb075ab619380014cd2065ef5cc56769272e58d0e616f3dc95cc8ef5c95",
+          "title": "Delegation lineage receipt: /api/v1/sessions/lineage",
+          "status": "Landed uncommitted on branch `codex/uctm-interface-v0`, owned by AO session `scratch-5`."
+        },
+        {
+          "path": "verification/evidence-pipeline-receipt.json",
+          "volatile": true
+        },
+        {
+          "path": "verification/verify_evidence_pipeline.py",
+          "bytes": 54859,
+          "sha256": "f03af771b3a51ce625e4e8bf7185e6bb7af8c23f3dfc6aee1233a70b742e1b7a"
+        },
+        {
+          "path": "volatile.json",
+          "bytes": 226,
+          "sha256": "a5215e7a5d3120d79ad69f4093609334645bc0e7c52ead18eed0003585c9db63"
+        }
+      ],
+      "pointed_bytes": 872206
+    },
+    {
+      "session": "scratch-6",
+      "artifacts": [
+        {
+          "path": "memory/2026-09-19.md",
+          "bytes": 4581,
+          "sha256": "e2148bfba27af51b53d703daffe3cd4fbb77eb2ce71292b123f21e3e59db3a6f",
+          "title": "2026-09-19 — scratch-6 (UCTM compaction / hooks)",
+          "status": null
+        }
+      ],
+      "pointed_bytes": 4581
+    },
+    {
+      "session": "scratch-9",
+      "artifacts": [
+        {
+          "path": "evidence/ios-agents-board.png",
+          "bytes": 221880,
+          "sha256": "765b4e0a52bbfbbed58ded040a5fea0e5c65eac779927f1d830e2a4bf0f297e6"
+        },
+        {
+          "path": "evidence/ios-orchestrator.png",
+          "bytes": 162805,
+          "sha256": "672debbb16071b48f63ecf183613c421ebd0370ba26ad5817d62b0b9d6a0a87b"
+        },
+        {
+          "path": "evidence/ios-pairing.png",
+          "bytes": 225409,
+          "sha256": "87eafe55585b0e16b43e498b339009d30dec9ade73b79d45eab04e2404ca0662"
+        },
+        {
+          "path": "evidence/ios-settings.png",
+          "bytes": 206071,
+          "sha256": "f2f4d5c364f81e8b3807a9fafc5de6f19f24221fa2a63f501991744894668c03"
+        },
+        {
+          "path": "PLAN.md",
+          "bytes": 2012,
+          "sha256": "1a0da8754ff4cb65b32672920cff637e7a2fed3eb0c5602fabea5f7536c0b2eb",
+          "title": "scratch-9 plan — UCTM phone connection + orchestrator parity",
+          "status": null
+        },
+        {
+          "path": "REPORT.md",
+          "bytes": 8743,
+          "sha256": "a5a5e6a58314a26be66cbcb495ccb0ef3013ea7d8d19d5fe7fa750b3c7df528e",
+          "title": "scratch-9 — UCTM phone connection + orchestrator parity",
+          "status": null
+        }
+      ],
+      "pointed_bytes": 826920
+    }
+  ],
+  "next_actions": [
+    "Mohamed: WS0.1 authority table and WS0.4 PACT naming decision.",
+    "Worker: WS1.1 + WS1.2 (tool-free recall boundary and CEF grant enforcement).",
+    "Worker (parallel, read-only): WS2.1 registry design and WS2.2 manifest verification.",
+    "Worker: WS3.1 minimal /v1/status returning real spine facts with full response metadata. Done 2026-09-19 (AO_F3_1_SPINE_SERVICE_2026-09-19.md); /v1/receipts also publishes, and the remaining seven routes abstain.",
+    "Mohamed: decide whether the Studio daemon is rebuilt and redeployed with the read surface, and whether UCTM_MODE=read_only plus the local endpoint are exported for the desktop launch. Deployment is a gate, not a task.",
+    "Worker: AO-F3, the project-scoped UCTM view, which must render disabled/unknown/stale/fresh honestly before it renders any payload. Done 2026-09-19 (AO_F3_FRONTEND_PROJECTION_2026-09-19.md); the view is reachable from the command palette and its read-only/no-telemetry behaviour is asserted by a test that drives the real API client.",
+    "Worker or design owner: decide the app-wide text-accent fix. The inventory below was corrected 2026-09-19 after two independent counts disagreed with the first one; do not action this from an earlier list. The defect is confirmed by compiling the repo's own stylesheet with @tailwindcss/node 4.3 — the emitted rule is .text-accent { color: var(--accent) }, and --accent is the shadcn *surface* token: light oklch(0.967 0.001 286.375) on --card oklch(0.985 0 0) = 1.054:1; dark oklch(0.274 0.006 286.033) on --card oklch(0.24 0.008 285.885) = 1.106:1. styles.css:13 says dark is the primary theme, so a light-only repair leaves the default theme broken, and every alternate theme from tokens.css:852 has the same accent-near-card shape. Reading the source is a trap: --color-accent: var(--primary) sits at tokens.css:106 and :713, later in source order than the @theme inline block, but the inline directive bypasses its own theme key and inlines var(--accent), so a source read concludes the opposite of the compiled truth.",
+    "Inventory: 16 production usages in 10 files. Reproduce with rg --pcre2 -o --glob '!node_modules' 'text-accent(?![-a-zA-Z])' frontend/src packages -g '*.{ts,tsx}'.",
+    "BrowserPanel.tsx 5, chat/ChatTimelineItems.tsx 2, TerminalPane.tsx 2, chat/TurnPlan.tsx 1, chat/ChatMarkdown.tsx 1, lib/workspace-file-status.ts 1, SessionInspector.tsx 1, IntakeFields.tsx 1, CenterPane.tsx 1, packages/product-ui/src/SessionsBoardView.tsx 1.",
+    "Five of those sixteen were missed by the first inventory: lib/workspace-file-status.ts, SessionInspector.tsx, IntakeFields.tsx and CenterPane.tsx were absent from the list entirely, and packages/product-ui/src/SessionsBoardView.tsx was missed by *both* scans until the @source directive at styles.css:5 was checked. Two of them deserve emphasis: lib/workspace-file-status.ts is a status→class map, so it is transitive across every surface that renders a file status; and the product-ui chip pairs bg-accent/12 with text-accent, which measures 1.048:1 light and 1.092:1 dark — accent text on its own tint.",
+    "One entry was a false positive and is removed: NotificationCenter.tsx has no bare text-accent; its only match is text-accent-foreground over bg-accent-strong, which is the correct token.",
+    "One test file is affected and is not a production call site: chat/ChatComposer.test.tsx 1.",
+    "The UCTM view holds zero real usages. The two matches in components/uctm/UctmProjectionCard.tsx are the comment that documents this defect, which is itself what made the first count read one file too wide.",
+    "text-accent-foreground, -weak, -dim and -strong are different tokens, compile to different variables, and are mostly correct: .text-accent-foreground { color: var(--primary-foreground) }, .text-accent-dim { color: var(--bridge-accent-dim) }, .bg-accent-strong { background-color: var(--bridge-accent-strong) }.",
+    "The replacement is a design decision (text-accent-foreground vs text-primary vs a new brand token) that would be worse guessed wrong across 16 sites than left recorded, so it stays open. Whoever builds the delegation-lineage tree view must not use text-accent for text.",
+    "Completeness, checked rather than assumed (second pass, 2026-09-19). Two escape routes that a text-utility grep structurally cannot see were closed by hand, so 16/10 is the complete *live* inventory and not merely the greppable subset: (a) there is no computed class name anywhere in the compiled scope — no text-${…} or concatenated text-* builder; and (b) exactly two CSS rules set an accent token as a text colour, .inspector-section__link (styles.css:3224) and .dashboard-app-header__primary-btn (styles.css:2709), and both have zero consumers in .tsx/.ts/.html — dead CSS. No live seventeenth site exists.",
+    "The worst site's verdict does not depend on the alpha-compositing model: gamma-encoded sRGB gives 1.093:1 dark / 1.047:1 light and linear gives 1.092:1 / 1.048:1, a 0.001 spread, so the number is safe to quote whichever model a reader assumes.",
+    "Adjacent, but a different defect class, and deliberately not folded into this item: the dead .dashboard-app-header__primary-btn rule pairs background: var(--accent) with color: var(--accent-fg), and --accent-fg is declared nowhere in the repository — its only occurrence is that usage, and --bridge-accent-fg (styles/tokens.css:583) is a different variable. It is invalid at computed-value time, so the colour inherits from the parent. Harmless while the class is dead; a silent wrong-colour trap if anyone revives it.",
+    "Why a source read misleads here, in one line: --color-accent is declared four times inside the compiled scope — renderer/styles.css:257 and site-theme/tokens.css:62 as var(--accent), styles/tokens.css:106 and :713 as var(--primary). That is a cascade read and not a browser measurement; the compile remains the evidence.",
+    "Worker: serve docs/uctm/ORIENTATION.v0.json from the daemon or inject it at spawn time, so re-orientation does not depend on a session knowing the script exists (AO_ORIENTATION_INDEX_2026-09-19.md). Done 2026-09-19 (AO_F4_ORIENTATION_AT_SPAWN_2026-09-19.md) by the spawn-injection half: the session manager appends a bounded orientation card under UCTM_STUDIO=1, and docs/uctm/GRAPH.v0.json adds occurrence identity plus --impact/--stale. The served half is deliberately not built — a second disclosure surface needs a consumer that is not a session. Effect begins at the next Studio launch; the daemon was not rebuilt.",
+    "Worker: extend the evidence kernel's edge extraction past documents and session artifacts — receipts name backend/ paths and test names, which is the join the spine's occurrence-to-graph item needs (AO_F4_ORIENTATION_AT_SPAWN_2026-09-19.md)."
+  ],
+  "machine_local": {
+    "workers_root": "/Users/mohameddiomande/.ao/uctm-studio/data/worktrees/scratch/workers",
+    "workers_root_state": "read",
+    "note": "Session workspaces are machine-local. The list is an observation of what has been written, not a roster of who is running."
+  },
+  "totals": {
+    "documents": 16,
+    "pointed_bytes": 204120,
+    "sessions": 8,
+    "session_artifacts": 130
+  },
+  "non_claims": [
+    "This index carries pointers, sizes and digests. It is not the evidence itself, and reading it is not the same as reading a receipt.",
+    "A digest here proves a pointer moved. It does not prove the fact behind it is true.",
+    "Derived indexes are not inputs to each other. ORIENTATION.v0.json and GRAPH.v0.json are excluded from the document scan and from the worktree dirty set, so writing an index is never reported here as the world moving. That is also why the worktree node is the source dirty set only.",
+    "Session artifact lists are machine-local observations of the AO worker root only. A session whose real workspace is elsewhere -- a checkout on the desktop, a shared checkout, a terminal agent -- appears with few or no artifacts. Absence here is not evidence of inactivity, and it is not evidence of authorship: authorship lives in transcripts, not in a workspace, and AO worker transcripts are written under the redirected CODEX_HOME the launcher pins (<AO data dir>/codex/sessions), not the passwd home's ~/.codex/sessions -- so an index built from the passwd home cannot see them. One session's lineage slice was attributed only after reading that redirected root.",
+    "`observations` is outside `orientation_id` on purpose. It holds the content of artifacts a session declared tool-regenerated (`<session>/volatile.json`): their existence is structure, their bytes are not. `--check` names them when they move and exits 0, because a generator rewriting its own output is not the world changing shape; `--check --strict` makes that non-zero for a caller who wants it. A declared path that no longer exists is recorded as `volatile_declaration_missing` rather than ignored, so a rename fails visibly instead of silently un-pinning the wrong file.",
+    "`skipped_names` on a session lists what the tool-state deny-list pruned there (a dependency tree, a VCS directory, a tool cache). Names only, never counts or contents, so installing dependencies does not move the address but a *new* kind of tree appearing in a workspace does. It is recorded because a deny-list fails quietly in both directions: an unlisted cache becomes thousands of artifacts, and a listed one vanishes unmentioned. Seeing a name here that is not tool state means the list is wrong for that workspace, and seeing a large tree indexed that should be here means the list is incomplete."
+  ],
+  "observations": {
+    "observed_id": "sha256:e2883f3e6d4e8548186843f181a91e58d5b0f826959a030cb420128a12f23f7e",
+    "id_domain": "uctm.orientation.observations.v0",
+    "volatile_artifacts": [
+      {
+        "session": "scratch-10",
+        "path": "memory/2026-09-19.md",
+        "bytes": 39740,
+        "sha256": "6d5128dfbfef953210d04335c6d5925fad8430ced0b39b891e8a533464daa0d9"
+      },
+      {
+        "session": "scratch-10",
+        "path": "memory/active-tasks.md",
+        "bytes": 13555,
+        "sha256": "8c8a41f3b6c350c4233faa99cda8b544bad5d30a8780f92242d9704909e6f329"
+      },
+      {
+        "session": "scratch-5",
+        "path": "living-architecture/evidence.json",
+        "bytes": 30079,
+        "sha256": "749dce784dde91d9c2f854f3c8dbfc3ae078fab4327cab366ebc7a43c7f09145"
+      },
+      {
+        "session": "scratch-5",
+        "path": "living-architecture/LIVING_ARCHITECTURE.md",
+        "bytes": 21398,
+        "sha256": "91e36a54c8d336241034d7e09d1a8c1176df4b91f034e613534c162eb81b94d4"
+      },
+      {
+        "session": "scratch-5",
+        "path": "settlement-layer/deployments/default.simnet-plan.yaml",
+        "bytes": 1972,
+        "sha256": "68b8b4bc09f14ff2dc6ae44af37f1ecefb18e35bf8587567670fc281a372c184"
+      },
+      {
+        "session": "scratch-5",
+        "path": "verification/evidence-pipeline-receipt.json",
+        "bytes": 13324,
+        "sha256": "e32bff5540ebb9e9f6b3e141898baaef478c9364d68539bba29b0ac47dfbfb26"
+      }
+    ],
+    "volatile_declaration_missing": []
+  }
+}

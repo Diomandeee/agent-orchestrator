@@ -505,6 +505,23 @@ type TelemetryEvent struct {
 	PayloadJson string
 }
 
+type UctmProjectionRecord struct {
+	ProjectID              domain.ProjectID
+	ProjectionKind         domain.UCTMProjectionKind
+	ExternalID             string
+	SourceHash             string
+	SchemaVersion          string
+	SourceCommitOrFreezeID string
+	HistoricalOrCurrent    domain.UCTMHistoricality
+	AuthorityCeiling       domain.UCTMAuthorityCeiling
+	ReceiptRef             string
+	ContentHashOrEtag      string
+	GeneratedAt            time.Time
+	PayloadJson            string
+	ObservedAt             time.Time
+	ExpiresAt              time.Time
+}
+
 type UsageBinding struct {
 	ID             int64
 	SessionID      domain.SessionID

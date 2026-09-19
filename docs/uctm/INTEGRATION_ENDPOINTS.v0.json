@@ -1,6 +1,6 @@
 {
   "schema_version": "uctm.ao-integration-endpoints.v0",
-  "status": "planned_not_implemented",
+  "status": "read_only_implemented_service_available_local_frontend_view_implemented",
   "ao_namespace": "/api/v1/uctm",
   "transport": {
     "ao_primary_listener": "loopback_only",
@@ -16,6 +16,45 @@
     "read_only": "Fetch and display current UCTM projections only.",
     "shadow": "Read plus bounded pointer/hash source-occurrence and context proposals; no live prompt mutation.",
     "human_gated": "Explicit desktop-only human proposals after separate qualification; not enabled by this contract."
+  },
+  "implementation_receipt": {
+    "receipt": "docs/uctm/AO_F2_READONLY_PROJECTION_2026-09-19.md",
+    "service_receipt": "docs/uctm/AO_F3_1_SPINE_SERVICE_2026-09-19.md",
+    "frontend_receipt": "docs/uctm/AO_F3_FRONTEND_PROJECTION_2026-09-19.md",
+    "orientation_receipt": "docs/uctm/AO_F4_ORIENTATION_AT_SPAWN_2026-09-19.md",
+    "implemented": [
+      "AO v0 read-only routes under /api/v1/uctm (8 kinds), loopback listener only.",
+      "Go domain/port/service/adapter/controller/daemon wiring per implementation_ownership.",
+      "Loopback-pinned, DNS-rejecting, redirect-refusing HTTP adapter with strict response decoding.",
+      "uctm_projection_records migration + sqlc query + store validation.",
+      "Projection storage is AO's own cache; it is never canonical UCTM truth.",
+      "Spine-side read-only projection service (uctm service --port PORT) publishing /v1/status and /v1/receipts with the required metadata and abstaining 204 for the other seven contract routes.",
+      "One end-to-end read on a second daemon instance returned real spine facts with a verified content address.",
+      "Project-scoped UCTM view at /projects/$projectId/uctm rendering all eight kinds, reachable from the command palette, and honest about disabled/unknown/stale/no_facts before it renders any payload.",
+      "Read-only and no-telemetry verification for the view: a test drives the real api-client and asserts eight GETs on the daemon origin, no off-origin request, and no telemetry event on success.",
+      "Evidence graph kernel (docs/uctm/GRAPH.v0.json) derived from the orientation packet, with occurrence identity per node so a moved file keeps its id and changes its occurrence.",
+      "Spawn-time orientation: under UCTM_STUDIO=1 the session manager appends a bounded, private orientation card (UCTM_ORIENTATION_CARD_PATH) after the existing user-context card; a configured-but-unreadable card fails the spawn."
+    ],
+    "not_implemented": [
+      "v1 proposal routes (source-occurrences, context-proposals, adjudication-proposals, gate-proposals).",
+      "v2 human-gated routes.",
+      "uctm_event_cursors table.",
+      "change_log CDC invalidation for uctm_projection_records.",
+      "UCTM_PROJECT_MAPPING (per-project mapping).",
+      "Launcher wiring: no launcher starts the service or exports UCTM_MODE / UCTM_API_BASE_URL / UCTM_API_TOKEN.",
+      "Deployed runtime: frontend/daemon/ao predates the read surface, so the desktop app cannot serve /api/v1/uctm.",
+      "Served orientation: docs/uctm/ORIENTATION.v0.json and docs/uctm/GRAPH.v0.json are files, not routes. No daemon endpoint publishes them; the spawn card is the delivery surface.",
+      "Card freshness: the orientation card is written by scripts/uctm-graph.mjs, not by the launcher. A launch after an indexed artifact moved injects a card whose id no longer matches, and the card's own --check then reports drift rather than hiding it.",
+      "Occurrence edges: the kernel resolves document and session-artifact cross-references only, so a receipt naming a backend/ path or a test name produces no edge yet."
+    ],
+    "default_state": "UCTM_MODE is unset in the UCTM Studio launch environment, so every route reports mode off and no UCTM call is attempted.",
+    "machine_local_assignment": {
+      "note": "Local convention for this Mac, not part of the wire contract. The endpoint is not a protocol default and is not exported by any launcher.",
+      "base_url": "http://127.0.0.1:18010",
+      "token_file": "~/.uctm/service-token",
+      "mode": "read_only",
+      "verified_on": "2026-09-19"
+    }
   },
   "ao_endpoints": [
     {"method": "GET", "path": "/api/v1/uctm/status", "phase": "v0", "effect": "read"},
@@ -58,10 +97,12 @@
     "content_hash_or_etag"
   ],
   "ao_storage_projection": {
-    "tables": ["uctm_projection_records", "uctm_event_cursors"],
+    "tables": ["uctm_projection_records"],
+    "deferred_tables": ["uctm_event_cursors"],
     "source_of_truth": false,
     "raw_prompt_or_response_text_allowed": false,
-    "cdc_via_existing_change_log": true,
+    "cdc_via_existing_change_log": false,
+    "cdc_deferred_reason": "change_log.event_type is a closed CHECK list rebuilt by migration 0103; adding an event type rebuilds the table and every trigger that writes it. Deferred until a live UCTM service exists to invalidate.",
     "new_sse_system_required": false
   },
   "authority_invariants": [
@@ -72,7 +113,12 @@
     "No UCTM route is mounted on the mobile LAN listener in v0 or v1.",
     "No raw conversation history crosses the boundary by default.",
     "Unknown response fields are rejected at the adapter boundary.",
-    "Service failure derives stale or unknown state, never healthy state."
+    "Service failure derives stale or unknown state, never healthy state.",
+    "A generated client is stale or current, never \"uncommitted\". The schema-vs-spec check regenerates to a temporary path and compares bytes, so it answers one question and does not go red on legitimate uncommitted work.",
+    "Exactly one generator produces each generated artifact. A second entry point resolving a different openapi-typescript version turns one check into two verdicts, which is worse than no check.",
+      "A generated spec and the code that builds it change as a pair. openapi.yaml and specgen/build.go are never committed apart: the second commit breaks TestBuild_MatchesEmbedded, and the failure reads as a stale spec rather than as half a pair."
+      ,"An index that describes this repository is not the repository. A named file's existence is part of its identity, so adding or removing one moves the address a session compares; its content is only an observation, so editing one does not. That is why the orientation graph's --check is a structural verdict and --check --strict is the gate that includes content."
+      ,"A path this process cannot read is never reported as an absent one, and never as a checked one. `cannot look` and `not there` are different facts, so the index vocabulary keeps them apart: a permission failure on the workers root or a session workspace inside it is `unreadable` or `partial`, a verdict that could not compare every named path is `incomplete` with exit 3, and `missing` is reserved for a path that was looked for and was not there. No bare catch may file both under the same word, because the deeper defect is not the wrong label -- it is a caller reading a clean verdict about a dimension nobody read."
   ],
   "implementation_ownership": {
     "domain": "backend/internal/domain/uctm.go",
@@ -84,11 +130,18 @@
     "migration": "backend/internal/storage/sqlite/migrations/NNNN_uctm_projection.sql",
     "query": "backend/internal/storage/sqlite/queries/uctm.sql",
     "frontend_route": "frontend/src/renderer/routes/_shell.projects.$projectId_.uctm.tsx",
-    "frontend_components": "frontend/src/renderer/components/uctm/"
+    "frontend_components": "frontend/src/renderer/components/uctm/",
+    "orientation_kernel": "scripts/uctm-graph.mjs",
+    "orientation_index": "scripts/uctm-orient.mjs",
+    "orientation_packet": "docs/uctm/ORIENTATION.v0.json",
+    "orientation_graph": "docs/uctm/GRAPH.v0.json",
+    "orientation_card_injection": "backend/internal/session_manager/manager.go (readPrivateCard)",
+    "orientation_launcher_env": "bridge/studio_launcher.py (UCTM_ORIENTATION_CARD_PATH)"
   },
-  "safe_claim": "The endpoint and package ownership contract is specified but no route, transport, schema, migration, projection, or UI has been implemented.",
+  "safe_claim": "The v0 read-only UCTM projection surface is implemented in the core daemon (routes, port, adapter, service, projection storage, OpenAPI), a read-only projection service now exists in the UCTM supervisor, and the desktop frontend has a project-scoped UCTM view that renders all eight kinds without proposing, approving, training, merging, deploying, spawning, or sending. One end-to-end read on a second daemon instance returned real spine facts with verified response metadata, and the view was rendered against it in a real browser. Separately, and without touching the projection surface, the workstream's own orientation index now has an occurrence graph and a bounded spawn card that the session manager injects under UCTM_STUDIO=1; both are files and prompt text, not routes, and neither is a daemon endpoint or a spine connection. The projection surface defaults to off, no launcher wires UCTM_MODE, the deployed daemon is unchanged, no proposal or human-gated route exists, and no UCTM fact reaches a model.",
   "forbidden_claims": [
     "AO UCTM API is live",
+    "A UCTM service is connected",
     "UCTM Studio is integrated",
     "human adjudication is enabled",
     "training requests can execute",

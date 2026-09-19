@@ -467,6 +467,7 @@ func Run() error {
 				return sqlite.OpenReadOnly(ctx, dataDir)
 			},
 		}),
+		UCTM:                wireUCTMProjection(cfg.UCTM, store, log),
 		Browser:             browserService,
 		PreviewServer:       managedPreview,
 		SessionCapabilities: browserAuthority,

@@ -248,6 +248,9 @@ export function CommandPalette() {
 				case "/projects/$projectId/settings":
 					useUiStore.getState().openProjectSettings(target.params.projectId);
 					break;
+				case "/projects/$projectId/uctm":
+					void navigate({ to: target.to, params: target.params });
+					break;
 				case "/projects/$projectId/sessions/$sessionId":
 					void navigate({ to: target.to, params: target.params });
 					break;

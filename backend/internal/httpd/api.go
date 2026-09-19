@@ -51,6 +51,10 @@ type APIDeps struct {
 	SessionCapabilities controllers.SessionCapabilityValidator
 	SystemChecks        controllers.SystemChecker
 	Installer           controllers.Installer
+	// UCTM is nil until the daemon wires the read-only UCTM projection service.
+	// The controller then answers 501 per route, so a daemon built without the
+	// integration is distinguishable from a route that was never mounted.
+	UCTM controllers.UCTMProjectionService
 
 	// Presence tracks which mobile devices are currently running the app.
 	// Nil disables presence tracking (the roster then reports every device offline).
@@ -110,6 +114,7 @@ type API struct {
 	browser       *controllers.BrowserController
 	system        *controllers.SystemController
 	systemInstall *controllers.SystemInstallController
+	uctm          *controllers.UCTMController
 	events        *EventsController
 }
 
@@ -148,6 +153,7 @@ func NewAPI(cfg config.Config, deps APIDeps) *API {
 		browser:       &controllers.BrowserController{Svc: deps.Browser},
 		system:        &controllers.SystemController{Checks: deps.SystemChecks},
 		systemInstall: &controllers.SystemInstallController{Installer: deps.Installer},
+		uctm:          &controllers.UCTMController{Svc: deps.UCTM},
 		events:        &EventsController{Source: deps.CDC, Live: deps.Events},
 	}
 }
@@ -183,6 +189,7 @@ func (a *API) Register(root chi.Router) {
 			a.browser.Register(r)
 			a.system.Register(r)
 			a.systemInstall.Register(r)
+			a.uctm.Register(r)
 			// Sibling REST controllers plug in here.
 		})
 		// Long-lived streams intentionally bypass the REST timeout middleware.

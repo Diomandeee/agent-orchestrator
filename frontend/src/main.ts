@@ -123,7 +123,7 @@ process.stdout.on("error", ignoreStdStreamError);
 process.stderr.on("error", ignoreStdStreamError);
 
 // Must run before app ready so the About panel and default-menu role labels use it.
-app.setName("Agent Orchestrator");
+app.setName(process.env.UCTM_STUDIO === "1" ? "UCTM Studio" : "Agent Orchestrator");
 
 // Windows shows native toasts only when the app declares an AppUserModelID that
 // matches its installer shortcut (the NSIS maker's appId). Without it,
@@ -420,7 +420,7 @@ async function createWindowInternal(): Promise<void> {
 		height: 860,
 		minWidth: 960,
 		minHeight: 640,
-		title: "Agent Orchestrator",
+		title: process.env.UCTM_STUDIO === "1" ? "UCTM Studio" : "Agent Orchestrator",
 		icon: windowIconPath(),
 		backgroundColor: NATIVE_WINDOW_BACKGROUND_DARK,
 		// Windows goes frameless and the renderer paints the whole titlebar,

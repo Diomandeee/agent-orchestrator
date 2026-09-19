@@ -14,6 +14,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/aoagents/agent-orchestrator/backend/internal/domain"
 )
 
 const (
@@ -142,6 +144,26 @@ type Config struct {
 	// GitLab carries the self-managed GitLab host allowlist and per-host
 	// token overrides, loaded once at boot from environment variables.
 	GitLab GitLabConfig
+	// UCTM configures the read-only UCTM integration. Its zero value means off.
+	UCTM UCTMConfig
+}
+
+// UCTMConfig is the resolved read-only UCTM integration configuration.
+//
+// Everything here is environment-only. In particular Token is never persisted,
+// never returned by a route, and never written to a receipt: a UCTM bearer that
+// leaked into AO's own state would outlive the operator's ability to rotate it.
+type UCTMConfig struct {
+	// Mode is the single active integration mode. Empty resolves to off, so a
+	// missing variable can never enable reads.
+	Mode domain.UCTMMode
+	// BaseURL is the loopback UCTM service address. There is no default: v0 does
+	// not guess an endpoint for an integration that may only ever run qualified.
+	BaseURL string
+	// Token is the bearer credential for the UCTM service.
+	Token string
+	// Timeout bounds one projection read. Zero means the adapter default.
+	Timeout time.Duration
 }
 
 // Addr returns the host:port the HTTP server binds. It uses net.JoinHostPort so
@@ -164,6 +186,11 @@ func (c Config) Addr() string {
 //	AO_AGENT             compatibility agent id (default claude-code)
 //	AO_APP_RUN_ID        desktop-app launch id, set by the Electron supervisor
 //	                     (default: a fresh id minted per daemon boot)
+//	UCTM_MODE            UCTM integration mode off|read_only|shadow|human_gated
+//	                     (default off; anything else is rejected at boot)
+//	UCTM_API_BASE_URL    loopback UCTM service address (no default)
+//	UCTM_API_TOKEN       UCTM bearer credential, environment-only
+//	UCTM_REQUEST_TIMEOUT one projection read timeout (Go duration > 0)
 //	AO_ALLOWED_ORIGINS   CORS origins, comma-separated (default DefaultAllowedOrigins)
 //	AO_TELEMETRY_EVENTS  local event capture off|on (default off)
 //	AO_TELEMETRY_METRICS local metric capture off|on (default off)
@@ -315,6 +342,28 @@ func Load() (Config, error) {
 		return Config{}, err
 	}
 	cfg.DataDir = dataDir
+
+	// UCTM integration. The mode is parsed strictly: a typo in UCTM_MODE must
+	// stop the daemon at boot rather than silently pick a different authority
+	// level than the operator asked for. Everything else is left uninterpreted
+	// here — the transport is validated where it is wired, so a bad base URL
+	// disables reads with a loud log instead of taking the harness down.
+	mode, err := domain.ParseUCTMMode(os.Getenv("UCTM_MODE"))
+	if err != nil {
+		return Config{}, fmt.Errorf("invalid UCTM_MODE: %w", err)
+	}
+	cfg.UCTM = UCTMConfig{
+		Mode:    mode,
+		BaseURL: strings.TrimSpace(os.Getenv("UCTM_API_BASE_URL")),
+		Token:   strings.TrimSpace(os.Getenv("UCTM_API_TOKEN")),
+	}
+	if raw := os.Getenv("UCTM_REQUEST_TIMEOUT"); raw != "" {
+		d, err := parsePositiveDuration("UCTM_REQUEST_TIMEOUT", raw)
+		if err != nil {
+			return Config{}, err
+		}
+		cfg.UCTM.Timeout = d
+	}
 
 	return cfg, nil
 }

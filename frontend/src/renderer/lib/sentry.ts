@@ -25,7 +25,7 @@ let initStarted = false;
 function dsn(): string {
 	try {
 		const configured = (import.meta as unknown as { env?: Record<string, string> }).env?.VITE_AO_SENTRY_DSN?.trim();
-		return configured || DEFAULT_SENTRY_DSN;
+		return configured ?? DEFAULT_SENTRY_DSN;
 	} catch {
 		return DEFAULT_SENTRY_DSN;
 	}

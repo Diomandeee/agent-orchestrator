@@ -521,13 +521,28 @@ Tasks after capacity passes:
 
 ### AO-F2 — Read-only UCTM port and adapter
 
-1. Add domain/port/service/adapter/controller/daemon wiring.
-2. Add read-only endpoints and OpenAPI contract.
-3. Add projection migration/query/CDC.
-4. Add fake adapter tests before real UCTM transport.
-5. Prove AO works unchanged with `UCTM_MODE=off`.
+Status: **implemented, service unwired** (2026-09-19). Receipt:
+`AO_F2_READONLY_PROJECTION_2026-09-19.md`.
+
+1. Add domain/port/service/adapter/controller/daemon wiring. — done.
+2. Add read-only endpoints and OpenAPI contract. — done (`openapi.yaml` + `schema.ts`).
+3. Add projection migration/query/CDC. — migration + query done; **CDC
+   invalidation deferred** (needs a `change_log` event-type rebuild, and no
+   consumer exists until a UCTM service is qualified).
+4. Add fake adapter tests before real UCTM transport. — done; the tests use a
+   real loopback HTTP peer rather than a mocked transport.
+5. Prove AO works unchanged with `UCTM_MODE=off`. — done: `UCTM_MODE` is unset in
+   the launch environment and the read path makes zero upstream calls when off.
+
+Open: no `UCTM_API_BASE_URL` is assigned, so reads report
+`transport_not_configured`; v1/v2 routes, `uctm_event_cursors`,
+`UCTM_PROJECT_MAPPING`, and the AO-F3 frontend view are not implemented.
 
 ### AO-F3 — UCTM Studio frontend
+
+Status: **implemented** (2026-09-19). Receipt:
+`AO_F3_FRONTEND_PROJECTION_2026-09-19.md`. The view is read-only by
+construction and is not yet served by the deployed daemon.
 
 1. Add project-scoped UCTM route and navigation.
 2. Implement overview, lanes, gates, receipts, families, adjudication queue, and evaluation views.

@@ -28,6 +28,7 @@ export type NavigateTarget =
 	| { to: "/settings" }
 	| { to: "/projects/$projectId"; params: { projectId: string } }
 	| { to: "/projects/$projectId/settings"; params: { projectId: string } }
+	| { to: "/projects/$projectId/uctm"; params: { projectId: string } }
 	| { to: "/projects/$projectId/sessions/$sessionId"; params: { projectId: string; sessionId: string } };
 
 export type CommandAction =
@@ -233,6 +234,17 @@ export function buildCommands(ctx: CommandPaletteContext, t: TFunction = appI18n
 			action: {
 				kind: "navigate",
 				target: { to: "/projects/$projectId/settings", params: { projectId: currentProject.id } },
+			},
+		});
+		items.push({
+			id: "current-project-uctm",
+			group: "current",
+			title: t("command.projectUctm"),
+			subtitle: currentProject.name,
+			keywords: ["uctm", "projection", "receipts", "gates", "lanes", currentProject.name],
+			action: {
+				kind: "navigate",
+				target: { to: "/projects/$projectId/uctm", params: { projectId: currentProject.id } },
 			},
 		});
 	}

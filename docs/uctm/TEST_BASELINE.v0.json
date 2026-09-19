@@ -1,0 +1,34 @@
+{
+  "schema": "uctm.test-baseline.v0",
+  "measured_on": "2026-09-19",
+  "branch": "codex/uctm-interface-v0",
+  "why": "A session that joins in flight spends real time deciding whether a red test is its fault. That question has an answer, and the answer belongs in one declared place instead of in each session's re-diagnosis.",
+  "how_to_reproduce": [
+    "cd backend && go test ./...",
+    "cd frontend && npm run test"
+  ],
+  "known_failures": {
+    "go": [
+      "internal/adapters/agent/codex: TestResolveCodexBinaryFindsNVMInstallWhenPathIsSparse (fails when a live AO_CODEX_BIN or bridge/codex is present)",
+      "internal/adapters/agent/crush: TestCrushLocalAuthStatusDoesNotUseProviderCatalog",
+      "internal/adapters/runtime/tmux: TestRuntimeIntegrationSupervisedExitKeepsInteractiveShell",
+      "internal/cli: 5 TestSpawn* cases (the fixture daemon answers HTTP 404)"
+    ],
+    "frontend": [
+      "src/landing/** - markdown-twins generator, download CTA, Android beta surfaces, launch analytics (9 files)",
+      "src/renderer/components/TaskComposer.test.tsx - 4 cases, model-catalog copy drift",
+      "src/renderer/components/ConnectMobileModal.test.tsx - 2 cases",
+      "src/renderer/i18n/renderer-coverage.test.ts - hardcoded English at components/settings/ConnectMobileContent.tsx:272"
+    ]
+  },
+  "note_on_counts": "The frontend total moved between 12 and 13 failing tests across two runs on the same commit. Treat the file list as the stable part and the count as flaky.",
+  "green_scope_verified": [
+    "backend: internal/domain, internal/adapters/uctm, internal/service/uctm, internal/daemon, internal/httpd, internal/storage/sqlite/store, internal/config (go test -count=1)",
+    "frontend: components/uctm, lib/uctm-projection, lib/command-palette, i18n parity (vitest)",
+    "frontend: e2e/uctm-view.spec.ts (playwright, with and without a live daemon)"
+  ],
+  "non_claims": [
+    "This baseline records what failed on one measured run. It is not a claim that a listed failure is acceptable or permanent.",
+    "A failure that is not listed here is new until someone shows otherwise."
+  ]
+}

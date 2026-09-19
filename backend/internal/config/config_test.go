@@ -10,7 +10,7 @@ import (
 func TestLoadDefaults(t *testing.T) {
 	// Clear every recognised var so we observe pure defaults regardless of the
 	// surrounding environment.
-	for _, k := range []string{"AO_PORT", "AO_REQUEST_TIMEOUT", "AO_SHUTDOWN_TIMEOUT", "AO_RUN_FILE", "AO_DATA_DIR", "AO_AGENT", "AO_ALLOWED_ORIGINS", "AO_TELEMETRY_EVENTS", "AO_TELEMETRY_METRICS", "AO_TELEMETRY_REMOTE", "AO_TELEMETRY_POSTHOG_KEY", "AO_TELEMETRY_POSTHOG_HOST", "AO_TELEMETRY_DISABLED_EVENTS", "AO_TELEMETRY_APP_VERSION"} {
+	for _, k := range []string{"AO_PORT", "AO_REQUEST_TIMEOUT", "AO_SHUTDOWN_TIMEOUT", "AO_RUN_FILE", "AO_DATA_DIR", "AO_AGENT", "AO_ALLOWED_ORIGINS", "AO_TELEMETRY_EVENTS", "AO_TELEMETRY_METRICS", "AO_TELEMETRY_REMOTE", "AO_TELEMETRY_POSTHOG_KEY", "AO_TELEMETRY_POSTHOG_HOST", "AO_TELEMETRY_DISABLED_EVENTS", "AO_TELEMETRY_APP_VERSION", "UCTM_MODE", "UCTM_API_BASE_URL", "UCTM_API_TOKEN", "UCTM_REQUEST_TIMEOUT"} {
 		t.Setenv(k, "")
 	}
 
@@ -365,5 +365,69 @@ func TestLoadGitLabInvalidHostTokens(t *testing.T) {
 				t.Fatal("Load() = nil error, want error for malformed AO_GITLAB_HOST_TOKENS")
 			}
 		})
+	}
+}
+
+// The UCTM integration defaults to off and stays off for anything the operator
+// did not write down explicitly. A readable default would be the worst possible
+// failure mode: a governance read path that opens itself.
+func TestLoadUCTMDefaultsToOff(t *testing.T) {
+	for _, k := range []string{"UCTM_MODE", "UCTM_API_BASE_URL", "UCTM_API_TOKEN", "UCTM_REQUEST_TIMEOUT"} {
+		t.Setenv(k, "")
+	}
+	cfg, err := Load()
+	if err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+	if cfg.UCTM.Mode != "off" {
+		t.Errorf("UCTM.Mode = %q, want off", cfg.UCTM.Mode)
+	}
+	if cfg.UCTM.BaseURL != "" || cfg.UCTM.Token != "" {
+		t.Errorf("UCTM transport defaulted to %+v, want empty", cfg.UCTM)
+	}
+}
+
+func TestLoadUCTMReadsExplicitConfiguration(t *testing.T) {
+	t.Setenv("UCTM_MODE", "read_only")
+	t.Setenv("UCTM_API_BASE_URL", "http://127.0.0.1:8010")
+	t.Setenv("UCTM_API_TOKEN", "secret")
+	t.Setenv("UCTM_REQUEST_TIMEOUT", "3s")
+
+	cfg, err := Load()
+	if err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+	if cfg.UCTM.Mode != "read_only" {
+		t.Errorf("UCTM.Mode = %q", cfg.UCTM.Mode)
+	}
+	if cfg.UCTM.BaseURL != "http://127.0.0.1:8010" {
+		t.Errorf("UCTM.BaseURL = %q", cfg.UCTM.BaseURL)
+	}
+	if cfg.UCTM.Token != "secret" {
+		t.Errorf("UCTM.Token = %q", cfg.UCTM.Token)
+	}
+	if cfg.UCTM.Timeout != 3*time.Second {
+		t.Errorf("UCTM.Timeout = %s", cfg.UCTM.Timeout)
+	}
+}
+
+// A typo must stop the daemon at boot. Silently choosing a different authority
+// level than the operator asked for is the one failure this integration cannot
+// afford.
+func TestLoadRejectsAMalformedUCTMMode(t *testing.T) {
+	for _, raw := range []string{"readonly", "on", "READ_ONLY", "yes"} {
+		t.Run(raw, func(t *testing.T) {
+			t.Setenv("UCTM_MODE", raw)
+			if _, err := Load(); err == nil {
+				t.Fatalf("Load accepted UCTM_MODE=%q", raw)
+			}
+		})
+	}
+}
+
+func TestLoadRejectsAMalformedUCTMTimeout(t *testing.T) {
+	t.Setenv("UCTM_REQUEST_TIMEOUT", "soon")
+	if _, err := Load(); err == nil {
+		t.Fatal("Load accepted a non-duration UCTM_REQUEST_TIMEOUT")
 	}
 }

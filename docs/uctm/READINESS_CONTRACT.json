@@ -78,31 +78,53 @@
     },
     {
       "domain": "uctm_endpoint_implementation",
-      "status": "not_started",
+      "status": "read_only_partial",
       "evidence": [
-        "Endpoint and package ownership contract exists in docs only."
+        "docs/uctm/AO_F2_READONLY_PROJECTION_2026-09-19.md records the implemented read-only surface and the tests that cover it.",
+        "docs/uctm/AO_F3_1_SPINE_SERVICE_2026-09-19.md records the spine-side read-only service, its invariants, and the first end-to-end read.",
+        "docs/uctm/AO_F3_FRONTEND_PROJECTION_2026-09-19.md records the project-scoped frontend view, its read-only/no-telemetry verification, and the states it refuses to invent.",
+        "backend/internal/domain/uctm.go, ports/uctm.go, adapters/uctm/client.go, service/uctm/service.go, httpd/controllers/uctm.go and daemon/uctm_wiring.go exist.",
+        "backend/internal/storage/sqlite/migrations/0111_uctm_projection.sql and queries/uctm.sql plus generated sqlc code exist.",
+        "backend/internal/httpd/apispec/openapi.yaml and frontend/src/api/schema.ts carry the eight UCTM read operations.",
+        "~/Developer/UCTM/src/service.rs implements uctm service --port PORT: /v1/status and /v1/receipts publish facts, the other seven contract routes abstain with 204, and the crate's 31 tests pass.",
+        "A second daemon instance in read_only mode read /v1/status as fresh with a content address recomputed independently and matching, and read abstained kinds as unknown/no_facts with no payload.",
+        "frontend/src/renderer/routes/_shell.projects.$projectId_.uctm.tsx plus frontend/src/renderer/components/uctm/ render all eight kinds, and a test asserts the surface issues only GETs on the daemon origin and emits no telemetry event when the reads succeed.",
+        "The route is reachable from the command palette (Project UCTM), verified in a real browser against a live daemon: 8 cards rendered, 0 page errors.",
+        "UCTM_MODE is unset in the launch environment, so every route reports mode off."
+        ,"docs/uctm/AO_F4_ORIENTATION_AT_SPAWN_2026-09-19.md records the workstream's occurrence graph (docs/uctm/GRAPH.v0.json) and the bounded spawn-time orientation card the session manager injects under UCTM_STUDIO=1. Neither is a UCTM route, neither touches this projection surface, and neither changes what any /api/v1/uctm route answers."
+        ,"docs/uctm/AO_F5_KERNEL_CODE_EDGES_2026-09-19.md records the evidence-to-code hop in that graph: the repository paths and Go test names the indexed receipts write are resolved as nodes, so a changed file names the claims that have to be re-read. It is index tooling under scripts/, and like AO-F4 it is not a UCTM route, does not touch this projection surface, and does not change what any /api/v1/uctm route answers."
+        ,"The openapi.yaml -> schema.ts hop now has its own guard: frontend/package.json api:check regenerates to /tmp/ao-schema.check.ts and diffs it against frontend/src/api/schema.ts, and the root api:check delegates to it after the duplicate root openapi-typescript pin (7.4.4, against the frontend's 7.13.0) was removed, leaving one generator version in the repository. The semantics are deliberately staleness-only rather than dirty-only: a current-but-uncommitted schema.ts passes, which is the correct verdict on a branch where the generated file is legitimately uncommitted, while the generate-then-git-diff form would be red for a non-defect. Measured 2026-09-19T09:35Z: npm run api:check exits 0; the same regenerate-and-diff against a copy with one trailing newline added exits 1, so the guard discriminates instead of always passing. This closes the spec-vs-schema hop that AO-F4 recorded as unguarded."
       ],
       "blockers": [
-        "AO-F1 source qualification absent.",
-        "No UCTM Go port, service, adapter, controller, migration, query, OpenAPI route, generated client, or React view."
+        "No launcher exports UCTM_MODE, UCTM_API_BASE_URL, or UCTM_API_TOKEN, so every deployed route still reports mode off.",
+        "The deployed frontend/daemon/ao predates the read surface and was not rebuilt or restarted, so the desktop app cannot serve /api/v1/uctm.",
+        "v1 proposal routes, v2 human-gated routes, uctm_event_cursors, and projection CDC invalidation are not implemented.",
+        "No live read has been performed through the deployed daemon; the verified read used a second, throwaway instance."
+        ,"The generated TypeScript client is byte-identical to a fresh generation (openapi-typescript 7.13.0, 0 diff lines) and the apispec tests pass, but internal/httpd/apispec/openapi.yaml and specgen/build.go are modified-but-uncommitted on this branch, so the client describes a working tree rather than a commit. openapi.yaml is generated: `go generate ./internal/httpd/apispec/` re-derives it, verified byte-identical (`shasum -a 256` = e040107a85eb1d3e2ce40a044c6eba4d2fa3285335ad07bec711c027f3b2b8cd, measured 2026-09-19T08:57:58Z; the 660ee08f4f4ee598 quoted here earlier the same day was the pre-change spec) and TestBuild_MatchesEmbedded is green, which also proves the uctm operations are produced by specgen rather than hand-added. The lineage author (scratch-5) owns those files and regenerates them on their side; if those DTOs move, frontend/src/api/schema.ts must be regenerated (npm run api:ts) in the same change. openapi.yaml must never be hand-edited: byte-equality with specgen.Build() and 1:1 route parity are both tested. A digest of a working-tree file is a moving target: cite the command with the date it was measured, not the number alone."
+        ,"The orientation card is a file written by scripts/uctm-graph.mjs, not by the launcher and not by a route, so it is only as current as the last write. The card carries its own orientation_id and the command that re-checks it, so a stale card reports drift instead of hiding it, but the generated frontend/daemon/ao binary was not rebuilt, so the injection has not run in the deployed desktop yet."
       ],
-      "safe_claim": "UCTM integration endpoints are planned but not implemented.",
+      "safe_claim": "The v0 read-only UCTM projection surface is implemented and defaults to off, a read-only projection service exists in the UCTM supervisor, and a project-scoped desktop view renders all eight kinds without proposing or effecting anything. One end-to-end read on a second daemon instance returned real spine facts with verified metadata, and the view was rendered against it in a real browser. Nothing is wired into the deployed runtime, so no UCTM fact is served or displayed there.",
       "forbidden_claims": [
-        "UCTM API routes exist in AO",
-        "UCTM Studio is integrated"
+        "A UCTM service is connected",
+        "UCTM Studio is integrated",
+        "UCTM routes return real UCTM facts"
       ]
     },
     {
       "domain": "uctm_interface_runtime",
       "status": "not_started",
-      "evidence": [],
-      "blockers": [
-        "No clone/build/install.",
-        "No fork-specific AO data directory.",
-        "No UCTM service transport.",
-        "No daemon or desktop probe."
+      "evidence": [
+        "The daemon source serves /api/v1/uctm on its loopback listener and answers a disabled state while UCTM_MODE is off.",
+        "The frontend view renders disabled/unknown/stale/no_facts honestly and states absence instead of drawing an empty box; a failed read is shown as a failure of the view, never as a UCTM state.",
+        "The deployed binary (pid 77457) was not rebuilt, restarted, or reconfigured during this work.",
+        "Measured on the live listeners at 2026-09-19T08:57Z, read-only GETs: 127.0.0.1:3001/api/v1/uctm -> 404 ROUTE_NOT_FOUND and 127.0.0.1:3011/api/v1/uctm -> 401 BAD_PASSWORD, so the running build carries neither the route nor the LAN blocklist entry the source has; 127.0.0.1:3011/shutdown -> 404 ROUTE_NOT_FOUND shows outermost blocking works; 127.0.0.1:3001/api/v1/sessions -> 200 shows the process is alive. This is a build vintage, not a fault, and no live UCTM route claim may be made until the daemon is restarted."
       ],
-      "safe_claim": "No UCTM Studio runtime exists.",
+      "blockers": [
+        "No fork-specific AO data directory is in use for a UCTM-qualified run.",
+        "No launcher starts the projection service or exports the transport environment to the deployed daemon.",
+        "No desktop probe of a real UCTM projection: the deployed binary does not carry the routes."
+      ],
+      "safe_claim": "The daemon exposes a UCTM read surface that is disabled by default. A projection service now exists and has answered one verified read on a throwaway instance, but the deployed runtime has neither the routes nor the transport.",
       "forbidden_claims": [
         "UCTM Studio is installed",
         "Daemon is healthy",

@@ -73,7 +73,7 @@ let started = false;
  */
 export async function initMainSentry(version: string): Promise<void> {
 	if (started) return;
-	const dsn = (process.env.AO_SENTRY_DSN ?? "").trim() || DEFAULT_SENTRY_DSN;
+	const dsn = (process.env.AO_SENTRY_DSN ?? DEFAULT_SENTRY_DSN).trim();
 	if (!dsn) return;
 	started = true;
 	try {

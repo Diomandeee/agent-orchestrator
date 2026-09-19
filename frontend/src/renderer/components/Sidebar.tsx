@@ -677,11 +677,11 @@ export function Sidebar({
 							role="button"
 							tabIndex={0}
 						>
-							Agent Orchestrator
+							{import.meta.env.VITE_UCTM_STUDIO === "1" ? "UCTM Studio" : "Agent Orchestrator"}
 						</span>
 					) : (
 						<span className="sidebar-expanded-chrome min-w-0 flex-1 truncate text-sm font-bold leading-tight tracking-tight-lg text-foreground group-data-[collapsible=icon]:hidden">
-							Agent Orchestrator
+							{import.meta.env.VITE_UCTM_STUDIO === "1" ? "UCTM Studio" : "Agent Orchestrator"}
 						</span>
 					)}
 					{isNightly && (

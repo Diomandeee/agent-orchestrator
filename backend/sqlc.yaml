@@ -269,6 +269,26 @@ sql:
             go_type:
               import: "github.com/aoagents/agent-orchestrator/backend/internal/domain"
               type: "ProjectID"
+          # UCTM projections: the column is a projection namespace, not a
+          # registered AO project row, so the domain type is the only shared
+          # vocabulary. The three enum columns use the domain types that already
+          # validate them at the service boundary.
+          - column: "uctm_projection_records.project_id"
+            go_type:
+              import: "github.com/aoagents/agent-orchestrator/backend/internal/domain"
+              type: "ProjectID"
+          - column: "uctm_projection_records.projection_kind"
+            go_type:
+              import: "github.com/aoagents/agent-orchestrator/backend/internal/domain"
+              type: "UCTMProjectionKind"
+          - column: "uctm_projection_records.historical_or_current"
+            go_type:
+              import: "github.com/aoagents/agent-orchestrator/backend/internal/domain"
+              type: "UCTMHistoricality"
+          - column: "uctm_projection_records.authority_ceiling"
+            go_type:
+              import: "github.com/aoagents/agent-orchestrator/backend/internal/domain"
+              type: "UCTMAuthorityCeiling"
           - column: "conversations.scope"
             go_type:
               import: "github.com/aoagents/agent-orchestrator/backend/internal/domain"
