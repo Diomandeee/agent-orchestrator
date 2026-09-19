@@ -260,7 +260,8 @@ func (d *Driver) Start(ctx context.Context, cfg ports.ChatStartConfig) (ports.Ch
 
 	var resp struct {
 		Thread struct {
-			ID string `json:"id"`
+			ID           string            `json:"id"`
+			Environments []turnEnvironment `json:"environments"`
 		} `json:"thread"`
 		Model           string `json:"model"`
 		ReasoningEffort string `json:"reasoningEffort"`
@@ -277,6 +278,8 @@ func (d *Driver) Start(ctx context.Context, cfg ports.ChatStartConfig) (ports.Ch
 	}
 
 	conv.start(resp.Thread.ID, resp.Model, resp.ReasoningEffort)
+	conv.threadEnvironments = resp.Thread.Environments
+	conv.workspacePath = cfg.WorkspacePath
 	return conv, nil
 }
 
@@ -314,6 +317,10 @@ func (d *Driver) Resume(ctx context.Context, cfg ports.ChatResumeConfig) (ports.
 	resumeCtx, cancel := context.WithTimeout(ctx, handshakeTimeout)
 	defer cancel()
 	var resp struct {
+		Thread struct {
+			ID           string            `json:"id"`
+			Environments []turnEnvironment `json:"environments"`
+		} `json:"thread"`
 		Model           string `json:"model"`
 		ReasoningEffort string `json:"reasoningEffort"`
 	}
@@ -326,6 +333,8 @@ func (d *Driver) Resume(ctx context.Context, cfg ports.ChatResumeConfig) (ports.
 	}
 
 	conv.start(cfg.ProviderConversationID, resp.Model, resp.ReasoningEffort)
+	conv.threadEnvironments = resp.Thread.Environments
+	conv.workspacePath = cfg.WorkspacePath
 	return conv, nil
 }
 
@@ -371,12 +380,12 @@ func (d *Driver) connect(ctx context.Context, workdir string, env map[string]str
 // approvalSettings maps AO's existing per-session permission mode onto Codex's
 // approval policy and sandbox.
 //
-// The default matches what AO already passes a Codex TUI session
-// (--dangerously-bypass-approvals-and-sandbox): AO sessions run in isolated
-// worktrees and are expected to work without prompting. Chat does not quietly
-// become stricter than the terminal path for the same setting.
+// UCTM Studio defaults to read-only with approvals. A worktree is not a security
+// boundary: opening the UI must not grant unrestricted machine access.
 func approvalSettings(mode ports.PermissionMode) (policy, sandbox string) {
 	switch ports.NormalizePermissionMode(mode) {
+	case ports.PermissionModeBypassPermissions:
+		return "never", "danger-full-access"
 	case ports.PermissionModeAcceptEdits, ports.PermissionModeAuto:
 		// on-request lets the provider decide when to ask; workspace-write keeps
 		// edits inside the worktree. approvalsReviewer is deliberately not set:
@@ -384,7 +393,7 @@ func approvalSettings(mode ports.PermissionMode) (policy, sandbox string) {
 		// fail thread/start outright.
 		return "on-request", "workspace-write"
 	default:
-		return "never", "danger-full-access"
+		return "on-request", "read-only"
 	}
 }
 
@@ -454,5 +463,22 @@ func spawnAppServer(ctx context.Context, bin, workdir string, env []string) (*pr
 // and every toolchain cache is missing. Found while writing the Claude driver,
 // where the same shape failed outright with "Not logged in".
 func envSlice(env map[string]string) []string {
-	return processenv.Merge(env)
+	merged := processenv.Merge(env)
+	if !uctmStudioEnabled() {
+		return merged
+	}
+	// The daemon needs these paths for the local evidence bridge. Codex and its
+	// shell tools do not: inheriting them would advertise private capabilities
+	// in the model-visible process environment.
+	filtered := merged[:0]
+	for _, entry := range merged {
+		if strings.HasPrefix(entry, "UCTM_CEF_URL=") ||
+			strings.HasPrefix(entry, "UCTM_CEF_GRANT_PATH=") ||
+			strings.HasPrefix(entry, "UCTM_CEF_TOKEN_PATH=") ||
+			strings.HasPrefix(entry, "UCTM_CEF_RECEIPTS_DIR=") {
+			continue
+		}
+		filtered = append(filtered, entry)
+	}
+	return filtered
 }

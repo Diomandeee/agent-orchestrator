@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+"""Codex host shim for UCTM Studio. Never places the provider key in Codex."""
+import hashlib
+import os
+import sys
+from pathlib import Path
+
+HOST = "/Users/mohameddiomande/.local/bin/codex"
+ISOLATED_HOME = "/Users/mohameddiomande/.ao/uctm-studio/home"
+CODEX_HOME = "/Users/mohameddiomande/.ao/uctm-studio/codex"
+PROXY_TOKEN = Path("/Users/mohameddiomande/.ao/uctm-studio/proxy-token")
+EXPECTED_SHA256 = "a1d2f191e70023ed7afd619bc70530f26067a085926e03bae50cf5c0f8298bcf"
+
+# hashlib.file_digest below needs >= 3.11. The shebang can resolve to the
+# system 3.9 interpreter whenever /usr/bin precedes Homebrew on PATH, which is
+# exactly the PATH an AO-spawned child inherits. Re-exec under a supported
+# interpreter, and otherwise fail with an explicit version error instead of
+# the generic host-unavailable message.
+MIN_PYTHON = (3, 11)
+PYTHON_CANDIDATES = (
+    "/opt/homebrew/bin/python3.14",
+    "/opt/homebrew/bin/python3.13",
+    "/opt/homebrew/bin/python3.12",
+    "/opt/homebrew/bin/python3.11",
+    "/usr/local/bin/python3.14",
+    "/usr/local/bin/python3.13",
+    "/usr/local/bin/python3.12",
+    "/usr/local/bin/python3.11",
+)
+REEXEC_MARKER = "UCTM_CODEX_SHIM_INTERPRETER"
+
+
+def ensure_supported_interpreter():
+    if sys.version_info >= MIN_PYTHON or os.environ.get(REEXEC_MARKER):
+        return
+    for candidate in PYTHON_CANDIDATES:
+        if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
+            env = dict(os.environ)
+            env[REEXEC_MARKER] = candidate
+            os.execve(candidate, [candidate, os.path.abspath(__file__), *sys.argv[1:]], env)
+
+
+def main():
+    ensure_supported_interpreter()
+    if sys.version_info < MIN_PYTHON:
+        print("uctm_codex_python_too_old: need python>=3.11 for hashlib.file_digest, "
+              "found {} at {}".format(sys.version.split()[0], sys.executable), file=sys.stderr)
+        return 3
+    with open(HOST, "rb") as host_binary:
+        actual = hashlib.file_digest(host_binary, "sha256").hexdigest()
+    if actual != EXPECTED_SHA256:
+        print("uctm_codex_host_hash_mismatch", file=sys.stderr)
+        return 3
+    if os.environ.get("CODEX_HOME") != CODEX_HOME:
+        print("uctm_codex_home_mismatch", file=sys.stderr)
+        return 3
+    config = Path(CODEX_HOME, "config.toml").read_text()
+    if ('model_provider = "deepseek"' not in config or 'wire_api = "responses"' not in config
+            or 'env_key = "UCTM_PROXY_TOKEN"' not in config
+            or 'base_url = "http://127.0.0.1:8769"' not in config):
+        print("uctm_codex_provider_mismatch", file=sys.stderr)
+        return 3
+    # Version/help probes never need a credential.
+    if not any(a in ("--version", "--help", "-h") for a in sys.argv[1:]):
+        stat = PROXY_TOKEN.stat()
+        if stat.st_uid != os.getuid() or stat.st_mode & 0o077:
+            print("uctm_proxy_token_permissions_invalid", file=sys.stderr)
+            return 2
+        token = PROXY_TOKEN.read_text().strip()
+        if len(token) < 32:
+            print("uctm_proxy_token_unavailable", file=sys.stderr)
+            return 2
+        # AO's Codex auth probe only understands `codex login status`. This
+        # host uses a local authenticated transport, not a Codex account login.
+        if sys.argv[1:] == ["login", "status"]:
+            print("Logged in via configured UCTM provider transport")
+            return 0
+        os.environ.pop("DEEPSEEK_API_KEY", None)
+        os.environ.pop("OPENAI_API_KEY", None)
+        os.environ["UCTM_PROXY_TOKEN"] = token
+    os.makedirs(ISOLATED_HOME, mode=0o700, exist_ok=True)
+    os.environ["HOME"] = ISOLATED_HOME
+    os.execv(HOST, [HOST, *sys.argv[1:]])
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except Exception as exception:
+        print("uctm_codex_host_unavailable: {}: {}".format(
+            type(exception).__name__, exception)[:300], file=sys.stderr)
+        raise SystemExit(3)

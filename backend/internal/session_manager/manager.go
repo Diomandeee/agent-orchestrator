@@ -3604,7 +3604,67 @@ func (m *Manager) buildSystemPrompt(ctx context.Context, kind domain.SessionKind
 	if pointer := strings.TrimSpace(m.aoSkillPointer()); pointer != "" {
 		cfg.AdditionalSections = append(cfg.AdditionalSections, pointer)
 	}
+	if os.Getenv("UCTM_STUDIO") == "1" {
+		card, err := readUCTMContextCard(os.Getenv("UCTM_CONTEXT_CARD_PATH"))
+		if err != nil {
+			return "", err
+		}
+		if card != "" {
+			cfg.AdditionalSections = append(cfg.AdditionalSections,
+				"## Permitted UCTM user context\nThis is a bounded, user-provided context card, not memory or a live evidence-recovery result. You may summarize its facts when the user asks what you know about them. Attribute claims to this card; do not infer facts not stated here. Do not search outside the assigned workspace for personal information.\n\n"+card)
+		}
+		// Orientation is delivered rather than discovered. A session that has to
+		// find the index before it can use it has already paid the onboarding cost
+		// the index exists to remove, so the card is injected at spawn and carries
+		// its own comparand: the id to check, the command that checks it, and the
+		// instruction to stop reading once the id matches.
+		orientation, err := readUCTMOrientationCard(os.Getenv("UCTM_ORIENTATION_CARD_PATH"))
+		if err != nil {
+			return "", err
+		}
+		if orientation != "" {
+			cfg.AdditionalSections = append(cfg.AdditionalSections, orientation)
+		}
+	}
 	return buildSystemPromptText(cfg), nil
+}
+
+func readUCTMContextCard(path string) (string, error) {
+	return readPrivateCard("UCTM context card", path)
+}
+
+// readUCTMOrientationCard reads the spawn-time orientation card. It is the same
+// bounded, private, absolute, fail-closed read as the user-context card: a card
+// the operator pointed at but that cannot be read is an error, never a silently
+// skipped section, because "orientation was not injected" and "there is nothing
+// to be oriented to" are different claims.
+func readUCTMOrientationCard(path string) (string, error) {
+	return readPrivateCard("UCTM orientation card", path)
+}
+
+// readPrivateCard is the single bounded read both cards go through. The bounds are
+// the contract with the writer (scripts/uctm-graph.mjs): absolute path, regular
+// file, mode 0600, at most 8192 bytes. An empty path means "not configured" and
+// yields no section, so an unset variable can never inject text.
+func readPrivateCard(label, path string) (string, error) {
+	if path == "" {
+		return "", nil
+	}
+	if !filepath.IsAbs(path) {
+		return "", fmt.Errorf("%s path must be absolute", label)
+	}
+	info, err := os.Lstat(path)
+	if err != nil {
+		return "", fmt.Errorf("%s: %w", label, err)
+	}
+	if !info.Mode().IsRegular() || info.Mode().Perm()&0o077 != 0 || info.Size() > 8192 {
+		return "", fmt.Errorf("%s must be a private regular file of at most 8192 bytes", label)
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return "", fmt.Errorf("read %s: %w", strings.ToLower(label), err)
+	}
+	return strings.TrimSpace(string(data)), nil
 }
 
 // aoSkillPointer is appended to every agent system prompt. It points the agent

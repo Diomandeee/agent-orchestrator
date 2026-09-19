@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"os"
 	"sort"
 	"strings"
 	"sync"
@@ -40,16 +41,32 @@ var approvalMethods = map[string]domain.ActivityKind{
 	codexproto.MethodItemToolRequestUserInput:            domain.ActivityKindApproval,
 }
 
+// turnEnvironment is one entry of a thread's environment selection, in the
+// shape turn/start expects. Only the identity and working directory are sent
+// back: app-server also reports runtimeWorkspaceRoots, which it derives again
+// from the thread.
+type turnEnvironment struct {
+	EnvironmentID string `json:"environmentId"`
+	Cwd           string `json:"cwd"`
+}
+
 // conversation is one live Codex thread. It is the only writer to that thread.
 type conversation struct {
 	conn *conn
 	proc *process
 	log  *slog.Logger
 
-	threadID string
-	events   chan ports.ChatEvent
+	threadID      string
+	workspacePath string
+	events        chan ports.ChatEvent
 	// Effective defaults returned when Codex opened or resumed this thread.
 	threadModel, threadEffort string
+	// threadEnvironments is the environment selection app-server reported for
+	// this thread. A recall turn removes it so the turn has no shell tool at all;
+	// every other turn re-asserts it, because that removal is sticky and would
+	// otherwise outlive the recall (including across a daemon restart, which
+	// resumes the same thread).
+	threadEnvironments []turnEnvironment
 
 	mu      sync.Mutex
 	pending map[string]*parkedRequest
@@ -231,10 +248,28 @@ func (c *conversation) SendTurn(ctx context.Context, msg ports.ChatUserMessage) 
 
 	c.sendMu.Lock()
 	defer c.sendMu.Unlock()
+	input := []any{map[string]any{"type": "text", "text": msg.Text}}
+	var recallManifest *uctmModelContext
+	if strings.HasPrefix(strings.TrimSpace(msg.Text), "/recall ") && uctmStudioEnabled() {
+		if err := validateUCTMReceiptDirectory(os.Getenv("UCTM_CEF_RECEIPTS_DIR")); err != nil {
+			return ports.ChatTurnRef{}, err
+		}
+		var admitted uctmModelContext
+		contextText, err := resolveUCTMHistoricalContextWithManifest(ctx, c.workspacePath, c.threadID, c.effectiveModel(msg.Settings.Model), msg.Text, &admitted)
+		if err != nil {
+			return ports.ChatTurnRef{}, err
+		}
+		recallManifest = &admitted
+		prompt := strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(msg.Text), "/recall"))
+		input = []any{
+			map[string]any{"type": "text", "text": prompt},
+			map[string]any{"type": "text", "text": contextText},
+		}
+	}
 
 	params := map[string]any{
 		"threadId": c.threadID,
-		"input":    []any{map[string]any{"type": "text", "text": msg.Text}},
+		"input":    input,
 	}
 	if msg.ClientMessageID != "" {
 		// The provider's own idempotency handle: a retry carrying the same id
@@ -242,6 +277,22 @@ func (c *conversation) SendTurn(ctx context.Context, msg ports.ChatUserMessage) 
 		params["clientUserMessageId"] = msg.ClientMessageID
 	}
 	applyTurnSettings(params, msg.Settings)
+	if recallManifest != nil {
+		// Historical evidence is admitted with execution_authorized=false, so
+		// the recall turn must not be able to execute anything at all. A
+		// read-only sandbox still runs commands; an empty environment removes
+		// the shell tool from the turn entirely. Verified against the installed
+		// app-server: with environments:[] the model reports no shell tool,
+		// while the same turn without the field runs a commandExecution.
+		params["approvalPolicy"] = "never"
+		params["sandboxPolicy"] = turnSandboxPolicy("read-only")
+		params["environments"] = []any{}
+	} else if len(c.threadEnvironments) > 0 {
+		// Put back what the recall turn removed. This is not bookkeeping: an
+		// empty selection persists on the thread, so without it one /recall
+		// would leave every later turn with no shell tool.
+		params["environments"] = c.threadEnvironments
+	}
 
 	var resp struct {
 		Turn struct {
@@ -251,12 +302,27 @@ func (c *conversation) SendTurn(ctx context.Context, msg ports.ChatUserMessage) 
 	if err := c.conn.request(ctx, "turn/start", params, &resp); err != nil {
 		return ports.ChatTurnRef{}, fmt.Errorf("turn/start: %w", err)
 	}
+	if recallManifest != nil {
+		if err := writeUCTMDeliveryReceipt(
+			os.Getenv("UCTM_CEF_RECEIPTS_DIR"), c.effectiveModel(msg.Settings.Model),
+			c.threadID, resp.Turn.ID, *recallManifest,
+		); err != nil {
+			c.log.Error("UCTM context delivery receipt failed", "error", err)
+		}
+	}
 
 	c.mu.Lock()
 	c.activeTurn = resp.Turn.ID
 	c.mu.Unlock()
 
 	return ports.ChatTurnRef{ProviderTurnID: resp.Turn.ID}, nil
+}
+
+func (c *conversation) effectiveModel(turnModel string) string {
+	if turnModel != "" {
+		return turnModel
+	}
+	return c.threadModel
 }
 
 // applyTurnSettings folds the caller's per-turn choices into a turn/start payload.

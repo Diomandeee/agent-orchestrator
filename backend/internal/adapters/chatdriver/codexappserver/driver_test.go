@@ -242,8 +242,8 @@ func TestStartCompletesHandshakeAndOpensThread(t *testing.T) {
 		t.Errorf("developerInstructions = %q", params.DeveloperInstructions)
 	}
 	// Default permissions must match what AO already gives a Codex TUI session.
-	if params.ApprovalPolicy != "never" || params.Sandbox != "danger-full-access" {
-		t.Errorf("default posture = %q/%q, want never/danger-full-access", params.ApprovalPolicy, params.Sandbox)
+	if params.ApprovalPolicy != "on-request" || params.Sandbox != "read-only" {
+		t.Errorf("default posture = %q/%q, want on-request/read-only", params.ApprovalPolicy, params.Sandbox)
 	}
 }
 
@@ -709,17 +709,18 @@ func TestProbeReportsMissingBinary(t *testing.T) {
 	}
 }
 
-// Chat must not be quietly stricter than the terminal path for the same setting.
-func TestApprovalSettingsMirrorTUIPosture(t *testing.T) {
+// UCTM Studio must not interpret absent or unrecognized permissions as a grant.
+func TestApprovalSettingsRequireExplicitWriteAuthority(t *testing.T) {
 	for _, tc := range []struct {
 		mode            ports.PermissionMode
 		policy, sandbox string
 	}{
-		{ports.PermissionModeDefault, "never", "danger-full-access"},
+		{ports.PermissionModeDefault, "on-request", "read-only"},
+		{ports.PermissionMode(""), "on-request", "read-only"},
 		{ports.PermissionModeBypassPermissions, "never", "danger-full-access"},
 		{ports.PermissionModeAcceptEdits, "on-request", "workspace-write"},
 		{ports.PermissionModeAuto, "on-request", "workspace-write"},
-		{ports.PermissionMode("nonsense"), "never", "danger-full-access"},
+		{ports.PermissionMode("nonsense"), "on-request", "read-only"},
 	} {
 		policy, sandbox := approvalSettings(tc.mode)
 		if policy != tc.policy || sandbox != tc.sandbox {
@@ -750,6 +751,23 @@ func TestEnvSliceIsSortedForReproducibleRelaunch(t *testing.T) {
 		if !strings.Contains(joined, want) {
 			t.Errorf("overlay entry %q missing from %v", want, got)
 		}
+	}
+}
+
+func TestUCTMCEFCapabilityPathsNeverReachCodexProcess(t *testing.T) {
+	t.Setenv("UCTM_STUDIO", "1")
+	t.Setenv("UCTM_CEF_URL", "http://127.0.0.1:8010")
+	t.Setenv("UCTM_CEF_GRANT_PATH", "/private/grant")
+	t.Setenv("UCTM_CEF_TOKEN_PATH", "/private/token")
+	t.Setenv("UCTM_CEF_RECEIPTS_DIR", "/private/receipts")
+	joined := strings.Join(envSlice(map[string]string{"SAFE_OVERLAY": "present"}), "\n")
+	for _, forbidden := range []string{"UCTM_CEF_URL=", "UCTM_CEF_GRANT_PATH=", "UCTM_CEF_TOKEN_PATH=", "UCTM_CEF_RECEIPTS_DIR="} {
+		if strings.Contains(joined, forbidden) {
+			t.Fatalf("private CEF capability leaked into Codex environment: %s", forbidden)
+		}
+	}
+	if !strings.Contains(joined, "SAFE_OVERLAY=present") {
+		t.Fatal("unrelated environment overlay was removed")
 	}
 }
 
