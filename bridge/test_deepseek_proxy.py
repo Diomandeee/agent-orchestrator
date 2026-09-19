@@ -1,12 +1,14 @@
 """Synthetic-only contract tests for the loopback provider transport."""
 
 import io
+import json
 import threading
 import unittest
 from unittest.mock import patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
+import deepseek_proxy
 from deepseek_proxy import Handler, ThreadingHTTPServer
 
 
@@ -66,6 +68,31 @@ class ProxyTests(unittest.TestCase):
             "https://api.deepseek.com/responses", b'{"model":"deepseek-flash"}',
             "Bearer synthetic-provider-secret", 120,
         )])
+
+    def test_oversize_returns_structured_413(self):
+        with patch.object(deepseek_proxy, "MAX_REQUEST_BYTES", 16):
+            request = Request(self.base + "/responses", data=b"x" * 17,
+                              method="POST",
+                              headers={"Authorization": "Bearer synthetic-local-token"})
+            with self.assertRaises(HTTPError) as caught:
+                urlopen(request)
+            self.assertEqual(caught.exception.code, 413)
+            payload = json.loads(caught.exception.read().decode())
+            caught.exception.close()
+        self.assertEqual(payload["error"], "invalid_request_size")
+        self.assertEqual(payload["code"], "request_too_large")
+        self.assertEqual(payload["limit_bytes"], 16)
+        self.assertEqual(payload["received_bytes"], 17)
+        self.assertIn("compact", payload["hint"])
+
+    def test_empty_body_returns_413(self):
+        request = Request(self.base + "/responses", data=b"",
+                          method="POST",
+                          headers={"Authorization": "Bearer synthetic-local-token"})
+        with self.assertRaises(HTTPError) as caught:
+            urlopen(request)
+        self.assertEqual(caught.exception.code, 413)
+        caught.exception.close()
 
 
 if __name__ == "__main__":

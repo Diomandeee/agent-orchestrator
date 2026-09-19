@@ -4,6 +4,7 @@
 import hashlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+import os
 import sys
 import traceback
 from urllib.error import HTTPError, URLError
@@ -18,7 +19,19 @@ ACCOUNT_ENDPOINT = "https://api.deepseek.com/chat/completions"
 # Must exceed the model context window in BYTES, not tokens: image/base64-heavy
 # turns reach ~16 bytes per token, and a 2 MiB cap fired at 56% of a 258k window -
 # below the token threshold where the harness compacts, so the turn just failed.
-MAX_REQUEST_BYTES = 16 * 1024 * 1024
+# Overridable at launch without a code change (bytes); falls back to the default
+# when the variable is absent or unparsable.
+def _max_request_bytes():
+    try:
+        configured = int(os.environ.get("UCTM_PROXY_MAX_REQUEST_BYTES", ""))
+        if configured > 0:
+            return configured
+    except (TypeError, ValueError):
+        pass
+    return 16 * 1024 * 1024
+
+
+MAX_REQUEST_BYTES = _max_request_bytes()
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -53,7 +66,20 @@ class Handler(BaseHTTPRequestHandler):
         except ValueError:
             length = 0
         if not 0 < length <= MAX_REQUEST_BYTES:
-            self.respond(413, b'{"error":"invalid_request_size"}')
+            # Structured rejection: the codex host surfaces error.message back to
+            # the agent, so the turn can compact/truncate and retry instead of
+            # blind-retrying the same oversized payload. The "error" key keeps
+            # backwards compatibility with existing log classifiers.
+            print(f"uctm_proxy_reject: path=/responses received={length} "
+                  f"limit={MAX_REQUEST_BYTES}", file=sys.stderr)
+            self.respond(413, json.dumps({
+                "error": "invalid_request_size",
+                "code": "request_too_large",
+                "limit_bytes": MAX_REQUEST_BYTES,
+                "received_bytes": length,
+                "hint": "request exceeded the proxy byte cap; compact the "
+                        "transcript and truncate large tool outputs, then retry",
+            }).encode())
             return
         payload = self.rfile.read(length)
         upstream = Request(UPSTREAM, data=payload, method="POST", headers={
