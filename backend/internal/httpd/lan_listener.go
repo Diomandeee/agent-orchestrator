@@ -61,6 +61,16 @@ var lanControlBlockedPrefixes = []string{
 	"/api/v1/browser",
 	"/api/v1/desktop",
 	"/api/v1/system/install",
+	// UCTM projections describe protected-history governance. v0 and v1 mount
+	// them on the loopback listener only, so a paired phone must not even learn
+	// the routes exist.
+	"/api/v1/uctm",
+	// Delegation lineage answers with every session's absolute worktree path in
+	// one response. The only other route that returns an absolute workspace path,
+	// DesktopWorkspaceLocationResponse, is loopback-only for the same reason, so a
+	// paired phone must not be able to enumerate the host's filesystem layout.
+	// Scope matches the prefix rule: it blocks nothing else under /api/v1/sessions.
+	"/api/v1/sessions/lineage",
 }
 
 // lanControlBlock returns 404 for any request whose path is, or is nested

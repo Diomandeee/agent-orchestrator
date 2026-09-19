@@ -117,3 +117,32 @@ func TestLANManagerStartStopIdempotent(t *testing.T) {
 	}
 	_ = m.Stop(ctx) // second stop is a no-op
 }
+
+// TestLANListenerBlocksDelegationLineage pins the loopback-only boundary for the
+// delegation lineage read. Its payload carries every session's absolute worktree
+// path at once, which is the same disclosure DesktopWorkspaceLocationResponse is
+// kept off the LAN listener to avoid. The block is segment-exact, so the rest of
+// /api/v1/sessions stays reachable from a paired phone.
+func TestLANListenerBlocksDelegationLineage(t *testing.T) {
+	blocked := []string{
+		"/api/v1/sessions/lineage",
+		"/api/v1/sessions/lineage/",
+	}
+	for _, path := range blocked {
+		if !isLANControlBlockedPath(path) {
+			t.Errorf("LAN listener would expose %s", path)
+		}
+	}
+
+	allowed := []string{
+		"/api/v1/sessions",
+		"/api/v1/sessions/lineage-extra",
+		"/api/v1/sessions/scratch-5",
+		"/api/v1/sessions/scratch-5/workspace/files",
+	}
+	for _, path := range allowed {
+		if isLANControlBlockedPath(path) {
+			t.Errorf("LAN block swallowed the unrelated path %s", path)
+		}
+	}
+}

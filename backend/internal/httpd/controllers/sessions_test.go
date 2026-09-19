@@ -38,6 +38,9 @@ type fakeSessionService struct {
 	sentAttachment       *ports.SpawnAttachment
 	delegationInput      sessionsvc.DelegateTaskInput
 	delegationErr        error
+	lineage              sessionsvc.LineageReport
+	lineageErr           error
+	lineageProjects      []domain.ProjectID
 	cleanupProjects      []domain.ProjectID
 	cleanupResult        []domain.SessionID
 	cleanupSkipped       []sessionsvc.CleanupSkipped
@@ -188,6 +191,16 @@ func (f *fakeSessionService) List(_ context.Context, filter sessionsvc.ListFilte
 		out = append(out, s)
 	}
 	return out, nil
+}
+
+func (f *fakeSessionService) Lineage(_ context.Context, projectID domain.ProjectID) (sessionsvc.LineageReport, error) {
+	f.lineageProjects = append(f.lineageProjects, projectID)
+	if f.lineageErr != nil {
+		return sessionsvc.LineageReport{}, f.lineageErr
+	}
+	report := f.lineage
+	report.ProjectID = projectID
+	return report, nil
 }
 
 func (f *fakeSessionService) Spawn(_ context.Context, cfg ports.SpawnConfig) (domain.Session, int, int, error) {
@@ -2727,6 +2740,102 @@ func TestSessionsAPI_CleanupWithoutProjectFilter(t *testing.T) {
 	}
 	if len(svc.cleanupProjects) != 1 || svc.cleanupProjects[0] != "" {
 		t.Fatalf("cleanupProjects = %#v, want empty project filter", svc.cleanupProjects)
+	}
+}
+
+func TestSessionsAPI_LineageReturnsDelegationForest(t *testing.T) {
+	svc := newFakeSessionService()
+	svc.lineage = sessionsvc.LineageReport{
+		Roots: []domain.SessionID{"ao-1"},
+		Nodes: []sessionsvc.LineageNode{{
+			SessionID:  "ao-1",
+			Kind:       domain.KindOrchestrator,
+			Children:   []domain.SessionID{"ao-2"},
+			Workspaces: []sessionsvc.LineageWorkspace{},
+		}},
+		Findings: []sessionsvc.LineageFinding{{
+			Code: sessionsvc.FindingOrphanedWorker, Severity: sessionsvc.SeverityDefect,
+			SessionID: "ao-2", Detail: "no orchestrator", Evidence: "namespace ao",
+		}},
+		Degraded: true,
+		Counts:   sessionsvc.LineageCounts{Orchestrators: 1, Workers: 1, Roots: 1, Orphaned: 1, Findings: 1, Defects: 1},
+	}
+	srv := newSessionTestServer(t, svc)
+
+	body, status, _ := doRequest(t, srv, "GET", "/api/v1/sessions/lineage?project=ao", "")
+	if status != http.StatusOK {
+		t.Fatalf("lineage = %d, want 200; body=%s", status, body)
+	}
+	var got struct {
+		ProjectID string   `json:"projectId"`
+		Roots     []string `json:"roots"`
+		Nodes     []struct {
+			SessionID  string   `json:"sessionId"`
+			Children   []string `json:"children"`
+			Workspaces []any    `json:"workspaces"`
+		} `json:"nodes"`
+		Findings []struct {
+			Code     string `json:"code"`
+			Severity string `json:"severity"`
+		} `json:"findings"`
+		Degraded bool `json:"degraded"`
+		Counts   struct {
+			Defects int `json:"defects"`
+		} `json:"counts"`
+	}
+	mustJSON(t, body, &got)
+	if got.ProjectID != "ao" || len(got.Roots) != 1 || got.Roots[0] != "ao-1" {
+		t.Fatalf("lineage envelope = %#v", got)
+	}
+	if len(got.Nodes) != 1 || len(got.Nodes[0].Children) != 1 || got.Nodes[0].Children[0] != "ao-2" {
+		t.Fatalf("lineage nodes = %#v, want the resolved child edge", got.Nodes)
+	}
+	// A node with no worktrees must serialize as [] rather than null: null reads
+	// as "not measured", and the forest did measure it.
+	if got.Nodes[0].Workspaces == nil {
+		t.Fatal("lineage node workspaces = null, want []")
+	}
+	if len(got.Findings) != 1 || got.Findings[0].Code != sessionsvc.FindingOrphanedWorker || got.Findings[0].Severity != sessionsvc.SeverityDefect {
+		t.Fatalf("lineage findings = %#v", got.Findings)
+	}
+	if !got.Degraded || got.Counts.Defects != 1 {
+		t.Fatalf("lineage degraded=%v counts=%#v", got.Degraded, got.Counts)
+	}
+	if len(svc.lineageProjects) != 1 || svc.lineageProjects[0] != "ao" {
+		t.Fatalf("lineageProjects = %#v, want [ao]", svc.lineageProjects)
+	}
+}
+
+// TestSessionsAPI_LineageRequiresProject pins the difference between "this
+// project has no sessions" and "no project was named": only the first is a 200.
+func TestSessionsAPI_LineageRequiresProject(t *testing.T) {
+	svc := newFakeSessionService()
+	srv := newSessionTestServer(t, svc)
+
+	body, status, _ := doRequest(t, srv, "GET", "/api/v1/sessions/lineage", "")
+	assertErrorCode(t, body, status, http.StatusBadRequest, "PROJECT_REQUIRED")
+	if len(svc.lineageProjects) != 0 {
+		t.Fatalf("lineage service called without a project: %#v", svc.lineageProjects)
+	}
+}
+
+// TestSessionsAPI_LineageRouteDoesNotShadowSessionLookup guards the static/param
+// pair in the other direction: adding /sessions/lineage must not stop
+// /sessions/{sessionId} from resolving a real session.
+func TestSessionsAPI_LineageRouteDoesNotShadowSessionLookup(t *testing.T) {
+	srv := newSessionTestServer(t, newFakeSessionService())
+	body, status, _ := doRequest(t, srv, "GET", "/api/v1/sessions/ao-1", "")
+	if status != http.StatusOK {
+		t.Fatalf("GET /sessions/ao-1 = %d, want 200; body=%s", status, body)
+	}
+	var got sessionBody
+	var envelope struct {
+		Session sessionBody `json:"session"`
+	}
+	mustJSON(t, body, &envelope)
+	got = envelope.Session
+	if got.ID != "ao-1" {
+		t.Fatalf("session id = %q, want ao-1; body=%s", got.ID, body)
 	}
 }
 

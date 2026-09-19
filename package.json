@@ -9,10 +9,8 @@
 		"shared:check": "npm run cloud:check && npm run product-ui:check",
 		"sqlc": "cd backend && go run github.com/sqlc-dev/sqlc/cmd/sqlc@v1.31.1 generate",
 		"api:spec": "cd backend && go generate ./internal/httpd/apispec/...",
-		"api:ts": "openapi-typescript backend/internal/httpd/apispec/openapi.yaml -o frontend/src/api/schema.ts",
+		"api:ts": "npm --prefix frontend run api:ts",
+		"api:check": "npm --prefix frontend run api:check",
 		"api": "npm run api:spec && npm run api:ts"
-	},
-	"devDependencies": {
-		"openapi-typescript": "7.4.4"
 	}
 }

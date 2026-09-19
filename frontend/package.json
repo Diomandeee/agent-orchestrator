@@ -30,7 +30,8 @@
 		"test": "vitest run --config vite.renderer.config.ts",
 		"test:e2e": "playwright test",
 		"test:e2e:renderer": "playwright test --grep \"@T0|@P0\"",
-		"api:ts": "openapi-typescript ../backend/internal/httpd/apispec/openapi.yaml -o src/api/schema.ts"
+		"api:ts": "openapi-typescript ../backend/internal/httpd/apispec/openapi.yaml -o src/api/schema.ts",
+		"api:check": "tmp=$(mktemp \"${TMPDIR:-/tmp}/ao-schema-check.XXXXXX\") && trap 'rm -f \"$tmp\"' EXIT && openapi-typescript ../backend/internal/httpd/apispec/openapi.yaml -o \"$tmp\" && { diff -q \"$tmp\" src/api/schema.ts || { echo 'api:check: the committed client is stale against openapi.yaml -- regenerate with npm run api:ts'; exit 1; }; }"
 	},
 	"devDependencies": {
 		"@electron-forge/cli": "^7.8.0",

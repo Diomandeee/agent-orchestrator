@@ -1651,6 +1651,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/sessions/lineage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read the delegation forest AO can prove for a project */
+        get: operations["getSessionLineage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/settings": {
         parameters: {
             query?: never;
@@ -1748,6 +1765,142 @@ export interface paths {
         };
         /** Check local machine readiness (git, tmux, agent harness, gh) */
         get: operations["getSystemRequirements"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/uctm/adjudication/queue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read the UCTM adjudication queue projection */
+        get: operations["getUctmAdjudicationQueue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/uctm/evaluations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read the UCTM evaluations projection */
+        get: operations["getUctmEvaluations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/uctm/families": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read the UCTM families projection */
+        get: operations["getUctmFamilies"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/uctm/gates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read the UCTM gates projection */
+        get: operations["getUctmGates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/uctm/lanes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read the UCTM lanes projection */
+        get: operations["getUctmLanes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/uctm/program": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read the UCTM program projection */
+        get: operations["getUctmProgram"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/uctm/receipts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read the UCTM receipts projection */
+        get: operations["getUctmReceipts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/uctm/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read the UCTM status projection */
+        get: operations["getUctmStatus"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2408,6 +2561,58 @@ export interface components {
             freed?: boolean;
             ok: boolean;
             sessionId: string;
+        };
+        LineageCounts: {
+            declaredEdges: number;
+            defects: number;
+            findings: number;
+            inferredEdges: number;
+            orchestrators: number;
+            orphaned: number;
+            roots: number;
+            workers: number;
+        };
+        LineageFinding: {
+            code: string;
+            detail: string;
+            evidence: string;
+            namespace?: string;
+            sessionId?: string;
+            severity: string;
+        };
+        LineageNode: {
+            activity?: string;
+            children: string[];
+            depth: number;
+            displayName?: string;
+            edgeSource?: string;
+            harness?: string;
+            kind: string;
+            namespace?: string;
+            ordinal?: number;
+            parentId?: string;
+            role?: string;
+            sessionId: string;
+            terminated: boolean;
+            workspaces: components["schemas"]["LineageWorkspace"][];
+        };
+        LineageReport: {
+            counts: components["schemas"]["LineageCounts"];
+            degraded: boolean;
+            findings: components["schemas"]["LineageFinding"][];
+            nodes: components["schemas"]["LineageNode"][];
+            projectId: string;
+            roots: string[];
+        };
+        LineageWorkspace: {
+            baseRef?: string;
+            baseSha?: string;
+            branch?: string;
+            path?: string;
+            pathPresent: boolean;
+            preservedRef?: string;
+            repoName?: string;
+            source: string;
         };
         ListAgentSwitchesResponse: {
             switches: components["schemas"]["AgentSwitch"][];
@@ -3197,6 +3402,52 @@ export interface components {
             reviewerHandleId: string;
             reviews: components["schemas"]["PRReviewState"][];
             runs: components["schemas"]["ReviewRun"][];
+        };
+        UCTMProjectionResponse: {
+            /** @description Authority the projection claims for itself. Recorded, never obeyed; AO's mode decides what AO does. */
+            authorityCeiling?: string;
+            /** @description The content address or ETag the UCTM service claimed. */
+            contentHashOrEtag?: string;
+            /**
+             * Format: date-time
+             * @description When it stops counting as fresh.
+             */
+            expiresAt?: null | string;
+            /**
+             * @description Derived at read time from durable projection facts. Never a stored column.
+             * @enum {string}
+             */
+            freshness: "disabled" | "fresh" | "stale" | "unknown";
+            /**
+             * Format: date-time
+             * @description When the UCTM service produced the projection.
+             */
+            generatedAt?: null | string;
+            /** @enum {string} */
+            historicalOrCurrent?: "historical" | "current" | "mixed";
+            /** @enum {string} */
+            kind: "status" | "program" | "lanes" | "gates" | "receipts" | "families" | "adjudication_queue" | "evaluations";
+            /**
+             * @description The single active UCTM integration mode.
+             * @enum {string}
+             */
+            mode: "off" | "read_only" | "shadow" | "human_gated";
+            /**
+             * Format: date-time
+             * @description When AO received it.
+             */
+            observedAt?: null | string;
+            /** @description Verbatim UCTM payload. */
+            payload?: unknown;
+            /** @description Projection namespace; empty means the unmapped/global namespace. */
+            projectId: string;
+            /** @description Stable code explaining the freshness state. */
+            reason: string;
+            receiptRef?: string;
+            schemaVersion?: string;
+            sourceCommitOrFreezeId?: string;
+            /** @description AO's own content address of the payload bytes. */
+            sourceHash?: string;
         };
         UnregisterPushDeviceResponse: {
             deleted: boolean;
@@ -9650,6 +9901,56 @@ export interface operations {
             };
         };
     };
+    getSessionLineage: {
+        parameters: {
+            query: {
+                /** @description Project id whose delegation forest is read. */
+                project: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LineageReport"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
     getSettings: {
         parameters: {
             query?: never;
@@ -10073,6 +10374,334 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SystemRequirementsResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    getUctmAdjudicationQueue: {
+        parameters: {
+            query?: {
+                /** @description Projection namespace. Omit for the unmapped/global namespace. */
+                projectId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UCTMProjectionResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    getUctmEvaluations: {
+        parameters: {
+            query?: {
+                /** @description Projection namespace. Omit for the unmapped/global namespace. */
+                projectId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UCTMProjectionResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    getUctmFamilies: {
+        parameters: {
+            query?: {
+                /** @description Projection namespace. Omit for the unmapped/global namespace. */
+                projectId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UCTMProjectionResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    getUctmGates: {
+        parameters: {
+            query?: {
+                /** @description Projection namespace. Omit for the unmapped/global namespace. */
+                projectId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UCTMProjectionResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    getUctmLanes: {
+        parameters: {
+            query?: {
+                /** @description Projection namespace. Omit for the unmapped/global namespace. */
+                projectId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UCTMProjectionResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    getUctmProgram: {
+        parameters: {
+            query?: {
+                /** @description Projection namespace. Omit for the unmapped/global namespace. */
+                projectId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UCTMProjectionResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    getUctmReceipts: {
+        parameters: {
+            query?: {
+                /** @description Projection namespace. Omit for the unmapped/global namespace. */
+                projectId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UCTMProjectionResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    getUctmStatus: {
+        parameters: {
+            query?: {
+                /** @description Projection namespace. Omit for the unmapped/global namespace. */
+                projectId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UCTMProjectionResponse"];
                 };
             };
             /** @description Internal Server Error */

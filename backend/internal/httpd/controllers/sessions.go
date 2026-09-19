@@ -81,6 +81,9 @@ var (
 // SessionService is the controller-facing session service contract.
 type SessionService interface {
 	List(ctx context.Context, filter sessionsvc.ListFilter) ([]domain.Session, error)
+	// Lineage is a read-only projection of the delegation forest. It reports the
+	// parent edges AO never persisted as findings rather than inventing them.
+	Lineage(ctx context.Context, projectID domain.ProjectID) (sessionsvc.LineageReport, error)
 	Spawn(ctx context.Context, cfg ports.SpawnConfig) (domain.Session, int, int, error)
 	SpawnOrchestrator(ctx context.Context, projectID domain.ProjectID, clean bool, requestedMode domain.SessionMode) (domain.Session, error)
 	Get(ctx context.Context, id domain.SessionID) (domain.Session, error)
@@ -160,6 +163,9 @@ func (c *SessionsController) Register(r chi.Router) {
 	r.Get("/sessions", c.list)
 	r.Post("/sessions", c.spawn)
 	r.Post("/sessions/cleanup", c.cleanup)
+	// Static path, declared beside /sessions/{sessionId}: chi resolves the static
+	// segment first, so "lineage" is never read as a session id.
+	r.Get("/sessions/lineage", c.lineage)
 	r.Get("/sessions/{sessionId}", c.get)
 	r.Get("/sessions/{sessionId}/preview", c.preview)
 	r.Post("/sessions/{sessionId}/preview", c.setPreview)
@@ -1315,6 +1321,29 @@ func (c *SessionsController) cleanup(w http.ResponseWriter, r *http.Request) {
 		skipped = append(skipped, CleanupSkippedSession{SessionID: skip.SessionID, Reason: skip.Reason})
 	}
 	envelope.WriteJSON(w, http.StatusOK, CleanupSessionsResponse{OK: true, Cleaned: out.Cleaned, Skipped: skipped})
+}
+
+// lineage renders the delegation forest the daemon can actually prove. A
+// missing project is a caller error, not an empty forest: answering 200 with no
+// nodes would read as "this project has no sessions", which is the opposite of
+// what an omitted parameter means.
+func (c *SessionsController) lineage(w http.ResponseWriter, r *http.Request) {
+	if c.Svc == nil {
+		apispec.NotImplemented(w, r, http.MethodGet, "/api/v1/sessions/lineage")
+		return
+	}
+	projectID := domain.ProjectID(r.URL.Query().Get("project"))
+	if projectID == "" {
+		envelope.WriteAPIError(w, r, http.StatusBadRequest, "bad_request", "PROJECT_REQUIRED",
+			"project query parameter is required", nil)
+		return
+	}
+	report, err := c.Svc.Lineage(r.Context(), projectID)
+	if err != nil {
+		envelope.WriteError(w, r, err)
+		return
+	}
+	envelope.WriteJSON(w, http.StatusOK, report)
 }
 
 func (c *SessionsController) send(w http.ResponseWriter, r *http.Request) {

@@ -15,6 +15,7 @@ import (
 	openapi "github.com/swaggest/openapi-go"
 	"github.com/swaggest/openapi-go/openapi31"
 
+	"github.com/aoagents/agent-orchestrator/backend/internal/domain"
 	"github.com/aoagents/agent-orchestrator/backend/internal/httpd/controllers"
 	"github.com/aoagents/agent-orchestrator/backend/internal/httpd/envelope"
 	projectsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/project"
@@ -83,6 +84,8 @@ func Build() ([]byte, error) {
 			"Target-isolated desktop browser runtime (loopback only)"),
 		*(&openapi31.Tag{Name: "system"}).WithDescription(
 			"Local machine readiness checks the desktop app runs before showing the board"),
+		*(&openapi31.Tag{Name: "uctm"}).WithDescription(
+			"Read-only UCTM projections. Loopback only, off by default, and never mounted on the mobile LAN listener"),
 	}
 
 	for _, op := range operations() {
@@ -136,11 +139,25 @@ func schemaName(_ reflect.Type, defaultName string) string {
 	return defaultName
 }
 
-// schemaNames is the exhaustive default→clean mapping for every type reflected
-// by projectOperations(). Add an entry when a new contract type is introduced;
-// the drift test fails until the spec is regenerated, which flags the gap.
+// schemaNames is the default→clean mapping for every reflected type that the
+// generator emits as a named component. Add an entry when a new contract type is
+// introduced; the drift test fails until the spec is regenerated, which flags the
+// gap. A type that is only ever a parameter or response *shape* is rendered
+// inline and never becomes a component, so it needs no entry -- and an entry for
+// it can never fire.
 var schemaNames = map[string]string{
+	// ControllersUCTMProjectionQuery is deliberately absent. It is only ever the
+	// query-parameter shape, so the generator inlines it as
+	// `schema: {description, type: string}` and `UCTMProjectionQuery` appears zero
+	// times in the generated spec. Settled the only way that settles it -- drop an
+	// entry, regenerate, compare bytes: dropping the Query entry leaves the spec
+	// byte-identical, while dropping the Response entry moves every
+	// `$ref` to `ControllersUCTMProjectionResponse`. An entry that can never match
+	// is indistinguishable from one doing its job, so this note is the evidence
+	// rather than the entry. (Same defect scratch-5 found in
+	// `SessionLineageEdgeSource`, which was inlined for the same reason.)
 	"ControllersSettingsResponse":                          "SettingsResponse",
+	"ControllersUCTMProjectionResponse":                    "UCTMProjectionResponse",
 	"ControllersDesktopWorkspaceLocationResponse":          "DesktopWorkspaceLocationResponse",
 	"ControllersUpdateSessionInterfaceRequest":             "UpdateSessionInterfaceRequest",
 	"ControllersConversationSnapshotResponse":              "ConversationSnapshotResponse",
@@ -385,6 +402,12 @@ var schemaNames = map[string]string{
 	"ProjectUpdateSettingsInput":        "UpdateProjectSettingsInput",
 	"ProjectWorkspaceRepo":              "WorkspaceRepo",
 	"SessionWorkspaceFileStatus":        "WorkspaceFileStatus",
+	// service/session delegation-lineage read model
+	"SessionLineageReport":    "LineageReport",
+	"SessionLineageNode":      "LineageNode",
+	"SessionLineageFinding":   "LineageFinding",
+	"SessionLineageWorkspace": "LineageWorkspace",
+	"SessionLineageCounts":    "LineageCounts",
 }
 
 // markRequestBodyRequired sets requestBody.required: true on the operation's
@@ -477,7 +500,60 @@ func operations() []operation {
 	ops = append(ops, browserOperations()...)
 	ops = append(ops, shellTerminalOperations()...)
 	ops = append(ops, systemOperations()...)
+	ops = append(ops, uctmOperations()...)
 	return ops
+}
+
+// uctmOperations declares the v0 read-only UCTM projection surface. The route
+// list is derived from domain.AllUCTMProjectionKinds rather than written out, so
+// a kind that gains a handler but no schema entry (or the reverse) cannot pass
+// the route/spec parity test.
+func uctmOperations() []operation {
+	ops := make([]operation, 0, len(domain.AllUCTMProjectionKinds))
+	for _, kind := range domain.AllUCTMProjectionKinds {
+		ops = append(ops, operation{
+			method: http.MethodGet, path: kind.AOFacingPath(), id: uctmOperationID(kind), tag: "uctm",
+			summary:    "Read the UCTM " + humanizeUCTMKind(kind) + " projection",
+			pathParams: []any{controllers.UCTMProjectionQuery{}},
+			resps: []respUnit{
+				{http.StatusOK, controllers.UCTMProjectionResponse{}},
+				{http.StatusInternalServerError, envelope.APIError{}},
+				{http.StatusNotImplemented, envelope.APIError{}},
+			},
+		})
+	}
+	return ops
+}
+
+// uctmOperationID turns a projection kind into the operation id clients use:
+// status -> getUctmStatus, adjudication_queue -> getUctmAdjudicationQueue.
+func uctmOperationID(kind domain.UCTMProjectionKind) string {
+	return "getUctm" + upperCamel(string(kind))
+}
+
+// humanizeUCTMKind turns a projection kind into the noun phrase used in the
+// operation summary.
+func humanizeUCTMKind(kind domain.UCTMProjectionKind) string {
+	switch kind {
+	case domain.UCTMKindAdjudicationQueue:
+		return "adjudication queue"
+	default:
+		return string(kind)
+	}
+}
+
+// upperCamel converts a snake_case identifier to UpperCamelCase.
+func upperCamel(raw string) string {
+	parts := strings.Split(raw, "_")
+	var b strings.Builder
+	for _, part := range parts {
+		if part == "" {
+			continue
+		}
+		b.WriteString(strings.ToUpper(part[:1]))
+		b.WriteString(part[1:])
+	}
+	return b.String()
 }
 
 // systemOperations declares the startup requirements gate the desktop loading
@@ -1432,6 +1508,17 @@ func sessionOperations() []operation {
 				{http.StatusOK, controllers.ListSessionsResponse{}},
 				{http.StatusBadRequest, envelope.APIError{}},
 				{http.StatusInternalServerError, envelope.APIError{}},
+			},
+		},
+		{
+			method: http.MethodGet, path: "/api/v1/sessions/lineage", id: "getSessionLineage", tag: "sessions",
+			summary:    "Read the delegation forest AO can prove for a project",
+			pathParams: []any{controllers.LineageQuery{}},
+			resps: []respUnit{
+				{http.StatusOK, controllers.LineageResponse{}},
+				{http.StatusBadRequest, envelope.APIError{}},
+				{http.StatusInternalServerError, envelope.APIError{}},
+				{http.StatusNotImplemented, envelope.APIError{}},
 			},
 		},
 		{

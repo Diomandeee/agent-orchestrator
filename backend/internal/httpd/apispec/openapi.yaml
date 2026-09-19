@@ -5054,6 +5054,45 @@ paths:
       summary: Clean up terminated session workspaces
       tags:
       - sessions
+  /api/v1/sessions/lineage:
+    get:
+      operationId: getSessionLineage
+      parameters:
+      - description: Project id whose delegation forest is read.
+        in: query
+        name: project
+        required: true
+        schema:
+          description: Project id whose delegation forest is read.
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LineageReport'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Internal Server Error
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Read the delegation forest AO can prove for a project
+      tags:
+      - sessions
   /api/v1/settings:
     get:
       operationId: getSettings
@@ -5381,6 +5420,262 @@ paths:
       summary: Check local machine readiness (git, tmux, agent harness, gh)
       tags:
       - system
+  /api/v1/uctm/adjudication/queue:
+    get:
+      operationId: getUctmAdjudicationQueue
+      parameters:
+      - description: Projection namespace. Omit for the unmapped/global namespace.
+        in: query
+        name: projectId
+        schema:
+          description: Projection namespace. Omit for the unmapped/global namespace.
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UCTMProjectionResponse'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Internal Server Error
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Read the UCTM adjudication queue projection
+      tags:
+      - uctm
+  /api/v1/uctm/evaluations:
+    get:
+      operationId: getUctmEvaluations
+      parameters:
+      - description: Projection namespace. Omit for the unmapped/global namespace.
+        in: query
+        name: projectId
+        schema:
+          description: Projection namespace. Omit for the unmapped/global namespace.
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UCTMProjectionResponse'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Internal Server Error
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Read the UCTM evaluations projection
+      tags:
+      - uctm
+  /api/v1/uctm/families:
+    get:
+      operationId: getUctmFamilies
+      parameters:
+      - description: Projection namespace. Omit for the unmapped/global namespace.
+        in: query
+        name: projectId
+        schema:
+          description: Projection namespace. Omit for the unmapped/global namespace.
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UCTMProjectionResponse'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Internal Server Error
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Read the UCTM families projection
+      tags:
+      - uctm
+  /api/v1/uctm/gates:
+    get:
+      operationId: getUctmGates
+      parameters:
+      - description: Projection namespace. Omit for the unmapped/global namespace.
+        in: query
+        name: projectId
+        schema:
+          description: Projection namespace. Omit for the unmapped/global namespace.
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UCTMProjectionResponse'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Internal Server Error
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Read the UCTM gates projection
+      tags:
+      - uctm
+  /api/v1/uctm/lanes:
+    get:
+      operationId: getUctmLanes
+      parameters:
+      - description: Projection namespace. Omit for the unmapped/global namespace.
+        in: query
+        name: projectId
+        schema:
+          description: Projection namespace. Omit for the unmapped/global namespace.
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UCTMProjectionResponse'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Internal Server Error
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Read the UCTM lanes projection
+      tags:
+      - uctm
+  /api/v1/uctm/program:
+    get:
+      operationId: getUctmProgram
+      parameters:
+      - description: Projection namespace. Omit for the unmapped/global namespace.
+        in: query
+        name: projectId
+        schema:
+          description: Projection namespace. Omit for the unmapped/global namespace.
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UCTMProjectionResponse'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Internal Server Error
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Read the UCTM program projection
+      tags:
+      - uctm
+  /api/v1/uctm/receipts:
+    get:
+      operationId: getUctmReceipts
+      parameters:
+      - description: Projection namespace. Omit for the unmapped/global namespace.
+        in: query
+        name: projectId
+        schema:
+          description: Projection namespace. Omit for the unmapped/global namespace.
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UCTMProjectionResponse'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Internal Server Error
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Read the UCTM receipts projection
+      tags:
+      - uctm
+  /api/v1/uctm/status:
+    get:
+      operationId: getUctmStatus
+      parameters:
+      - description: Projection namespace. Omit for the unmapped/global namespace.
+        in: query
+        name: projectId
+        schema:
+          description: Projection namespace. Omit for the unmapped/global namespace.
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UCTMProjectionResponse'
+          description: OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Internal Server Error
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Read the UCTM status projection
+      tags:
+      - uctm
   /api/v1/usage/sessions:
     get:
       operationId: listCompactSessionUsage
@@ -7101,6 +7396,146 @@ components:
       required:
       - ok
       - sessionId
+      type: object
+    LineageCounts:
+      properties:
+        declaredEdges:
+          type: integer
+        defects:
+          type: integer
+        findings:
+          type: integer
+        inferredEdges:
+          type: integer
+        orchestrators:
+          type: integer
+        orphaned:
+          type: integer
+        roots:
+          type: integer
+        workers:
+          type: integer
+      required:
+      - orchestrators
+      - workers
+      - roots
+      - orphaned
+      - inferredEdges
+      - declaredEdges
+      - findings
+      - defects
+      type: object
+    LineageFinding:
+      properties:
+        code:
+          type: string
+        detail:
+          type: string
+        evidence:
+          type: string
+        namespace:
+          type: string
+        sessionId:
+          type: string
+        severity:
+          type: string
+      required:
+      - code
+      - severity
+      - detail
+      - evidence
+      type: object
+    LineageNode:
+      properties:
+        activity:
+          type: string
+        children:
+          items:
+            type: string
+          type: array
+        depth:
+          type: integer
+        displayName:
+          type: string
+        edgeSource:
+          type: string
+        harness:
+          type: string
+        kind:
+          type: string
+        namespace:
+          type: string
+        ordinal:
+          type: integer
+        parentId:
+          type: string
+        role:
+          type: string
+        sessionId:
+          type: string
+        terminated:
+          type: boolean
+        workspaces:
+          items:
+            $ref: '#/components/schemas/LineageWorkspace'
+          type: array
+      required:
+      - sessionId
+      - kind
+      - terminated
+      - depth
+      - children
+      - workspaces
+      type: object
+    LineageReport:
+      properties:
+        counts:
+          $ref: '#/components/schemas/LineageCounts'
+        degraded:
+          type: boolean
+        findings:
+          items:
+            $ref: '#/components/schemas/LineageFinding'
+          type: array
+        nodes:
+          items:
+            $ref: '#/components/schemas/LineageNode'
+          type: array
+        projectId:
+          type: string
+        roots:
+          items:
+            type: string
+          type: array
+      required:
+      - projectId
+      - roots
+      - nodes
+      - findings
+      - degraded
+      - counts
+      type: object
+    LineageWorkspace:
+      properties:
+        baseRef:
+          type: string
+        baseSha:
+          type: string
+        branch:
+          type: string
+        path:
+          type: string
+        pathPresent:
+          type: boolean
+        preservedRef:
+          type: string
+        repoName:
+          type: string
+        source:
+          type: string
+      required:
+      - source
+      - pathPresent
       type: object
     ListAgentSwitchesResponse:
       properties:
@@ -9146,6 +9581,91 @@ components:
       - runs
       - created
       type: object
+    UCTMProjectionResponse:
+      properties:
+        authorityCeiling:
+          description: Authority the projection claims for itself. Recorded, never
+            obeyed; AO's mode decides what AO does.
+          type: string
+        contentHashOrEtag:
+          description: The content address or ETag the UCTM service claimed.
+          type: string
+        expiresAt:
+          description: When it stops counting as fresh.
+          format: date-time
+          type:
+          - "null"
+          - string
+        freshness:
+          description: Derived at read time from durable projection facts. Never a
+            stored column.
+          enum:
+          - disabled
+          - fresh
+          - stale
+          - unknown
+          type: string
+        generatedAt:
+          description: When the UCTM service produced the projection.
+          format: date-time
+          type:
+          - "null"
+          - string
+        historicalOrCurrent:
+          enum:
+          - historical
+          - current
+          - mixed
+          type: string
+        kind:
+          enum:
+          - status
+          - program
+          - lanes
+          - gates
+          - receipts
+          - families
+          - adjudication_queue
+          - evaluations
+          type: string
+        mode:
+          description: The single active UCTM integration mode.
+          enum:
+          - "off"
+          - read_only
+          - shadow
+          - human_gated
+          type: string
+        observedAt:
+          description: When AO received it.
+          format: date-time
+          type:
+          - "null"
+          - string
+        payload:
+          description: Verbatim UCTM payload.
+        projectId:
+          description: Projection namespace; empty means the unmapped/global namespace.
+          type: string
+        reason:
+          description: Stable code explaining the freshness state.
+          type: string
+        receiptRef:
+          type: string
+        schemaVersion:
+          type: string
+        sourceCommitOrFreezeId:
+          type: string
+        sourceHash:
+          description: AO's own content address of the payload bytes.
+          type: string
+      required:
+      - kind
+      - mode
+      - projectId
+      - freshness
+      - reason
+      type: object
     UnregisterPushDeviceResponse:
       properties:
         deleted:
@@ -9564,3 +10084,6 @@ tags:
 - description: Local machine readiness checks the desktop app runs before showing
     the board
   name: system
+- description: Read-only UCTM projections. Loopback only, off by default, and never
+    mounted on the mobile LAN listener
+  name: uctm

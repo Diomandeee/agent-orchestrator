@@ -135,6 +135,19 @@ type CleanupSessionsQuery struct {
 	Project string `query:"project,omitempty" description:"Project id filter. When omitted, clean terminated sessions across all projects."`
 }
 
+// LineageQuery is the query string accepted by GET /api/v1/sessions/lineage.
+// The handler rejects a missing project with PROJECT_REQUIRED, so mark it
+// required: requiredFromJSONTag only derives `required` from json tags, and
+// query params carry none.
+type LineageQuery struct {
+	Project string `query:"project" required:"true" description:"Project id whose delegation forest is read."`
+}
+
+// LineageResponse is the body of GET /api/v1/sessions/lineage. It is an alias,
+// not a restatement: the daemon's only definition of the forest is the service
+// read model, and a mirrored struct here could drift from it silently.
+type LineageResponse = sessionsvc.LineageReport
+
 // WorkspaceFileQuery is the query string accepted by GET /api/v1/sessions/{sessionId}/workspace/file.
 type WorkspaceFileQuery struct {
 	Path string `query:"path" description:"Session-worktree-relative file path."`
@@ -2079,4 +2092,35 @@ type MuteDeviceRequest struct {
 // routes.
 type InstallIDParam struct {
 	InstallID string `path:"installId" description:"The device's stable install id."`
+}
+
+// UCTMProjectionQuery is the shared query for the read-only UCTM projection
+// routes. The projection namespace is the AO project id when present; omitting
+// it reads the unmapped/global namespace AO uses before any mapping exists.
+type UCTMProjectionQuery struct {
+	ProjectID string `query:"projectId,omitempty" description:"Projection namespace. Omit for the unmapped/global namespace."`
+}
+
+// UCTMProjectionResponse is one UCTM read rendered for the dashboard.
+//
+// Freshness and reason are always present; provenance fields appear only when
+// AO actually holds a projection. A payload is never returned for an unknown or
+// disabled state, so a client cannot mistake an empty display for a fact.
+type UCTMProjectionResponse struct {
+	Kind                   string          `json:"kind" enum:"status,program,lanes,gates,receipts,families,adjudication_queue,evaluations"`
+	Mode                   string          `json:"mode" enum:"off,read_only,shadow,human_gated" description:"The single active UCTM integration mode."`
+	ProjectID              string          `json:"projectId" description:"Projection namespace; empty means the unmapped/global namespace."`
+	Freshness              string          `json:"freshness" enum:"disabled,fresh,stale,unknown" description:"Derived at read time from durable projection facts. Never a stored column."`
+	Reason                 string          `json:"reason" description:"Stable code explaining the freshness state."`
+	AuthorityCeiling       string          `json:"authorityCeiling,omitempty" description:"Authority the projection claims for itself. Recorded, never obeyed; AO's mode decides what AO does."`
+	ReceiptRef             string          `json:"receiptRef,omitempty"`
+	SchemaVersion          string          `json:"schemaVersion,omitempty"`
+	SourceCommitOrFreezeID string          `json:"sourceCommitOrFreezeId,omitempty"`
+	HistoricalOrCurrent    string          `json:"historicalOrCurrent,omitempty" enum:"historical,current,mixed"`
+	ContentHashOrETag      string          `json:"contentHashOrEtag,omitempty" description:"The content address or ETag the UCTM service claimed."`
+	SourceHash             string          `json:"sourceHash,omitempty" description:"AO's own content address of the payload bytes."`
+	GeneratedAt            *time.Time      `json:"generatedAt,omitempty" description:"When the UCTM service produced the projection."`
+	ObservedAt             *time.Time      `json:"observedAt,omitempty" description:"When AO received it."`
+	ExpiresAt              *time.Time      `json:"expiresAt,omitempty" description:"When it stops counting as fresh."`
+	Payload                json.RawMessage `json:"payload,omitempty" description:"Verbatim UCTM payload."`
 }
