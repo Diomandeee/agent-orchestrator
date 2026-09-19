@@ -11,9 +11,9 @@ connecting one never promotes another.
 
 | # | Layer | Connected means | Today |
 | --- | --- | --- | --- |
-| L1 | Evidence delivery | A gated recall turn reaches the model through CEF with a durable identity-only receipt | **Live** (2 receipts) |
+| L1 | Evidence delivery | A gated recall turn reaches the model through CEF with a durable identity-only receipt | **Live** (8 receipts 2026-09-18→19; tool-free turns proven; denial ladder 401/403/422 proven with zero stray receipts; ping-pong battery `/tmp/uctm-pingpong-inner.md`) |
 | L2 | Evidence hardening | Native identity, signed Graph Kernel membership, and pre-hydration read boundary are enforced, not asserted | **Partial** |
-| L3 | Spine projection | Studio reads UCTM facts over a loopback service and displays them; proposals stay advisory | **Partial** — v0 read surface implemented, spine service implemented, frontend view implemented and rendered against a live service; one live read verified on a throwaway instance; off by default, no launcher wiring, deployed daemon unchanged (`AO_F2_READONLY_PROJECTION_2026-09-19.md`, `AO_F3_1_SPINE_SERVICE_2026-09-19.md`, `AO_F3_FRONTEND_PROJECTION_2026-09-19.md`) |
+| L3 | Spine projection | Studio reads UCTM facts over a loopback service and displays them; proposals stay advisory | **Live in read_only** 2026-09-19 — daemon relaunched with `UCTM_MODE=read_only` + spine endpoint; `GET /api/v1/uctm/status` returns `fresh_projection` with receipt etag byte-identical to the spine's live content hash; proposals stay advisory, no authority widened |
 | L4 | Governance | PACT/pPACT, SQUID, Canonical and Spine independently authorize a specific effect | **Not started** |
 | L5 | Learning | Learned Harness and Harness Router act only on split-locked, evaluated evidence | **Advisory only** |
 | L6 | Release | Signed, installable, advisory-clean distribution | **Dev runtime** |

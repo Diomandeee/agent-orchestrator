@@ -1,14 +1,35 @@
 {
-  "generated_at": "2026-09-19T19:24:33.557Z",
-  "orientation_id": "sha256:350be77f612b482ea9e49ee2b39fdfb76276efee8a017f03e9596976c41c0555",
+  "generated_at": "2026-09-19T21:13:24.063Z",
+  "orientation_id": "sha256:576b5ffaacc4a2fafe99fca6eda08bf77084f13051bbc6b2d6e1b53827cb0c71",
   "schema": "uctm.orientation.v0",
   "how_to_use": "Record orientation_id when you finish orienting. On return, run `node scripts/uctm-orient.mjs --check`: exit 0 means every dimension here was compared and nothing moved, so do not re-read. Exit 1 prints the exact paths that moved, and you read only those. Exit 3 means a dimension could not be read in this shell -- most often the session root, when $HOME is rewritten -- so the run says `incomplete:` and deliberately does not say `oriented`; run `--where` to see the root it resolved, the root this packet recorded, and every candidate it tried, then name one with --workers-root or UCTM_WORKERS_ROOT. A root that is missing or unreadable is never reported as an empty one, and `--write` refuses rather than drop pointers it could not read. `--write` regenerates; a write over an unchanged world is byte-identical on purpose. A check that exits 0 has oriented you even when `orientation_id` differs from the one recorded here: the id also covers the worktree's dirty digest, so an edit to any source file moves it without moving a receipt. `--check` names that case and still exits 0, so key on the exit code and the reason string rather than on id equality -- an id that moved is not by itself a reason to re-read. `--write` records the whole fleet as it stands at that instant, including another session's in-flight edit, so a temporary experiment surfaces as drift once it is undone; point a negative control at a new file instead of editing one the packet already records.",
   "worktree": {
     "branch": "codex/uctm-interface-v0",
-    "head": "c8e0598ccdfe9611830965d631e405c667f53bc2",
-    "dirty_count": 0,
-    "dirty_id": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-    "dirty": []
+    "head": "2ea390cd76e8fb1625e68f4eb8e48950724054d9",
+    "dirty_count": 4,
+    "dirty_id": "sha256:7609ee33d77da8ece9e255c2cc96a699783942995369f7780d97e93423f3d91c",
+    "dirty": [
+      {
+        "status": "M",
+        "path": "bridge/__pycache__/deepseek_proxy.cpython-314.pyc",
+        "sha256": "32b45bd15337fc8b8d6cd272716f025c8001bdfa508283fbbbacfb7922654738"
+      },
+      {
+        "status": "M",
+        "path": "bridge/__pycache__/test_deepseek_proxy.cpython-314.pyc",
+        "sha256": "5ad54a8319c8c94e65e4576bf56bc8d8146b0db9ba61a4c44220ec99efe9f89f"
+      },
+      {
+        "status": "M",
+        "path": "docs/uctm/CONNECTION_PLAN_2026-09-18.md",
+        "sha256": "a9de9b44684c261e773ab6b4a41a8f2e21b8380bd1a759b5cf0d3d9b083a666b"
+      },
+      {
+        "status": "??",
+        "path": "docs/uctm/PACT_DECISION_PACKET_DRAFT_2026-09-19.md",
+        "sha256": "240e9605827ebf80a17329b57f9e58f0bacc586a43eeab9598c71ffcf3d45e66"
+      }
+    ]
   },
   "documents": [
     {
@@ -87,8 +108,8 @@
     {
       "path": "docs/uctm/CONNECTION_PLAN_2026-09-18.md",
       "role": "plan",
-      "bytes": 25748,
-      "sha256": "8fdae8bec0395b6c4a3e2e85ae06e21bfdf2e229d58823f58998d8141e081a65",
+      "bytes": 25791,
+      "sha256": "a9de9b44684c261e773ab6b4a41a8f2e21b8380bd1a759b5cf0d3d9b083a666b",
       "title": "UCTM Studio connection plan — 2026-09-18"
     },
     {
@@ -196,6 +217,14 @@
       "sha256": "ed890b8d140ec7b593ea57ab900838b70e51359ab85cdd3e916b1f4607a0b9bd",
       "title": "Mobile port lineage: the iOS session board and the AO phone app are one rule set",
       "status": "verified 2026-09-19; differential corrected and fixed, see the correction below. `packages/uctm-mobile-ios/Sources/SessionBoard.swift` is a deliberate port of three AO phone-app view-model modules, and this document names both sides so the evidence kernel can point at them. Placed because the whole package was invisible to `--impact` before it: the code node set is exactly the repository paths the indexed documents name, and no document named any of them."
+    },
+    {
+      "path": "docs/uctm/PACT_DECISION_PACKET_DRAFT_2026-09-19.md",
+      "role": "reference",
+      "bytes": 3338,
+      "sha256": "240e9605827ebf80a17329b57f9e58f0bacc586a43eeab9598c71ffcf3d45e66",
+      "title": "PACT decision packet — DRAFT, unsigned (2026-09-19)",
+      "status": "discussion draft, not a contract. Nothing here authorizes any effect. WS4.1 requires a signed contract before code, and WS0.1/WS0.4 require Mohamed's written decisions. This packet exists so those decisions arrive as checkboxes, not essays. Each item ends with a recommendation and a `[ ]`."
     },
     {
       "path": "docs/uctm/READINESS_CONTRACT.json",
@@ -1067,8 +1096,8 @@
     "note": "Session workspaces are machine-local. The list is an observation of what has been written, not a roster of who is running."
   },
   "totals": {
-    "documents": 16,
-    "pointed_bytes": 204120,
+    "documents": 17,
+    "pointed_bytes": 207501,
     "sessions": 8,
     "session_artifacts": 130
   },
