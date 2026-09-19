@@ -188,11 +188,13 @@ func ClaudePermissionArgs(policy PermissionPolicy) []string {
 func CodexPermissionArgs(policy PermissionPolicy) []string {
 	switch NormalizePermissionPolicy(policy) {
 	case PermissionAcceptEdits:
-		return []string{"--ask-for-approval", "on-request"}
+		return []string{"--ask-for-approval", "on-request", "--sandbox", "workspace-write"}
 	case PermissionAuto:
-		return []string{"--ask-for-approval", "on-request", "-c", `approvals_reviewer="auto_review"`}
-	default:
+		return []string{"--ask-for-approval", "on-request", "--sandbox", "workspace-write", "-c", `approvals_reviewer="auto_review"`}
+	case PermissionBypassPermissions:
 		return []string{"--dangerously-bypass-approvals-and-sandbox"}
+	default:
+		return []string{"--ask-for-approval", "on-request", "--sandbox", "read-only"}
 	}
 }
 

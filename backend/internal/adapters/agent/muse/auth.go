@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
+	aoprocess "github.com/aoagents/agent-orchestrator/backend/internal/process"
 	"github.com/aoagents/agent-orchestrator/backend/internal/ports"
 )
 
@@ -39,7 +41,35 @@ func museLocalAuthStatus(ctx context.Context) (ports.AgentAuthStatus, bool, erro
 	if !ok {
 		return ports.AgentAuthStatusUnknown, false, nil
 	}
-	return museAuthJSONStatus(path)
+	if status, ok, err := museAuthJSONStatus(path); err != nil || ok {
+		return status, ok, err
+	}
+	// The official launcher keeps working OAuth sessions in the macOS
+	// Keychain while auth.json carries empty tokens, so a file-only check
+	// reports Unknown for a logged-in machine. Presence of the Keychain
+	// item is the whole signal; its secret value is never read.
+	if museKeychainProbe(ctx) {
+		return ports.AgentAuthStatusAuthorized, true, nil
+	}
+	return ports.AgentAuthStatusUnknown, false, nil
+}
+
+// museKeychainService is the macOS Keychain generic-password service the
+// official launcher uses for Meta OAuth (account "meta").
+const museKeychainService = "ai.meta.dev.credentials"
+
+// museKeychainProbe is a variable so tests can stub the OS Keychain.
+var museKeychainProbe = probeMuseKeychain
+
+func probeMuseKeychain(ctx context.Context) bool {
+	if runtime.GOOS != "darwin" {
+		return false
+	}
+	cmd := aoprocess.CommandContext(ctx, "/usr/bin/security",
+		"find-generic-password", "-s", museKeychainService)
+	// Output discarded: exit 0 (item exists) is the entire signal. A
+	// locked Keychain in a headless daemon session fails closed to Unknown.
+	return cmd.Run() == nil
 }
 
 // museAuthPath mirrors the official launcher: MUSE_AUTH_PATH wins, then the

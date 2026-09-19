@@ -96,6 +96,11 @@ func TestMuseAuthJSONStatusRejectsMalformedJSON(t *testing.T) {
 func TestMuseLocalAuthStatusUnknownWhenMissing(t *testing.T) {
 	clearMuseAuthEnv(t)
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
+	// Isolate from the developer machine's real Keychain: this case covers
+	// "no credential anywhere", not the Keychain fallback below.
+	old := museKeychainProbe
+	museKeychainProbe = func(context.Context) bool { return false }
+	t.Cleanup(func() { museKeychainProbe = old })
 	status, ok, err := museLocalAuthStatus(context.Background())
 	if err != nil {
 		t.Fatal(err)
@@ -114,6 +119,30 @@ func TestAuthStatusUsesLocalCredentialProbe(t *testing.T) {
 	}
 	if status != ports.AgentAuthStatusAuthorized {
 		t.Fatalf("status = %q, want %q", status, ports.AgentAuthStatusAuthorized)
+	}
+}
+
+func TestMuseLocalAuthStatusFallsBackToMacOSKeychain(t *testing.T) {
+	clearMuseAuthEnv(t)
+	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
+	old := museKeychainProbe
+	museKeychainProbe = func(context.Context) bool { return true }
+	t.Cleanup(func() { museKeychainProbe = old })
+	status, ok, err := museLocalAuthStatus(context.Background())
+	if err != nil || !ok || status != ports.AgentAuthStatusAuthorized {
+		t.Fatalf("status = (%q, %v, %v), want (authorized, true, nil)", status, ok, err)
+	}
+}
+
+func TestMuseLocalAuthStatusUnknownWhenKeychainProbeFails(t *testing.T) {
+	clearMuseAuthEnv(t)
+	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
+	old := museKeychainProbe
+	museKeychainProbe = func(context.Context) bool { return false }
+	t.Cleanup(func() { museKeychainProbe = old })
+	status, ok, err := museLocalAuthStatus(context.Background())
+	if err != nil || ok || status != ports.AgentAuthStatusUnknown {
+		t.Fatalf("status = (%q, %v, %v), want (unknown, false, nil)", status, ok, err)
 	}
 }
 

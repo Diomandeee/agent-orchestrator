@@ -56,6 +56,22 @@ func TestCodexAuthStatusFromOutputRequiresAffirmativeEvidence(t *testing.T) {
 	}
 }
 
+func TestResolveCodexBinaryExplicitOverride(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "codex")
+	if err := os.WriteFile(path, []byte("#!/bin/sh\n"), 0700); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("AO_CODEX_BIN", path)
+	got, err := ResolveCodexBinary(context.Background())
+	if err != nil || got != path {
+		t.Fatalf("ResolveCodexBinary = %q, %v; want %q", got, err, path)
+	}
+	t.Setenv("AO_CODEX_BIN", "relative/codex")
+	if _, err := ResolveCodexBinary(context.Background()); err == nil {
+		t.Fatal("relative override must fail closed")
+	}
+}
+
 func TestNativeConversationExistsRequiresActivePersistedCodexRollout(t *testing.T) {
 	p := &Plugin{}
 	id := "019fc430-1234-7abc-8def-0123456789ab"
@@ -489,18 +505,19 @@ func TestGetLaunchCommandMapsApprovalModes(t *testing.T) {
 		{
 			name:       "default",
 			permission: ports.PermissionModeDefault,
-			want:       []string{"--dangerously-bypass-approvals-and-sandbox"},
+			want:       []string{"--ask-for-approval", "on-request", "--sandbox", "read-only"},
+			notExpected: "--dangerously-bypass-approvals-and-sandbox",
 		},
 		{
 			name:        "accept-edits",
 			permission:  ports.PermissionModeAcceptEdits,
-			want:        []string{"--ask-for-approval", "on-request"},
+			want:        []string{"--ask-for-approval", "on-request", "--sandbox", "workspace-write"},
 			notExpected: "--dangerously-bypass-approvals-and-sandbox",
 		},
 		{
 			name:        "auto",
 			permission:  ports.PermissionModeAuto,
-			want:        []string{"--ask-for-approval", "on-request", "-c", `approvals_reviewer="auto_review"`},
+			want:        []string{"--ask-for-approval", "on-request", "--sandbox", "workspace-write", "-c", `approvals_reviewer="auto_review"`},
 			notExpected: "--dangerously-bypass-approvals-and-sandbox",
 		},
 		{
@@ -511,7 +528,8 @@ func TestGetLaunchCommandMapsApprovalModes(t *testing.T) {
 		{
 			name:       "empty",
 			permission: "",
-			want:       []string{"--dangerously-bypass-approvals-and-sandbox"},
+			want:       []string{"--ask-for-approval", "on-request", "--sandbox", "read-only"},
+			notExpected: "--dangerously-bypass-approvals-and-sandbox",
 		},
 	}
 
@@ -818,6 +836,7 @@ func TestGetRestoreCommandReadsAgentSessionID(t *testing.T) {
 		"-c", "notice.hide_rate_limit_model_nudge=true",
 		"--dangerously-bypass-hook-trust",
 		"--ask-for-approval", "on-request",
+		"--sandbox", "workspace-write",
 		"-c", `approvals_reviewer="auto_review"`,
 	}
 	want = append(want, sessionHookFlags(t)...)

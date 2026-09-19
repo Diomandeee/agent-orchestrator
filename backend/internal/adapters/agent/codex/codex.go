@@ -331,6 +331,16 @@ func ResolveCodexBinary(ctx context.Context) (string, error) {
 	if err := ctx.Err(); err != nil {
 		return "", err
 	}
+	if override := os.Getenv("AO_CODEX_BIN"); override != "" {
+		if !filepath.IsAbs(override) {
+			return "", fmt.Errorf("codex: AO_CODEX_BIN must be absolute")
+		}
+		info, err := os.Stat(override)
+		if err != nil || info.IsDir() || info.Mode()&0111 == 0 {
+			return "", fmt.Errorf("codex: AO_CODEX_BIN is not executable")
+		}
+		return override, nil
+	}
 
 	if runtime.GOOS == "windows" {
 		candidates := []string{}
