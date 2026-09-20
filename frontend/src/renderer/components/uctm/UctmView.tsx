@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { uctmProjectionKindLabelKeys, uctmProjectionKinds } from "../../lib/uctm-projection";
 import { UctmProjectionPanel } from "./UctmProjectionPanel";
+import { CliSessionsPanel } from "./CliSessionsPanel";
 
 /**
  * The project-scoped UCTM projection view.
@@ -27,6 +28,7 @@ export function UctmView({ projectId }: { projectId: string }) {
 					<UctmProjectionPanel key={kind} kind={kind} projectId={projectId} />
 				))}
 			</div>
+			<CliSessionsPanel />
 			<div className="px-4.5 pb-5 text-caption text-passive">
 				{t("uctm.footer", { kinds: uctmProjectionKinds.length })}{" "}
 				{uctmProjectionKinds.map((kind) => t(uctmProjectionKindLabelKeys[kind])).join(" · ")}

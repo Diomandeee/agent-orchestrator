@@ -1392,5 +1392,9 @@
 	"uctm.field.expiresAt": "Vigente hasta",
 	"uctm.field.contentHash": "Dirección de contenido reclamada",
 	"uctm.field.sourceHash": "Dirección de contenido de AO",
-	"uctm.field.receipt": "Referencia del recibo"
+	"uctm.field.receipt": "Referencia del recibo",
+	"uctm.cli.title": "Hilos de CLI",
+	"uctm.cli.empty": "No se encontraron sesiones de CLI.",
+	"uctm.cli.unverified": "sin verificar",
+	"uctm.cli.capped": "{{count}} más recientes"
 }

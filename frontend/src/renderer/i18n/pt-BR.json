@@ -1392,5 +1392,9 @@
 	"uctm.field.expiresAt": "Válido até",
 	"uctm.field.contentHash": "Endereço de conteúdo reivindicado",
 	"uctm.field.sourceHash": "Endereço de conteúdo da AO",
-	"uctm.field.receipt": "Referência do recibo"
+	"uctm.field.receipt": "Referência do recibo",
+	"uctm.cli.title": "Conversas de CLI",
+	"uctm.cli.empty": "Nenhuma sessão de CLI encontrada.",
+	"uctm.cli.unverified": "não verificado",
+	"uctm.cli.capped": "{{count}} mais recentes exibidos"
 }

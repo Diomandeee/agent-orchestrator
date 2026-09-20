@@ -1374,5 +1374,9 @@
 	"uctm.field.expiresAt": "有効期限",
 	"uctm.field.contentHash": "主張された内容アドレス",
 	"uctm.field.sourceHash": "AO 内容アドレス",
-	"uctm.field.receipt": "レシート参照"
+	"uctm.field.receipt": "レシート参照",
+	"uctm.cli.title": "CLIスレッド",
+	"uctm.cli.empty": "CLIセッションが見つかりません。",
+	"uctm.cli.unverified": "未検証",
+	"uctm.cli.capped": "新しい順に{{count}}件表示"
 }

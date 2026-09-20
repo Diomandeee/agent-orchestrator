@@ -56,6 +56,15 @@ type APIDeps struct {
 	// integration is distinguishable from a route that was never mounted.
 	UCTM controllers.UCTMProjectionService
 
+	// CLIChat is nil until the daemon wires the read-only CLI session
+	// reader. Same 501 pattern as UCTM: unwired is distinguishable from
+	// unmounted.
+	CLIChat controllers.CLICLIChatService
+
+	// Parks is nil until the daemon wires the read-only parked-idea
+	// reader. Same 501 pattern: unwired is distinguishable from unmounted.
+	Parks controllers.ParksService
+
 	// Presence tracks which mobile devices are currently running the app.
 	// Nil disables presence tracking (the roster then reports every device offline).
 	Presence *presence.Tracker
@@ -115,6 +124,8 @@ type API struct {
 	system        *controllers.SystemController
 	systemInstall *controllers.SystemInstallController
 	uctm          *controllers.UCTMController
+	clichat       *controllers.CLIChatController
+	parks         *controllers.ParksController
 	events        *EventsController
 }
 
@@ -154,6 +165,8 @@ func NewAPI(cfg config.Config, deps APIDeps) *API {
 		system:        &controllers.SystemController{Checks: deps.SystemChecks},
 		systemInstall: &controllers.SystemInstallController{Installer: deps.Installer},
 		uctm:          &controllers.UCTMController{Svc: deps.UCTM},
+		clichat:       &controllers.CLIChatController{Svc: deps.CLIChat},
+		parks:         &controllers.ParksController{Svc: deps.Parks},
 		events:        &EventsController{Source: deps.CDC, Live: deps.Events},
 	}
 }
@@ -190,6 +203,8 @@ func (a *API) Register(root chi.Router) {
 			a.system.Register(r)
 			a.systemInstall.Register(r)
 			a.uctm.Register(r)
+			a.clichat.Register(r)
+			a.parks.Register(r)
 			// Sibling REST controllers plug in here.
 		})
 		// Long-lived streams intentionally bypass the REST timeout middleware.

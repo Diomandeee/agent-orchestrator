@@ -820,6 +820,7 @@
 	"shell.downloadUpdateVersion": "Download update v{{version}}",
 	"shell.expandSidebar": "Expand sidebar",
 	"shell.expandSidebarTitle": "Expand sidebar · Ctrl+B",
+	"shell.garden": "Idea Garden",
 	"shell.idleSessions": "Idle sessions",
 	"shell.idleWorkingSessions": "Idle / Working sessions",
 	"shell.intakeIssue": "Intake issue: {{id}}",
@@ -1356,5 +1357,17 @@
 	"uctm.field.expiresAt": "Fresh until",
 	"uctm.field.contentHash": "Claimed content address",
 	"uctm.field.sourceHash": "AO content address",
-	"uctm.field.receipt": "Receipt reference"
+	"uctm.field.receipt": "Receipt reference",
+	"uctm.garden.title": "Idea Garden",
+	"uctm.garden.subtitle": "Parked ideas. Each card is a sleeping conversation thread.",
+	"uctm.garden.readOnlyBanner": "Read-only: threads resume in a terminal with uctm resume. Nothing here can wake one.",
+	"uctm.garden.empty": "No parked ideas yet. Park a thread and it appears here.",
+	"uctm.garden.loading": "Reading parked ideas\u2026",
+	"uctm.garden.error": "The garden did not answer.",
+	"uctm.garden.blocked": "{{count}} blocked",
+	"uctm.garden.next": "{{count}} next",
+	"uctm.garden.resume": "Resume in a terminal:",
+	"uctm.garden.packet.show": "Show the handoff packet",
+	"uctm.garden.packet.absent": "No packet received.",
+	"uctm.garden.footer": "Threads resume in the terminal, never from here."
 }

@@ -5452,6 +5452,72 @@ paths:
       summary: Read the UCTM adjudication queue projection
       tags:
       - uctm
+  /api/v1/uctm/cli-sessions:
+    get:
+      operationId: listUctmCliSessions
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ControllersCLISessionSummary'
+                type: array
+          description: OK
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: List UCTM CLI sessions with chain status
+      tags:
+      - uctm
+  /api/v1/uctm/cli-sessions/{id}/transcript:
+    get:
+      operationId: getUctmCliTranscript
+      parameters:
+      - description: CLI session identifier (filename stem).
+        in: path
+        name: id
+        required: true
+        schema:
+          description: CLI session identifier (filename stem).
+          type: string
+      - description: Max events newest-first. Defaults to the 200-event cap.
+        in: query
+        name: limit
+        schema:
+          description: Max events newest-first. Defaults to the 200-event cap.
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ControllersCLITranscriptResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Found
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Read a capped newest-first CLI session transcript
+      tags:
+      - uctm
   /api/v1/uctm/evaluations:
     get:
       operationId: getUctmEvaluations
@@ -5578,6 +5644,60 @@ paths:
                 $ref: '#/components/schemas/APIError'
           description: Not Implemented
       summary: Read the UCTM lanes projection
+      tags:
+      - uctm
+  /api/v1/uctm/parks:
+    get:
+      operationId: listUctmParks
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ControllersParkSummary'
+                type: array
+          description: OK
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: List parked ideas for the Idea Garden
+      tags:
+      - uctm
+  /api/v1/uctm/parks/{name}/packet:
+    get:
+      operationId: getUctmParkPacket
+      parameters:
+      - description: Parked idea identifier (packet filename stem).
+        in: path
+        name: name
+        required: true
+        schema:
+          description: Parked idea identifier (packet filename stem).
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ControllersParkPacketResponse'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Found
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Read one parked idea's handoff packet verbatim
       tags:
       - uctm
   /api/v1/uctm/program:
@@ -6211,6 +6331,98 @@ components:
       properties:
         disabled:
           type: boolean
+      type: object
+    ControllersCLISessionSummary:
+      properties:
+        chainOk:
+          type: boolean
+        display:
+          type: string
+        id:
+          type: string
+        lastActivityNs:
+          type: string
+        messageCount:
+          type: integer
+        project:
+          type: string
+        tailDigest:
+          type: string
+      required:
+      - id
+      - display
+      - messageCount
+      - lastActivityNs
+      - chainOk
+      type: object
+    ControllersCLITranscriptEvent:
+      properties:
+        data: {}
+        kind:
+          type: string
+        seq:
+          minimum: 0
+          type: integer
+        timeNs:
+          type: string
+      required:
+      - seq
+      - kind
+      - timeNs
+      - data
+      type: object
+    ControllersCLITranscriptResponse:
+      properties:
+        cappedAt:
+          type: integer
+        chainOk:
+          type: boolean
+        events:
+          items:
+            $ref: '#/components/schemas/ControllersCLITranscriptEvent'
+          type: array
+        id:
+          type: string
+        total:
+          type: integer
+      required:
+      - id
+      - chainOk
+      - total
+      - cappedAt
+      - events
+      type: object
+    ControllersParkPacketResponse:
+      properties:
+        name:
+          type: string
+        packet: {}
+      required:
+      - name
+      - packet
+      type: object
+    ControllersParkSummary:
+      properties:
+        blocked:
+          items:
+            type: string
+          type: array
+        created:
+          type: string
+        name:
+          type: string
+        next:
+          items:
+            type: string
+          type: array
+        state:
+          type: string
+      required:
+      - name
+      - created
+      - state
+      - blocked
+      - next
       type: object
     ControllersRequestRereviewRequest:
       properties:

@@ -501,7 +501,60 @@ func operations() []operation {
 	ops = append(ops, shellTerminalOperations()...)
 	ops = append(ops, systemOperations()...)
 	ops = append(ops, uctmOperations()...)
+	ops = append(ops, clichatOperations()...)
+	ops = append(ops, parksOperations()...)
 	return ops
+}
+
+// parksOperations declares the read-only parked-idea surface. The daemon
+// never writes the parks store; a missing packet is 404, never invented.
+func parksOperations() []operation {
+	return []operation{
+		{
+			method: http.MethodGet, path: "/api/v1/uctm/parks", id: "listUctmParks", tag: "uctm",
+			summary: "List parked ideas for the Idea Garden",
+			resps: []respUnit{
+				{http.StatusOK, []controllers.ParkSummary{}},
+				{http.StatusNotImplemented, envelope.APIError{}},
+			},
+		},
+		{
+			method: http.MethodGet, path: "/api/v1/uctm/parks/{name}/packet", id: "getUctmParkPacket", tag: "uctm",
+			summary:    "Read one parked idea's handoff packet verbatim",
+			pathParams: []any{controllers.ParkIDParam{}},
+			resps: []respUnit{
+				{http.StatusOK, controllers.ParkPacketResponse{}},
+				{http.StatusNotFound, envelope.APIError{}},
+				{http.StatusNotImplemented, envelope.APIError{}},
+			},
+		},
+	}
+}
+
+// clichatOperations declares the read-only CLI session surface. The daemon
+// never writes the CLI session store; broken chains degrade, never repair.
+func clichatOperations() []operation {
+	return []operation{
+		{
+			method: http.MethodGet, path: "/api/v1/uctm/cli-sessions", id: "listUctmCliSessions", tag: "uctm",
+			summary: "List UCTM CLI sessions with chain status",
+			resps: []respUnit{
+				{http.StatusOK, []controllers.CLISessionSummary{}},
+				{http.StatusNotImplemented, envelope.APIError{}},
+			},
+		},
+		{
+			method: http.MethodGet, path: "/api/v1/uctm/cli-sessions/{id}/transcript", id: "getUctmCliTranscript", tag: "uctm",
+			summary:    "Read a capped newest-first CLI session transcript",
+			pathParams: []any{controllers.CLISessionIDParam{}, controllers.CLITranscriptQuery{}},
+			resps: []respUnit{
+				{http.StatusOK, controllers.CLITranscriptResponse{}},
+				{http.StatusBadRequest, envelope.APIError{}},
+				{http.StatusNotFound, envelope.APIError{}},
+				{http.StatusNotImplemented, envelope.APIError{}},
+			},
+		},
+	}
 }
 
 // uctmOperations declares the v0 read-only UCTM projection surface. The route

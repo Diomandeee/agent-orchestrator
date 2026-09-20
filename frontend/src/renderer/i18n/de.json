@@ -1374,5 +1374,9 @@
 	"uctm.field.expiresAt": "Gültig bis",
 	"uctm.field.contentHash": "Beanspruchte Inhaltsadresse",
 	"uctm.field.sourceHash": "AO-Inhaltsadresse",
-	"uctm.field.receipt": "Belegreferenz"
+	"uctm.field.receipt": "Belegreferenz",
+	"uctm.cli.title": "CLI-Threads",
+	"uctm.cli.empty": "Keine CLI-Sitzungen gefunden.",
+	"uctm.cli.unverified": "ungeprüft",
+	"uctm.cli.capped": "neueste {{count}} angezeigt"
 }

@@ -1790,6 +1790,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/uctm/cli-sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List UCTM CLI sessions with chain status */
+        get: operations["listUctmCliSessions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/uctm/cli-sessions/{id}/transcript": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read a capped newest-first CLI session transcript */
+        get: operations["getUctmCliTranscript"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/uctm/evaluations": {
         parameters: {
             query?: never;
@@ -1850,6 +1884,40 @@ export interface paths {
         };
         /** Read the UCTM lanes projection */
         get: operations["getUctmLanes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/uctm/parks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List parked ideas for the Idea Garden */
+        get: operations["listUctmParks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/uctm/parks/{name}/packet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read one parked idea's handoff packet verbatim */
+        get: operations["getUctmParkPacket"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2122,6 +2190,39 @@ export interface components {
         };
         ContainerReapConfig: {
             disabled?: boolean;
+        };
+        ControllersCLISessionSummary: {
+            chainOk: boolean;
+            display: string;
+            id: string;
+            lastActivityNs: string;
+            messageCount: number;
+            project?: string;
+            tailDigest?: string;
+        };
+        ControllersCLITranscriptEvent: {
+            data: unknown;
+            kind: string;
+            seq: number;
+            timeNs: string;
+        };
+        ControllersCLITranscriptResponse: {
+            cappedAt: number;
+            chainOk: boolean;
+            events: components["schemas"]["ControllersCLITranscriptEvent"][];
+            id: string;
+            total: number;
+        };
+        ControllersParkPacketResponse: {
+            name: string;
+            packet: unknown;
+        };
+        ControllersParkSummary: {
+            blocked: string[];
+            created: string;
+            name: string;
+            next: string[];
+            state: string;
         };
         ControllersRequestRereviewRequest: {
             /** @description Tracked pull request URL. Required when the session has multiple PRs. */
@@ -10437,6 +10538,88 @@ export interface operations {
             };
         };
     };
+    listUctmCliSessions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ControllersCLISessionSummary"][];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    getUctmCliTranscript: {
+        parameters: {
+            query?: {
+                /** @description Max events newest-first. Defaults to the 200-event cap. */
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                /** @description CLI session identifier (filename stem). */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ControllersCLITranscriptResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
     getUctmEvaluations: {
         parameters: {
             query?: {
@@ -10583,6 +10766,76 @@ export interface operations {
             };
             /** @description Internal Server Error */
             500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    listUctmParks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ControllersParkSummary"][];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    getUctmParkPacket: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Parked idea identifier (packet filename stem). */
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ControllersParkPacketResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -41,9 +41,11 @@ import (
 	agentsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/agent"
 	browsersvc "github.com/aoagents/agent-orchestrator/backend/internal/service/browser"
 	chatsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/chat"
+	clichatsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/clichat"
 	devimportsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/devimport"
 	importsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/importer"
 	notificationsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/notification"
+	parksvc "github.com/aoagents/agent-orchestrator/backend/internal/service/parks"
 	prsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/pr"
 	projectsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/project"
 	settingssvc "github.com/aoagents/agent-orchestrator/backend/internal/service/settings"
@@ -468,6 +470,8 @@ func Run() error {
 			},
 		}),
 		UCTM:                wireUCTMProjection(cfg.UCTM, store, log),
+		CLIChat:             clichatsvc.Service{Dir: clichatsvc.SessionsDir()},
+		Parks:               parksvc.Service{Dir: parksvc.ParksDir()},
 		Browser:             browserService,
 		PreviewServer:       managedPreview,
 		SessionCapabilities: browserAuthority,

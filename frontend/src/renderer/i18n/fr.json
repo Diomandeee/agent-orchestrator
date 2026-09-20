@@ -1392,5 +1392,9 @@
 	"uctm.field.expiresAt": "Valide jusqu'à",
 	"uctm.field.contentHash": "Adresse de contenu revendiquée",
 	"uctm.field.sourceHash": "Adresse de contenu AO",
-	"uctm.field.receipt": "Référence du reçu"
+	"uctm.field.receipt": "Référence du reçu",
+	"uctm.cli.title": "Fils CLI",
+	"uctm.cli.empty": "Aucune session CLI trouvée.",
+	"uctm.cli.unverified": "non vérifié",
+	"uctm.cli.capped": "{{count}} les plus récents affichés"
 }

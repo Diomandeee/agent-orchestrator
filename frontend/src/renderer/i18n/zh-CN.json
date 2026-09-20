@@ -1356,5 +1356,9 @@
 	"uctm.field.expiresAt": "有效期至",
 	"uctm.field.contentHash": "声称的内容地址",
 	"uctm.field.sourceHash": "AO 内容地址",
-	"uctm.field.receipt": "凭据引用"
+	"uctm.field.receipt": "凭据引用",
+	"uctm.cli.title": "CLI 会话",
+	"uctm.cli.empty": "未找到 CLI 会话。",
+	"uctm.cli.unverified": "未验证",
+	"uctm.cli.capped": "显示最新的 {{count}} 条"
 }

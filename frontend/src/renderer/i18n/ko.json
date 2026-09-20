@@ -1374,5 +1374,9 @@
 	"uctm.field.expiresAt": "유효 기한",
 	"uctm.field.contentHash": "주장된 콘텐츠 주소",
 	"uctm.field.sourceHash": "AO 콘텐츠 주소",
-	"uctm.field.receipt": "영수증 참조"
+	"uctm.field.receipt": "영수증 참조",
+	"uctm.cli.title": "CLI 스레드",
+	"uctm.cli.empty": "CLI 세션을 찾을 수 없습니다.",
+	"uctm.cli.unverified": "미확인",
+	"uctm.cli.capped": "최신 {{count}}개 표시"
 }
