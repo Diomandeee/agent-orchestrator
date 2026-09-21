@@ -43,6 +43,7 @@ import (
 	chatsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/chat"
 	clichatsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/clichat"
 	devimportsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/devimport"
+	distsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/dist"
 	importsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/importer"
 	notificationsvc "github.com/aoagents/agent-orchestrator/backend/internal/service/notification"
 	parksvc "github.com/aoagents/agent-orchestrator/backend/internal/service/parks"
@@ -472,6 +473,7 @@ func Run() error {
 		UCTM:                wireUCTMProjection(cfg.UCTM, store, log),
 		CLIChat:             clichatsvc.Service{Dir: clichatsvc.SessionsDir()},
 		Parks:               parksvc.Service{Dir: parksvc.ParksDir()},
+		Dist:                distsvc.Service{Dir: distsvc.DistDir()},
 		Browser:             browserService,
 		PreviewServer:       managedPreview,
 		SessionCapabilities: browserAuthority,

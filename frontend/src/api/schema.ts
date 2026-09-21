@@ -157,6 +157,91 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/dist/enqueue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Enqueue a draft distribution item */
+        post: operations["enqueueDistItem"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/dist/items/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Move a distribution item between draft and scheduled */
+        patch: operations["setDistItemStatus"];
+        trace?: never;
+    };
+    "/api/v1/dist/queue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List distribution items in firing order */
+        get: operations["listDistQueue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/dist/queue/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Replace the distribution queue firing order */
+        post: operations["reorderDistQueue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/dist/webhooks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Ingest an HMAC-signed provider webhook outcome */
+        post: operations["ingestDistWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/events": {
         parameters: {
             query?: never;
@@ -2591,6 +2676,34 @@ export interface components {
         DevImportProjectsResponse: {
             report: components["schemas"]["DevImportProjectsReport"];
         };
+        DistItem: {
+            caption: string;
+            comments: number;
+            external_id?: string;
+            id: string;
+            likes: number;
+            park: string;
+            /** @description Distribution provider: doublespeed or farm. */
+            provider: string;
+            scheduled_at?: string;
+            /** @description Lifecycle state: draft, scheduled, posted, linked, or failed. */
+            status: string;
+            views: number;
+        };
+        DistQueueResponse: {
+            items: components["schemas"]["DistItem"][];
+        };
+        DistWebhookRequest: {
+            /** @description Provider event: post.succeeded, post.failed, or post.linked. */
+            event: string;
+            external_id: string;
+            stats?: components["schemas"]["DistWebhookStats"];
+        };
+        DistWebhookStats: {
+            comments?: number;
+            likes?: number;
+            views?: number;
+        };
         DomainActivity: {
             /** Format: date-time */
             lastActivityAt: string;
@@ -2610,6 +2723,15 @@ export interface components {
             /** @enum {string} */
             state?: "queued" | "running" | "completed" | "recovered" | "interrupted" | "failed";
             turnId?: string;
+        };
+        EnqueueDistRequest: {
+            caption?: string;
+            /** @description Provider post id when already known; webhooks match on it. */
+            external_id?: string;
+            park: string;
+            /** @description Distribution provider: doublespeed or farm. Defaults to doublespeed. */
+            provider?: string;
+            scheduled_at?: string;
         };
         ImportReport: {
             dryRun: boolean;
@@ -3006,6 +3128,10 @@ export interface components {
             ok: boolean;
             sessionId: string;
         };
+        ReorderDistQueueRequest: {
+            /** @description Item ids in the new firing order; must list every item exactly once. */
+            ids: string[];
+        };
         ResolveCommentsResponse: {
             ok: boolean;
             resolved: number;
@@ -3295,6 +3421,10 @@ export interface components {
         };
         SetConversationTitleResponse: {
             title: string;
+        };
+        SetDistStatusRequest: {
+            /** @description Target state: draft or scheduled. */
+            status: string;
         };
         SetProjectConfigInput: {
             config: components["schemas"]["ProjectConfig"];
@@ -4194,6 +4324,233 @@ export interface operations {
             };
             /** @description Internal Server Error */
             500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    enqueueDistItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EnqueueDistRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DistItem"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    setDistItemStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Distribution item identifier. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetDistStatusRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DistItem"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    listDistQueue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DistQueueResponse"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    reorderDistQueue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderDistQueueRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DistQueueResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+        };
+    };
+    ingestDistWebhook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DistWebhookRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DistItem"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["APIError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

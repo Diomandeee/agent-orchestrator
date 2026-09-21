@@ -1439,5 +1439,14 @@
 	"uctm.fleet.copy": "Copiar comando de retomada",
 	"uctm.fleet.copied": "Copiado",
 	"uctm.fleet.more": "+{{count}} a mais",
-	"uctm.fleet.summary": "{{total}} threads · {{blocked}} bloqueados · {{ready}} prontos"
+	"uctm.fleet.summary": "{{total}} threads · {{blocked}} bloqueados · {{ready}} prontos",
+	"uctm.fleet.queueSummary": "{{scheduled}} agendados · {{posted}} publicados · {{linked}} vinculados · {{failed}} com falha",
+	"uctm.fleet.queue.title": "Fila de distribuição",
+	"uctm.fleet.queue.empty": "Nada na fila para este parque ainda.",
+	"uctm.fleet.queue.stats": "{{views}} visualizações · {{likes}} curtidas · {{comments}} comentários",
+	"uctm.fleet.status.draft": "Rascunho",
+	"uctm.fleet.status.scheduled": "Agendado",
+	"uctm.fleet.status.posted": "Publicado",
+	"uctm.fleet.status.linked": "Vinculado",
+	"uctm.fleet.status.failed": "Falhou"
 }

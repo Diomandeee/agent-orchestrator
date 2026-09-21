@@ -1439,5 +1439,14 @@
 	"uctm.fleet.copy": "Copier la commande de reprise",
 	"uctm.fleet.copied": "Copié",
 	"uctm.fleet.more": "+{{count}} autres",
-	"uctm.fleet.summary": "{{total}} fils · {{blocked}} bloqués · {{ready}} prêts"
+	"uctm.fleet.summary": "{{total}} fils · {{blocked}} bloqués · {{ready}} prêts",
+	"uctm.fleet.queueSummary": "{{scheduled}} planifiés · {{posted}} publiés · {{linked}} liés · {{failed}} échoués",
+	"uctm.fleet.queue.title": "File de distribution",
+	"uctm.fleet.queue.empty": "Rien en file pour ce parc pour l'instant.",
+	"uctm.fleet.queue.stats": "{{views}} vues · {{likes}} mentions · {{comments}} commentaires",
+	"uctm.fleet.status.draft": "Brouillon",
+	"uctm.fleet.status.scheduled": "Planifié",
+	"uctm.fleet.status.posted": "Publié",
+	"uctm.fleet.status.linked": "Lié",
+	"uctm.fleet.status.failed": "Échoué"
 }

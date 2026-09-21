@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParkPacketQuery } from "../../hooks/useParks";
+import { useDistQueue } from "../../hooks/useDistQueue";
 import { cn } from "../../lib/utils";
-import { fleetResumeCommand, type FleetPacket } from "../../lib/fleet";
+import { fleetResumeCommand, type DistQueueItem, type FleetPacket } from "../../lib/fleet";
 import type { ParkSummary } from "../../lib/parks";
 import { ResumeCommand } from "./ResumeCommand";
 
@@ -125,6 +126,7 @@ function FleetPacketView({ name }: { name: string }) {
 	const packet = query.data.packet as unknown as FleetPacket;
 	return (
 		<div className="mt-2 flex flex-col gap-3">
+			<FleetQueueSection name={name} />
 			{packet.next && packet.next.length > 0 ? (
 				<ol className="flex flex-col gap-1.5">
 					{packet.next.map((item) => (
@@ -162,5 +164,92 @@ function FleetPacketView({ name }: { name: string }) {
 				</p>
 			) : null}
 		</div>
+	);
+}
+
+/**
+ * This park's distribution queue, read-only like the rest of the board.
+ * Queued posts go out through the distribution lane, never from here.
+ */
+function FleetQueueSection({ name }: { name: string }) {
+	const { t } = useTranslation();
+	const query = useDistQueue();
+	if (query.isPending) {
+		return <p className="mt-2 text-control text-passive">{t("uctm.fleet.loading")}</p>;
+	}
+	if (query.isError || !query.data) {
+		return (
+			<p role="alert" className="mt-2 text-control text-destructive">
+				{query.error instanceof Error ? query.error.message : t("uctm.fleet.error")}
+			</p>
+		);
+	}
+	const items = query.data.filter((item) => item.park === name);
+	if (items.length === 0) {
+		return <p className="mt-2 text-control text-passive">{t("uctm.fleet.queue.empty")}</p>;
+	}
+	return (
+		<div className="mt-2 flex flex-col gap-1.5">
+			<h4 className="text-caption font-semibold text-muted-foreground">
+				{t("uctm.fleet.queue.title")}
+			</h4>
+			<ul className="flex flex-col gap-2">
+				{items.map((item) => (
+					<FleetQueueItem key={item.id} item={item} />
+				))}
+			</ul>
+		</div>
+	);
+}
+
+function distStatusKey(status: DistQueueItem["status"]): string {
+	switch (status) {
+		case "draft":
+			return "uctm.fleet.status.draft";
+		case "scheduled":
+			return "uctm.fleet.status.scheduled";
+		case "posted":
+			return "uctm.fleet.status.posted";
+		case "linked":
+			return "uctm.fleet.status.linked";
+		case "failed":
+			return "uctm.fleet.status.failed";
+	}
+}
+
+function FleetQueueItem({ item }: { item: DistQueueItem }) {
+	const { t } = useTranslation();
+	return (
+		<li className="flex flex-col gap-1 rounded-md border border-border bg-background p-2">
+			<div className="flex items-center justify-between gap-2">
+				<span className="min-w-0 truncate text-control text-foreground">{item.caption}</span>
+				<span
+					className={cn(
+						"shrink-0 rounded-md px-2 py-0.5 text-caption font-semibold",
+						item.status === "linked" || item.status === "posted"
+							? "bg-success/15 text-success"
+							: item.status === "scheduled"
+								? "bg-warning/15 text-warning"
+								: item.status === "failed"
+									? "bg-destructive/15 text-destructive"
+									: "bg-raised text-passive",
+					)}
+				>
+					{t(distStatusKey(item.status))}
+				</span>
+			</div>
+			{item.scheduled_at ? (
+				<p className="font-mono text-caption text-passive">{item.scheduled_at}</p>
+			) : null}
+			{item.status === "linked" ? (
+				<p className="text-caption text-passive">
+					{t("uctm.fleet.queue.stats", {
+						views: item.views ?? 0,
+						likes: item.likes ?? 0,
+						comments: item.comments ?? 0,
+					})}
+				</p>
+			) : null}
+		</li>
 	);
 }

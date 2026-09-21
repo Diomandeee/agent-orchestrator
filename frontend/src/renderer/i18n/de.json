@@ -1421,5 +1421,14 @@
 	"uctm.fleet.copy": "Resume-Befehl kopieren",
 	"uctm.fleet.copied": "Kopiert",
 	"uctm.fleet.more": "+{{count}} weitere",
-	"uctm.fleet.summary": "{{total}} Threads · {{blocked}} blockiert · {{ready}} bereit"
+	"uctm.fleet.summary": "{{total}} Threads · {{blocked}} blockiert · {{ready}} bereit",
+	"uctm.fleet.queueSummary": "{{scheduled}} geplant · {{posted}} veröffentlicht · {{linked}} verknüpft · {{failed}} fehlgeschlagen",
+	"uctm.fleet.queue.title": "Verteilungs-Warteschlange",
+	"uctm.fleet.queue.empty": "Für diesen Park ist noch nichts eingereiht.",
+	"uctm.fleet.queue.stats": "{{views}} Aufrufe · {{likes}} Likes · {{comments}} Kommentare",
+	"uctm.fleet.status.draft": "Entwurf",
+	"uctm.fleet.status.scheduled": "Geplant",
+	"uctm.fleet.status.posted": "Veröffentlicht",
+	"uctm.fleet.status.linked": "Verknüpft",
+	"uctm.fleet.status.failed": "Fehlgeschlagen"
 }

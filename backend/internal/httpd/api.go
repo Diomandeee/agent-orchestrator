@@ -65,6 +65,10 @@ type APIDeps struct {
 	// reader. Same 501 pattern: unwired is distinguishable from unmounted.
 	Parks controllers.ParksService
 
+	// Dist is nil until the daemon wires the distribution-queue service.
+	// Same 501 pattern as Parks: unwired is distinguishable from unmounted.
+	Dist controllers.DistService
+
 	// Presence tracks which mobile devices are currently running the app.
 	// Nil disables presence tracking (the roster then reports every device offline).
 	Presence *presence.Tracker
@@ -126,6 +130,7 @@ type API struct {
 	uctm          *controllers.UCTMController
 	clichat       *controllers.CLIChatController
 	parks         *controllers.ParksController
+	dist          *controllers.DistController
 	events        *EventsController
 }
 
@@ -167,6 +172,7 @@ func NewAPI(cfg config.Config, deps APIDeps) *API {
 		uctm:          &controllers.UCTMController{Svc: deps.UCTM},
 		clichat:       &controllers.CLIChatController{Svc: deps.CLIChat},
 		parks:         &controllers.ParksController{Svc: deps.Parks},
+		dist:          &controllers.DistController{Svc: deps.Dist},
 		events:        &EventsController{Source: deps.CDC, Live: deps.Events},
 	}
 }
@@ -205,6 +211,7 @@ func (a *API) Register(root chi.Router) {
 			a.uctm.Register(r)
 			a.clichat.Register(r)
 			a.parks.Register(r)
+			a.dist.Register(r)
 			// Sibling REST controllers plug in here.
 		})
 		// Long-lived streams intentionally bypass the REST timeout middleware.

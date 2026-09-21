@@ -86,6 +86,8 @@ func Build() ([]byte, error) {
 			"Local machine readiness checks the desktop app runs before showing the board"),
 		*(&openapi31.Tag{Name: "uctm"}).WithDescription(
 			"Read-only UCTM projections. Loopback only, off by default, and never mounted on the mobile LAN listener"),
+		*(&openapi31.Tag{Name: "dist"}).WithDescription(
+			"Distribution lane: queue, schedule, and webhook outcomes for outbound posts"),
 	}
 
 	for _, op := range operations() {
@@ -402,6 +404,14 @@ var schemaNames = map[string]string{
 	"ProjectUpdateSettingsInput":        "UpdateProjectSettingsInput",
 	"ProjectWorkspaceRepo":              "WorkspaceRepo",
 	"SessionWorkspaceFileStatus":        "WorkspaceFileStatus",
+	// httpd/controllers: distribution-lane wire envelopes
+	"ControllersDistItem":                 "DistItem",
+	"ControllersEnqueueDistRequest":       "EnqueueDistRequest",
+	"ControllersSetDistStatusRequest":     "SetDistStatusRequest",
+	"ControllersReorderDistQueueRequest":  "ReorderDistQueueRequest",
+	"ControllersDistWebhookStats":         "DistWebhookStats",
+	"ControllersDistWebhookRequest":       "DistWebhookRequest",
+	"ControllersDistQueueResponse":        "DistQueueResponse",
 	// service/session delegation-lineage read model
 	"SessionLineageReport":    "LineageReport",
 	"SessionLineageNode":      "LineageNode",
@@ -503,7 +513,68 @@ func operations() []operation {
 	ops = append(ops, uctmOperations()...)
 	ops = append(ops, clichatOperations()...)
 	ops = append(ops, parksOperations()...)
+	ops = append(ops, distOperations()...)
 	return ops
+}
+
+// distOperations declares the distribution-lane surface. The queue is
+// file-backed under bridge/dist; webhooks carry HMAC-signed provider
+// outcomes keyed by external id.
+func distOperations() []operation {
+	return []operation{
+		{
+			method: http.MethodGet, path: "/api/v1/dist/queue", id: "listDistQueue", tag: "dist",
+			summary: "List distribution items in firing order",
+			resps: []respUnit{
+				{http.StatusOK, controllers.DistQueueResponse{}},
+				{http.StatusNotImplemented, envelope.APIError{}},
+			},
+		},
+		{
+			method: http.MethodPost, path: "/api/v1/dist/enqueue", id: "enqueueDistItem", tag: "dist",
+			summary: "Enqueue a draft distribution item",
+			reqBody: controllers.EnqueueDistRequest{},
+			resps: []respUnit{
+				{http.StatusCreated, controllers.DistItem{}},
+				{http.StatusBadRequest, envelope.APIError{}},
+				{http.StatusNotImplemented, envelope.APIError{}},
+			},
+		},
+		{
+			method: http.MethodPatch, path: "/api/v1/dist/items/{id}/status", id: "setDistItemStatus", tag: "dist",
+			summary:    "Move a distribution item between draft and scheduled",
+			pathParams: []any{controllers.DistItemIDParam{}},
+			reqBody:    controllers.SetDistStatusRequest{},
+			resps: []respUnit{
+				{http.StatusOK, controllers.DistItem{}},
+				{http.StatusBadRequest, envelope.APIError{}},
+				{http.StatusNotFound, envelope.APIError{}},
+				{http.StatusNotImplemented, envelope.APIError{}},
+			},
+		},
+		{
+			method: http.MethodPost, path: "/api/v1/dist/queue/reorder", id: "reorderDistQueue", tag: "dist",
+			summary: "Replace the distribution queue firing order",
+			reqBody: controllers.ReorderDistQueueRequest{},
+			resps: []respUnit{
+				{http.StatusOK, controllers.DistQueueResponse{}},
+				{http.StatusBadRequest, envelope.APIError{}},
+				{http.StatusNotImplemented, envelope.APIError{}},
+			},
+		},
+		{
+			method: http.MethodPost, path: "/api/v1/dist/webhooks", id: "ingestDistWebhook", tag: "dist",
+			summary: "Ingest an HMAC-signed provider webhook outcome",
+			reqBody: controllers.DistWebhookRequest{},
+			resps: []respUnit{
+				{http.StatusOK, controllers.DistItem{}},
+				{http.StatusBadRequest, envelope.APIError{}},
+				{http.StatusUnauthorized, envelope.APIError{}},
+				{http.StatusNotFound, envelope.APIError{}},
+				{http.StatusNotImplemented, envelope.APIError{}},
+			},
+		},
+	}
 }
 
 // parksOperations declares the read-only parked-idea surface. The daemon

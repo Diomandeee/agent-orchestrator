@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParksQuery } from "../../hooks/useParks";
+import { useDistQueue } from "../../hooks/useDistQueue";
 import { FleetCard } from "./FleetCard";
 import { FLEET_PROGRAM, isFleetPark, waveRank } from "../../lib/fleet";
 
@@ -13,6 +14,17 @@ import { FLEET_PROGRAM, isFleetPark, waveRank } from "../../lib/fleet";
 export function FleetPanel() {
 	const { t } = useTranslation();
 	const query = useParksQuery();
+	const distQuery = useDistQueue();
+	const queueCounts = useMemo(() => {
+		const counts = { scheduled: 0, posted: 0, linked: 0, failed: 0 };
+		for (const item of distQuery.data ?? []) {
+			if (item.status === "scheduled") counts.scheduled += 1;
+			else if (item.status === "posted") counts.posted += 1;
+			else if (item.status === "linked") counts.linked += 1;
+			else if (item.status === "failed") counts.failed += 1;
+		}
+		return counts;
+	}, [distQuery.data]);
 	const fleet = useMemo(
 		() => (query.data ?? []).filter((park) => isFleetPark(park.name)),
 		[query.data],
@@ -64,6 +76,9 @@ export function FleetPanel() {
 					blocked: blockedCount,
 					ready: fleet.length - blockedCount,
 				})}
+			</p>
+			<p className="text-control text-muted-foreground">
+				{t("uctm.fleet.queueSummary", queueCounts)}
 			</p>
 			{program.map((park) => (
 				<section key={park.name} aria-label={t("uctm.fleet.section.program")}>

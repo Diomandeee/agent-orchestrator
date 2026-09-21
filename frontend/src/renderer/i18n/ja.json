@@ -1421,5 +1421,14 @@
 	"uctm.fleet.copy": "再開コマンドをコピー",
 	"uctm.fleet.copied": "コピーしました",
 	"uctm.fleet.more": "他{{count}}件",
-	"uctm.fleet.summary": "{{total}}件中 {{blocked}}件がブロック中 · {{ready}}件が再開可能"
+	"uctm.fleet.summary": "{{total}}件中 {{blocked}}件がブロック中 · {{ready}}件が再開可能",
+	"uctm.fleet.queueSummary": "予約中 {{scheduled}} · 投稿済み {{posted}} · リンク済み {{linked}} · 失敗 {{failed}}",
+	"uctm.fleet.queue.title": "配信キュー",
+	"uctm.fleet.queue.empty": "このパークのキューはまだ空です。",
+	"uctm.fleet.queue.stats": "表示 {{views}} · いいね {{likes}} · コメント {{comments}}",
+	"uctm.fleet.status.draft": "下書き",
+	"uctm.fleet.status.scheduled": "予約済み",
+	"uctm.fleet.status.posted": "投稿済み",
+	"uctm.fleet.status.linked": "リンク済み",
+	"uctm.fleet.status.failed": "失敗"
 }

@@ -1403,5 +1403,14 @@
 	"uctm.fleet.copy": "Copy resume command",
 	"uctm.fleet.copied": "Copied",
 	"uctm.fleet.more": "+{{count}} more",
-	"uctm.fleet.summary": "{{total}} threads · {{blocked}} blocked · {{ready}} ready"
+	"uctm.fleet.summary": "{{total}} threads · {{blocked}} blocked · {{ready}} ready",
+	"uctm.fleet.queueSummary": "{{scheduled}} scheduled · {{posted}} posted · {{linked}} linked · {{failed}} failed",
+	"uctm.fleet.queue.title": "Distribution queue",
+	"uctm.fleet.queue.empty": "Nothing queued for this park yet.",
+	"uctm.fleet.queue.stats": "{{views}} views · {{likes}} likes · {{comments}} comments",
+	"uctm.fleet.status.draft": "Draft",
+	"uctm.fleet.status.scheduled": "Scheduled",
+	"uctm.fleet.status.posted": "Posted",
+	"uctm.fleet.status.linked": "Linked",
+	"uctm.fleet.status.failed": "Failed"
 }

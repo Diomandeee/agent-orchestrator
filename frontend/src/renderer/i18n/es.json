@@ -1439,5 +1439,14 @@
 	"uctm.fleet.copy": "Copiar el comando de reanudación",
 	"uctm.fleet.copied": "Copiado",
 	"uctm.fleet.more": "+{{count}} más",
-	"uctm.fleet.summary": "{{total}} hilos · {{blocked}} bloqueados · {{ready}} listos"
+	"uctm.fleet.summary": "{{total}} hilos · {{blocked}} bloqueados · {{ready}} listos",
+	"uctm.fleet.queueSummary": "{{scheduled}} programados · {{posted}} publicados · {{linked}} enlazados · {{failed}} fallidos",
+	"uctm.fleet.queue.title": "Cola de distribución",
+	"uctm.fleet.queue.empty": "Nada en cola para este parque todavía.",
+	"uctm.fleet.queue.stats": "{{views}} vistas · {{likes}} me gusta · {{comments}} comentarios",
+	"uctm.fleet.status.draft": "Borrador",
+	"uctm.fleet.status.scheduled": "Programado",
+	"uctm.fleet.status.posted": "Publicado",
+	"uctm.fleet.status.linked": "Enlazado",
+	"uctm.fleet.status.failed": "Fallido"
 }

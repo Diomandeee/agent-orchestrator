@@ -410,6 +410,175 @@ paths:
       summary: Run the developer project-registry import through the daemon store
       tags:
       - dev
+  /api/v1/dist/enqueue:
+    post:
+      operationId: enqueueDistItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnqueueDistRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DistItem'
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Bad Request
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Enqueue a draft distribution item
+      tags:
+      - dist
+  /api/v1/dist/items/{id}/status:
+    patch:
+      operationId: setDistItemStatus
+      parameters:
+      - description: Distribution item identifier.
+        in: path
+        name: id
+        required: true
+        schema:
+          description: Distribution item identifier.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetDistStatusRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DistItem'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Found
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Move a distribution item between draft and scheduled
+      tags:
+      - dist
+  /api/v1/dist/queue:
+    get:
+      operationId: listDistQueue
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DistQueueResponse'
+          description: OK
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: List distribution items in firing order
+      tags:
+      - dist
+  /api/v1/dist/queue/reorder:
+    post:
+      operationId: reorderDistQueue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReorderDistQueueRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DistQueueResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Bad Request
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Replace the distribution queue firing order
+      tags:
+      - dist
+  /api/v1/dist/webhooks:
+    post:
+      operationId: ingestDistWebhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DistWebhookRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DistItem'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Found
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: Not Implemented
+      summary: Ingest an HMAC-signed provider webhook outcome
+      tags:
+      - dist
   /api/v1/events:
     get:
       operationId: streamEvents
@@ -7441,6 +7610,71 @@ components:
       required:
       - report
       type: object
+    DistItem:
+      properties:
+        caption:
+          type: string
+        comments:
+          type: integer
+        external_id:
+          type: string
+        id:
+          type: string
+        likes:
+          type: integer
+        park:
+          type: string
+        provider:
+          description: 'Distribution provider: doublespeed or farm.'
+          type: string
+        scheduled_at:
+          type: string
+        status:
+          description: 'Lifecycle state: draft, scheduled, posted, linked, or failed.'
+          type: string
+        views:
+          type: integer
+      required:
+      - id
+      - park
+      - caption
+      - status
+      - views
+      - likes
+      - comments
+      - provider
+      type: object
+    DistQueueResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/DistItem'
+          type: array
+      required:
+      - items
+      type: object
+    DistWebhookRequest:
+      properties:
+        event:
+          description: 'Provider event: post.succeeded, post.failed, or post.linked.'
+          type: string
+        external_id:
+          type: string
+        stats:
+          $ref: '#/components/schemas/DistWebhookStats'
+      required:
+      - event
+      - external_id
+      type: object
+    DistWebhookStats:
+      properties:
+        comments:
+          type: integer
+        likes:
+          type: integer
+        views:
+          type: integer
+      type: object
     DomainActivity:
       properties:
         lastActivityAt:
@@ -7490,6 +7724,23 @@ components:
       required:
       - sourceBranchId
       - activeBranchId
+      type: object
+    EnqueueDistRequest:
+      properties:
+        caption:
+          type: string
+        external_id:
+          description: Provider post id when already known; webhooks match on it.
+          type: string
+        park:
+          type: string
+        provider:
+          description: 'Distribution provider: doublespeed or farm. Defaults to doublespeed.'
+          type: string
+        scheduled_at:
+          type: string
+      required:
+      - park
       type: object
     ImportReport:
       properties:
@@ -8491,6 +8742,17 @@ components:
       - sessionId
       - displayName
       type: object
+    ReorderDistQueueRequest:
+      properties:
+        ids:
+          description: Item ids in the new firing order; must list every item exactly
+            once.
+          items:
+            type: string
+          type: array
+      required:
+      - ids
+      type: object
     ResolveCommentsResponse:
       properties:
         ok:
@@ -9253,6 +9515,14 @@ components:
           type: string
       required:
       - title
+      type: object
+    SetDistStatusRequest:
+      properties:
+        status:
+          description: 'Target state: draft or scheduled.'
+          type: string
+      required:
+      - status
       type: object
     SetProjectConfigInput:
       properties:
@@ -10308,3 +10578,6 @@ tags:
 - description: Read-only UCTM projections. Loopback only, off by default, and never
     mounted on the mobile LAN listener
   name: uctm
+- description: 'Distribution lane: queue, schedule, and webhook outcomes for outbound
+    posts'
+  name: dist

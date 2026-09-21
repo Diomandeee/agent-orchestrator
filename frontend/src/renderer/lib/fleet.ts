@@ -18,6 +18,20 @@ export interface FleetPacket {
 	verify?: string[];
 }
 
+/** Distribution queue item: one scheduled social post for a fleet park. */
+export type DistQueueStatus = "draft" | "scheduled" | "posted" | "linked" | "failed";
+
+export interface DistQueueItem {
+	id: string;
+	park: string;
+	caption: string;
+	status: DistQueueStatus;
+	scheduled_at?: string | null;
+	views?: number | null;
+	likes?: number | null;
+	comments?: number | null;
+}
+
 export const FLEET_PREFIX = "fleet-";
 export const FLEET_PROGRAM = "fleet-program";
 

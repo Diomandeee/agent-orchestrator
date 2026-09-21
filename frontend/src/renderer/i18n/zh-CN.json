@@ -1403,5 +1403,14 @@
 	"uctm.fleet.copy": "复制恢复命令",
 	"uctm.fleet.copied": "已复制",
 	"uctm.fleet.more": "还有{{count}}项",
-	"uctm.fleet.summary": "共 {{total}} 个线程，{{blocked}} 个受阻，{{ready}} 个可恢复"
+	"uctm.fleet.summary": "共 {{total}} 个线程，{{blocked}} 个受阻，{{ready}} 个可恢复",
+	"uctm.fleet.queueSummary": "已排期 {{scheduled}} · 已发布 {{posted}} · 已关联 {{linked}} · 失败 {{failed}}",
+	"uctm.fleet.queue.title": "分发队列",
+	"uctm.fleet.queue.empty": "此公园暂无排队内容。",
+	"uctm.fleet.queue.stats": "{{views}} 次观看 · {{likes}} 个赞 · {{comments}} 条评论",
+	"uctm.fleet.status.draft": "草稿",
+	"uctm.fleet.status.scheduled": "已排期",
+	"uctm.fleet.status.posted": "已发布",
+	"uctm.fleet.status.linked": "已关联",
+	"uctm.fleet.status.failed": "失败"
 }

@@ -1,12 +1,60 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { appI18n } from "../../i18n";
+import type { DistQueueItem } from "../../lib/fleet";
 import type { ParkSummary } from "../../lib/parks";
 import { FleetCard } from "./FleetCard";
 
 vi.mock("../../hooks/useParks", () => ({
-	useParkPacketQuery: () => ({ isPending: false, isError: false, data: null }),
+	useParkPacketQuery: () => ({
+		isPending: false,
+		isError: false,
+		data: { packet: { name: "fleet-app-firstdate", next: [], depends_on: [], related: [] } },
+	}),
 }));
+
+const { queueState } = vi.hoisted(() => ({
+	queueState: {
+		items: [
+			{
+				id: "q1",
+				park: "fleet-app-firstdate",
+				caption: "Launch clip",
+				status: "scheduled",
+				scheduled_at: "2026-09-22T10:00:00Z",
+			},
+			{
+				id: "q2",
+				park: "fleet-app-firstdate",
+				caption: "Teaser",
+				status: "linked",
+				scheduled_at: "2026-09-20T10:00:00Z",
+				views: 12,
+				likes: 3,
+				comments: 1,
+			},
+			{
+				id: "q3",
+				park: "fleet-app-other",
+				caption: "Other clip",
+				status: "posted",
+				scheduled_at: "2026-09-21T10:00:00Z",
+			},
+		] as DistQueueItem[],
+	},
+}));
+
+vi.mock("../../hooks/useDistQueue", () => ({
+	useDistQueue: () => ({ isPending: false, isError: false, data: queueState.items }),
+}));
+
+async function expandPacket() {
+	fireEvent.click(screen.getByText("Show the tackle list"));
+	const details = document.querySelector("details");
+	expect(details).not.toBeNull();
+	details!.open = true;
+	fireEvent(details!, new Event("toggle", { bubbles: true }));
+}
 
 function fleetPark(overrides: Partial<ParkSummary> = {}): ParkSummary {
 	return {
@@ -60,5 +108,35 @@ describe("FleetCard", () => {
 		expect(
 			screen.getByRole("button", { name: "Copy resume command" }),
 		).toBeInTheDocument();
+	});
+
+	it("lists this park's queue items inside the packet details", async () => {
+		render(<FleetCard park={fleetPark()} />);
+		await expandPacket();
+		expect(await screen.findByText("Distribution queue")).toBeInTheDocument();
+		expect(screen.getByText("Launch clip")).toBeInTheDocument();
+		expect(screen.getByText("2026-09-22T10:00:00Z")).toBeInTheDocument();
+		expect(screen.getByText("Scheduled")).toBeInTheDocument();
+		expect(screen.queryByText("Other clip")).not.toBeInTheDocument();
+	});
+
+	it("shows linked stats for linked queue items", async () => {
+		render(<FleetCard park={fleetPark()} />);
+		await expandPacket();
+		expect(await screen.findByText("Teaser")).toBeInTheDocument();
+		expect(screen.getByText("Linked")).toBeInTheDocument();
+		expect(screen.getByText("12 views · 3 likes · 1 comments")).toBeInTheDocument();
+	});
+
+	it("shows the queue empty state when the park has no items", async () => {
+		const saved = queueState.items;
+		queueState.items = [];
+		try {
+			render(<FleetCard park={fleetPark()} />);
+			await expandPacket();
+			expect(await screen.findByText("Nothing queued for this park yet.")).toBeInTheDocument();
+		} finally {
+			queueState.items = saved;
+		}
 	});
 });

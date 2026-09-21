@@ -1421,5 +1421,14 @@
 	"uctm.fleet.copy": "재개 명령 복사",
 	"uctm.fleet.copied": "복사됨",
 	"uctm.fleet.more": "외 {{count}}개",
-	"uctm.fleet.summary": "총 {{total}}개 중 {{blocked}}개 차단됨 · {{ready}}개 재개 가능"
+	"uctm.fleet.summary": "총 {{total}}개 중 {{blocked}}개 차단됨 · {{ready}}개 재개 가능",
+	"uctm.fleet.queueSummary": "예약 {{scheduled}} · 게시 {{posted}} · 연결 {{linked}} · 실패 {{failed}}",
+	"uctm.fleet.queue.title": "배포 대기열",
+	"uctm.fleet.queue.empty": "이 파크에 대기 중인 항목이 없습니다.",
+	"uctm.fleet.queue.stats": "조회 {{views}} · 좋아요 {{likes}} · 댓글 {{comments}}",
+	"uctm.fleet.status.draft": "초안",
+	"uctm.fleet.status.scheduled": "예약됨",
+	"uctm.fleet.status.posted": "게시됨",
+	"uctm.fleet.status.linked": "연결됨",
+	"uctm.fleet.status.failed": "실패"
 }
