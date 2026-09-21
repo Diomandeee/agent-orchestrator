@@ -4,7 +4,7 @@
   "created": "2026-09-20",
   "status": "parked",
   "wave": 3,
-  "tier": "TIER-3",
+  "tier": "MISSION",
   "state": "(NKo Scribe \u2014 no docs found) [11 Swift files, 2228 loc]",
   "path": "Desktop/NKoScribe",
   "bundle": "org.ggml.whisper",

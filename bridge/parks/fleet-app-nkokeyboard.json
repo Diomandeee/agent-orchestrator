@@ -4,7 +4,7 @@
   "created": "2026-09-20",
   "status": "parked",
   "wave": 2,
-  "tier": "TIER-3",
+  "tier": "MISSION",
   "state": "Real-time Latin \u2192 N'Ko transliteration keyboard for iOS, enabling system-wide N'Ko typing on iPhone and iPad. ``` [36 Swift files, 12292 loc]",
   "path": "Developer/NKo/ios",
   "bundle": "$(PRODUCT_BUNDLE_IDENTIFIER)",

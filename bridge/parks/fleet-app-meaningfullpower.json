@@ -1,0 +1,30 @@
+{
+  "name": "fleet-app-meaningfullpower",
+  "display": "MeaningFullPower",
+  "created": "2026-09-21",
+  "status": "parked",
+  "wave": 2,
+  "tier": "TIER-2",
+  "state": "Meaning Full Power — purpose/meaning app (App Store Connect record live: com.mohameddiomande.meaningfullpower). No Desktop code yet; record-first addition.",
+  "path": "",
+  "bundle": "com.mohameddiomande.meaningfullpower",
+  "version": "1.0",
+  "blocked_on_mo": [
+    "Decide Desktop canonical home + scaffold"
+  ],
+  "next": [
+    "Scaffold repo from ASC record",
+    "Define format + cadence",
+    "Five-number analytics + push"
+  ],
+  "depends_on": [
+    "fleet-kit"
+  ],
+  "related": [],
+  "evidence": [
+    "App Store Connect record Meaning Full Power"
+  ],
+  "verify": [
+    "asc apps list | grep 'Meaning Full Power'"
+  ]
+}

@@ -20,7 +20,9 @@
     "ASO pass: terms in name/subtitle/keywords, result-first screenshot 1, PPO running"
   ],
   "depends_on": [],
-  "related": [],
+  "related": [
+    "IdeaGarden (sibling idea-capture app — living-organism side vs garden side)"
+  ],
   "evidence": [
     "Desktop/cognitive-hire/evidence/fleet-audit/CATALOG.csv (row: Spore)",
     "Desktop/cognitive-hire/evidence/fleet-audit/COHORT-50.md",

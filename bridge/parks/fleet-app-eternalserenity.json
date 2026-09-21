@@ -1,0 +1,31 @@
+{
+  "name": "fleet-app-eternalserenity",
+  "display": "EternalSerenity",
+  "created": "2026-09-21",
+  "status": "parked",
+  "wave": 2,
+  "tier": "TIER-2",
+  "state": "Eternal Serenity — mind/spirit app (Xcode project on Desktop, 25 Swift files, EVOLUTION.md + README). App Store Connect record live: com.bufbarista.eternal-serenity.",
+  "path": "Desktop/Eternal_Serenity",
+  "bundle": "com.bufbarista.eternal-serenity",
+  "version": "1.0",
+  "blocked_on_mo": [
+    "Declare Desktop canonical root + merge variants"
+  ],
+  "next": [
+    "Verify build + TestFlight",
+    "Five-number analytics + push",
+    "ASO pass"
+  ],
+  "depends_on": [
+    "fleet-kit"
+  ],
+  "related": [],
+  "evidence": [
+    "Desktop/Eternal_Serenity (Xcode project)",
+    "App Store Connect record Eternal Serenity"
+  ],
+  "verify": [
+    "test -d \"$HOME/Desktop/Eternal_Serenity\" && echo app-present"
+  ]
+}

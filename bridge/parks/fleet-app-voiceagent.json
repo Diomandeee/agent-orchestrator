@@ -22,7 +22,9 @@
   "depends_on": [
     "fleet-kit"
   ],
-  "related": [],
+  "related": [
+    "SpeakFlow (capability folded in — dictation + multiscript voice OS)"
+  ],
   "evidence": [
     "Desktop/cognitive-hire/evidence/fleet-audit/CATALOG.csv (row: VoiceAgent)",
     "Desktop/cognitive-hire/evidence/fleet-audit/COHORT-50.md",
