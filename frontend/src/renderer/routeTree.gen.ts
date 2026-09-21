@@ -13,6 +13,8 @@ import { Route as ShellRouteImport } from './routes/_shell'
 import { Route as ShellIndexRouteImport } from './routes/_shell.index'
 import { Route as ShellTerminalsRouteImport } from './routes/_shell.terminals'
 import { Route as ShellSettingsRouteImport } from './routes/_shell.settings'
+import { Route as ShellGardenRouteImport } from './routes/_shell.garden'
+import { Route as ShellFleetRouteImport } from './routes/_shell.fleet'
 import { Route as ShellSessionsSessionIdRouteImport } from './routes/_shell.sessions.$sessionId'
 import { Route as ShellProjectsProjectIdRouteImport } from './routes/_shell.projects.$projectId'
 import { Route as ShellProjectsProjectIdUctmRouteImport } from './routes/_shell.projects.$projectId_.uctm'
@@ -36,6 +38,16 @@ const ShellTerminalsRoute = ShellTerminalsRouteImport.update({
 const ShellSettingsRoute = ShellSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => ShellRoute,
+} as any)
+const ShellGardenRoute = ShellGardenRouteImport.update({
+  id: '/garden',
+  path: '/garden',
+  getParentRoute: () => ShellRoute,
+} as any)
+const ShellFleetRoute = ShellFleetRouteImport.update({
+  id: '/fleet',
+  path: '/fleet',
   getParentRoute: () => ShellRoute,
 } as any)
 const ShellSessionsSessionIdRoute = ShellSessionsSessionIdRouteImport.update({
@@ -69,6 +81,8 @@ const ShellProjectsProjectIdSessionsSessionIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof ShellIndexRoute
+  '/fleet': typeof ShellFleetRoute
+  '/garden': typeof ShellGardenRoute
   '/settings': typeof ShellSettingsRoute
   '/terminals': typeof ShellTerminalsRoute
   '/projects/$projectId': typeof ShellProjectsProjectIdRoute
@@ -78,6 +92,8 @@ export interface FileRoutesByFullPath {
   '/projects/$projectId/sessions/$sessionId': typeof ShellProjectsProjectIdSessionsSessionIdRoute
 }
 export interface FileRoutesByTo {
+  '/fleet': typeof ShellFleetRoute
+  '/garden': typeof ShellGardenRoute
   '/settings': typeof ShellSettingsRoute
   '/terminals': typeof ShellTerminalsRoute
   '/': typeof ShellIndexRoute
@@ -90,6 +106,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_shell': typeof ShellRouteWithChildren
+  '/_shell/fleet': typeof ShellFleetRoute
+  '/_shell/garden': typeof ShellGardenRoute
   '/_shell/settings': typeof ShellSettingsRoute
   '/_shell/terminals': typeof ShellTerminalsRoute
   '/_shell/': typeof ShellIndexRoute
@@ -103,6 +121,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/fleet'
+    | '/garden'
     | '/settings'
     | '/terminals'
     | '/projects/$projectId'
@@ -112,6 +132,8 @@ export interface FileRouteTypes {
     | '/projects/$projectId/sessions/$sessionId'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/fleet'
+    | '/garden'
     | '/settings'
     | '/terminals'
     | '/'
@@ -123,6 +145,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_shell'
+    | '/_shell/fleet'
+    | '/_shell/garden'
     | '/_shell/settings'
     | '/_shell/terminals'
     | '/_shell/'
@@ -167,6 +191,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShellSettingsRouteImport
       parentRoute: typeof ShellRoute
     }
+    '/_shell/garden': {
+      id: '/_shell/garden'
+      path: '/garden'
+      fullPath: '/garden'
+      preLoaderRoute: typeof ShellGardenRouteImport
+      parentRoute: typeof ShellRoute
+    }
+    '/_shell/fleet': {
+      id: '/_shell/fleet'
+      path: '/fleet'
+      fullPath: '/fleet'
+      preLoaderRoute: typeof ShellFleetRouteImport
+      parentRoute: typeof ShellRoute
+    }
     '/_shell/sessions/$sessionId': {
       id: '/_shell/sessions/$sessionId'
       path: '/sessions/$sessionId'
@@ -206,6 +244,8 @@ declare module '@tanstack/react-router' {
 }
 
 interface ShellRouteChildren {
+  ShellFleetRoute: typeof ShellFleetRoute
+  ShellGardenRoute: typeof ShellGardenRoute
   ShellSettingsRoute: typeof ShellSettingsRoute
   ShellTerminalsRoute: typeof ShellTerminalsRoute
   ShellIndexRoute: typeof ShellIndexRoute
@@ -217,6 +257,8 @@ interface ShellRouteChildren {
 }
 
 const ShellRouteChildren: ShellRouteChildren = {
+  ShellFleetRoute: ShellFleetRoute,
+  ShellGardenRoute: ShellGardenRoute,
   ShellSettingsRoute: ShellSettingsRoute,
   ShellTerminalsRoute: ShellTerminalsRoute,
   ShellIndexRoute: ShellIndexRoute,
