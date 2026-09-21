@@ -39,9 +39,14 @@ test("project UCTM view states every kind and invents none @T0 @UCTM", async ({ 
 			text: node.textContent ?? "",
 		})),
 	);
-	expect(cards.map((card) => card.kind)).toEqual(KINDS);
+	expect(cards.map((card) => card.kind)).toEqual([...KINDS, "cli-sessions"]);
 
-	for (const card of cards) {
+	// CLI threads render beside the projections: the section exists with or
+	// without a daemon, and against a live daemon it lists real sessions.
+	const cli = cards.find((card) => card.kind === "cli-sessions");
+	expect(cli).toBeDefined();
+
+	for (const card of cards.filter((c) => c.kind !== "cli-sessions")) {
 		if (card.freshness === null) {
 			// Nothing was read at all (no UCTM daemon behind the proxy). The view
 			// must report the failure rather than paint a state for a fact that
