@@ -1,0 +1,39 @@
+{
+  "name": "fleet-app-nkokeyboard",
+  "display": "NKoKeyboard",
+  "created": "2026-09-20",
+  "status": "parked",
+  "wave": 2,
+  "tier": "TIER-3",
+  "state": "Real-time Latin \u2192 N'Ko transliteration keyboard for iOS, enabling system-wide N'Ko typing on iPhone and iPad. ``` [36 Swift files, 12292 loc]",
+  "path": "Developer/NKo/ios",
+  "bundle": "$(PRODUCT_BUNDLE_IDENTIFIER)",
+  "version": "1.0.0",
+  "blocked_on_mo": [
+    "Declare Desktop canonical root + merge variants",
+    "FleetPaywallKit v1 extracted from Spore"
+  ],
+  "next": [
+    "Integrate FleetPaywallKit: onboarding paywall, weekly default >=$7.48, 14-day trial",
+    "Value screens before price; first-session win instrumented",
+    "Five-number analytics + push-in-the-hour + share + rating prompt",
+    "ASO checklist + content cadence owner + 3-path download links"
+  ],
+  "depends_on": [
+    "fleet-kit"
+  ],
+  "related": [
+    "NKoMathLab",
+    "NKoScribe"
+  ],
+  "evidence": [
+    "Desktop/cognitive-hire/evidence/fleet-audit/CATALOG.csv (row: ios)",
+    "Desktop/cognitive-hire/evidence/fleet-audit/COHORT-50.md",
+    "Desktop/cognitive-hire/evidence/fleet-audit/PLAYBOOK.md",
+    "Desktop/cognitive-hire/evidence/colin-tam/BOOK.md"
+  ],
+  "verify": [
+    "test -d \"$HOME/Developer/NKo/ios\" && echo app-present",
+    "cd \"$HOME/Desktop/cognitive-hire/evidence/fleet-audit\" && python3 fleet_audit.py --help >/dev/null && echo audit-ok"
+  ]
+}

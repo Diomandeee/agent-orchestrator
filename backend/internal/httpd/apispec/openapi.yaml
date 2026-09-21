@@ -6417,12 +6417,21 @@ components:
           type: array
         state:
           type: string
+        status:
+          type: string
+        tier:
+          type: string
+        wave:
+          type: integer
       required:
       - name
       - created
+      - status
       - state
       - blocked
       - next
+      - wave
+      - tier
       type: object
     ControllersRequestRereviewRequest:
       properties:

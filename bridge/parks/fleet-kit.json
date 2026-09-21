@@ -1,0 +1,70 @@
+{
+  "name": "fleet-kit",
+  "created": "2026-09-20",
+  "status": "parked",
+  "state": "FleetPaywallKit: one shared Swift package extracted from Spore (StoreManager, PaywallView, 14-day trial, five-number analytics, review + share helpers). Not yet built.",
+  "blocked_on_mo": [
+    "Declare Desktop canonical root",
+    "Spore hardening sign-off"
+  ],
+  "next": [
+    "Extract StoreManager + PaywallView from Spore/Spore",
+    "Weekly $7.99 default, trial attached, value-before-price",
+    "Analytics five-number events + SKStoreReview + ShareSheet helpers"
+  ],
+  "depends_on": [
+    "fleet-program"
+  ],
+  "unblocks": [
+    "fleet-app-aura",
+    "fleet-app-creativedirector",
+    "fleet-app-speakflow",
+    "fleet-app-motionmixapp",
+    "fleet-app-nkomathlab",
+    "fleet-app-nkokeyboard",
+    "fleet-app-securiclaw",
+    "fleet-app-ledger",
+    "fleet-app-pith",
+    "fleet-app-timbre",
+    "fleet-app-drift",
+    "fleet-app-envoy",
+    "fleet-app-voiceagent",
+    "fleet-app-voicepilot",
+    "fleet-app-shootview",
+    "fleet-app-calilightsios",
+    "fleet-app-cadence",
+    "fleet-app-trajectorysearch",
+    "fleet-app-stageview",
+    "fleet-app-cardforge",
+    "fleet-app-vesper",
+    "fleet-app-sway",
+    "fleet-app-vigil",
+    "fleet-app-dreamstudio",
+    "fleet-app-transpose",
+    "fleet-app-kinetictheater",
+    "fleet-app-loom",
+    "fleet-app-styleshoot",
+    "fleet-app-ember",
+    "fleet-app-routeforge",
+    "fleet-app-glyph",
+    "fleet-app-dreamscape",
+    "fleet-app-printworlds",
+    "fleet-app-teleprompterpro",
+    "fleet-app-dictum",
+    "fleet-app-ambientlisten",
+    "fleet-app-researchbrowser",
+    "fleet-app-stack",
+    "fleet-app-steep",
+    "fleet-app-torrent",
+    "fleet-app-skateforge",
+    "fleet-app-nkoscribe",
+    "fleet-app-rune",
+    "fleet-app-personalspanish"
+  ],
+  "evidence": [
+    "Desktop/Spore/Spore/Views/PaywallView.swift"
+  ],
+  "verify": [
+    "test -f \"$HOME/Desktop/Spore/Spore/Views/PaywallView.swift\" && echo exemplar-present"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "fleet-app-ideagarden",
+  "display": "IdeaGarden",
+  "created": "2026-09-20",
+  "status": "active",
+  "wave": 1,
+  "tier": "TIER-1",
+  "state": "iOS app \u2014 IdeaGarden [40 Swift files, 11773 loc]",
+  "path": "Desktop/IdeaGarden",
+  "bundle": "$(PRODUCT_BUNDLE_IDENTIFIER)",
+  "version": "1.0",
+  "blocked_on_mo": [
+    "Declare Desktop canonical, merge variants"
+  ],
+  "next": [
+    "Attach 14-day intro offer to existing products",
+    "Instrument first-session win + push within the hour naming the unlock",
+    "Wire five-number analytics (downloads, trial starts, trial->paid, D1/D7/D30, $/download)",
+    "Add share sheet + URL scheme; SKStoreReview after wins",
+    "ASO pass: terms in name/subtitle/keywords, result-first screenshot 1, PPO running"
+  ],
+  "depends_on": [],
+  "related": [],
+  "evidence": [
+    "Desktop/cognitive-hire/evidence/fleet-audit/CATALOG.csv (row: IdeaGarden)",
+    "Desktop/cognitive-hire/evidence/fleet-audit/COHORT-50.md",
+    "Desktop/cognitive-hire/evidence/fleet-audit/PLAYBOOK.md",
+    "Desktop/cognitive-hire/evidence/colin-tam/BOOK.md"
+  ],
+  "verify": [
+    "test -d \"$HOME/Desktop/IdeaGarden\" && echo app-present",
+    "cd \"$HOME/Desktop/cognitive-hire/evidence/fleet-audit\" && python3 fleet_audit.py --help >/dev/null && echo audit-ok"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "fleet-app-creativedirector",
+  "display": "CreativeDirector",
+  "created": "2026-09-20",
+  "status": "parked",
+  "wave": 2,
+  "tier": "TIER-2",
+  "state": "CreativeDirector is an iOS content creation studio (v3.3.0, iOS 17+) built for recording, editing, and publishing short-form video (TikTok,  [125 Swift files, 24627 loc]",
+  "path": "Desktop/CreativeDirector",
+  "bundle": "$(PRODUCT_BUNDLE_IDENTIFIER)",
+  "version": "1.0",
+  "blocked_on_mo": [
+    "Declare Desktop canonical root + merge variants",
+    "FleetPaywallKit v1 extracted from Spore"
+  ],
+  "next": [
+    "Integrate FleetPaywallKit: onboarding paywall, weekly default >=$7.48, 14-day trial",
+    "Value screens before price; first-session win instrumented",
+    "Five-number analytics + push-in-the-hour + share + rating prompt",
+    "ASO checklist + content cadence owner + 3-path download links"
+  ],
+  "depends_on": [
+    "fleet-kit"
+  ],
+  "related": [],
+  "evidence": [
+    "Desktop/cognitive-hire/evidence/fleet-audit/CATALOG.csv (row: CreativeDirector)",
+    "Desktop/cognitive-hire/evidence/fleet-audit/COHORT-50.md",
+    "Desktop/cognitive-hire/evidence/fleet-audit/PLAYBOOK.md",
+    "Desktop/cognitive-hire/evidence/colin-tam/BOOK.md"
+  ],
+  "verify": [
+    "test -d \"$HOME/Desktop/CreativeDirector\" && echo app-present",
+    "cd \"$HOME/Desktop/cognitive-hire/evidence/fleet-audit\" && python3 fleet_audit.py --help >/dev/null && echo audit-ok"
+  ]
+}

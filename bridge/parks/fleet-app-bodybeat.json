@@ -1,0 +1,35 @@
+{
+  "name": "fleet-app-bodybeat",
+  "display": "BodyBeat",
+  "created": "2026-09-20",
+  "status": "active",
+  "wave": 1,
+  "tier": "TIER-1",
+  "state": "BodyBeat 2.0 S4-ENGINE DONE (2026-09-20): ProbabilisticEngine.swift ported from prototype (tables verified identical: Markov/Camelot/Euclid/Dorian/Phrygian). 2 sound packs (House Dorian, Dusk Phrygian), pitched bass+stab voices, Conjure backing band in Layer mode, seed = shareable recipe. Simulator + iPhone 16 Plus builds green, installed + launched on-device. VERIFIED 2026-09-20: shipped Swift engine compiled + executed in sim runtime, 11/11 checks green (seed determinism, modal lattice incl. Phrygian flat-2nd, grid integrity, euclid rotation, addGenerativeLayer path). Also purged DerivedData (disk was 194M -> 3.7G free). Next: live Jev L3 (blocked: no TypeSafe API key), S3 share/export, FleetPaywallKit paywall migration.",
+  "path": "Desktop/BodyBeat",
+  "bundle": "com.diomande.bodybeat",
+  "version": "1.0.0",
+  "blocked_on_mo": [
+    "Declare Desktop canonical, merge variants",
+    "TypeSafe API key for live Jev director"
+  ],
+  "next": [
+    "LIVE JEV L3: needs TypeSafe API key (no SDK/key on this machine) - then 4 narrow questions per section",
+    "S3: offline-render loop to .m4a + share card with MotionMix deep link",
+    "Migrate StoreManager to FleetPaywallKit + sound packs as products",
+    "Attach 14-day intro offer; five-number analytics; ASO pass"
+  ],
+  "depends_on": [],
+  "related": [],
+  "evidence": [
+    "Desktop/cognitive-hire/evidence/fleet-audit/CATALOG.csv (row: BodyBeat)",
+    "Desktop/cognitive-hire/evidence/fleet-audit/COHORT-50.md",
+    "Desktop/cognitive-hire/evidence/fleet-audit/PLAYBOOK.md",
+    "Desktop/cognitive-hire/evidence/colin-tam/BOOK.md",
+    "Desktop/BodyBeat/BODYBEAT-2.0.md"
+  ],
+  "verify": [
+    "test -d \"$HOME/Desktop/BodyBeat\" && echo app-present",
+    "cd \"$HOME/Desktop/cognitive-hire/evidence/fleet-audit\" && python3 fleet_audit.py --help >/dev/null && echo audit-ok"
+  ]
+}

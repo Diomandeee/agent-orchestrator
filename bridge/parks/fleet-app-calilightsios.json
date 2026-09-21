@@ -1,0 +1,36 @@
+{
+  "name": "fleet-app-calilightsios",
+  "display": "CaliLightsIOS",
+  "created": "2026-09-20",
+  "status": "parked",
+  "wave": 3,
+  "tier": "TIER-2",
+  "state": "[DEP-AUDIT.md] Cali Lights iOS is an **early Phase 0/1 prototype** \u2014 a well-structured SwiftUI + SwiftData photo chain journal with solid ar [24 Swift files, 4575 loc]",
+  "path": "Desktop/CaliLightsIOS",
+  "bundle": "",
+  "version": "1.0",
+  "blocked_on_mo": [
+    "Declare Desktop canonical root + merge variants",
+    "FleetPaywallKit v1 extracted from Spore"
+  ],
+  "next": [
+    "Integrate FleetPaywallKit: onboarding paywall, weekly default >=$7.48, 14-day trial",
+    "Value screens before price; first-session win instrumented",
+    "Five-number analytics + push-in-the-hour + share + rating prompt",
+    "ASO checklist + content cadence owner + 3-path download links"
+  ],
+  "depends_on": [
+    "fleet-kit"
+  ],
+  "related": [],
+  "evidence": [
+    "Desktop/cognitive-hire/evidence/fleet-audit/CATALOG.csv (row: CaliLightsIOS)",
+    "Desktop/cognitive-hire/evidence/fleet-audit/COHORT-50.md",
+    "Desktop/cognitive-hire/evidence/fleet-audit/PLAYBOOK.md",
+    "Desktop/cognitive-hire/evidence/colin-tam/BOOK.md"
+  ],
+  "verify": [
+    "test -d \"$HOME/Desktop/CaliLightsIOS\" && echo app-present",
+    "cd \"$HOME/Desktop/cognitive-hire/evidence/fleet-audit\" && python3 fleet_audit.py --help >/dev/null && echo audit-ok"
+  ]
+}

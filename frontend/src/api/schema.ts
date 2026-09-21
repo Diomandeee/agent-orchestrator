@@ -2223,6 +2223,9 @@ export interface components {
             name: string;
             next: string[];
             state: string;
+            status: string;
+            tier: string;
+            wave: number;
         };
         ControllersRequestRereviewRequest: {
             /** @description Tracked pull request URL. Required when the session has multiple PRs. */

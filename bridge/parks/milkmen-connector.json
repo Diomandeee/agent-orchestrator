@@ -1,0 +1,25 @@
+{
+  "blocked_on_mo": [
+    "Live Supabase creds (URL + service-role key)",
+    "STRIPE_SECRET_KEY",
+    "Apply 2 migrations (delivery_charges + measure_cycle event type)",
+    "Deploy MCP server over HTTPS",
+    "Meta connector review (Phase 5)"
+  ],
+  "created": "2026-09-19",
+  "evidence": [
+    "Desktop/cognitive-hire/evidence/karl-router/ (phase0-recovered, voter.json 8/12, adjudication-20260919.json, motionmix-boundary.json)"
+  ],
+  "name": "milkmen-connector",
+  "next": [
+    "Prove end-to-end on live DB (sweep\u2192verify\u2192qualify\u2192promote\u2192send\u2192reply\u2192visit\u2192complete\u2192charge\u2192measure)",
+    "Apply migrations, deploy, list"
+  ],
+  "spec": "Developer/MilkMen/docs/WHOLESALE-SUPER-FIELD-AGENT.md",
+  "state": "21-tool MCP server builds clean (tsc), auth gate + Stripe + prospect/qualify/outreach/measure phases verified fail-closed. UNCOMMITTED in Developer/Milk Men/milkmen-mcp-server. 13 tools at connector-gate commit; +8 wholesale tools since.",
+  "verify": [
+    "cd '/Users/mohameddiomande/Developer/Milk Men/milkmen-mcp-server' && npm run build",
+    "test -f '/Users/mohameddiomande/Developer/Milk Men/milkmen-mcp-server/dist/index.js' && echo dist-ok",
+    "node '/Users/mohameddiomande/Developer/Milk Men/milkmen-mcp-server/dist/index.js' --help | head -n 4"
+  ]
+}
