@@ -1010,6 +1010,28 @@ export function main(argv, env = process.env, root = fileURLToPath(new URL("..",
 		);
 	}
 
+	// A rewritten $HOME is the most expensive ambient fact in this repo. `~` resolves
+	// into the harness home, which is empty, and an empty read is byte-identical to
+	// "not configured" -- so a path built from `~` reports a missing file instead of a
+	// wrong root, and the session concludes the estate was never set up. This index
+	// survives the rewrite, because AO_DATA_DIR outranks both $HOME guesses, and that
+	// is exactly why the rewrite has to be said out loud: without this line the run
+	// exits 0 with `oriented`, and the rewrite is discovered much later by a command
+	// that returned nothing. One line, here, because this is the command sessions run
+	// first. It is a warning and never a verdict -- the exit code still reports only
+	// what the packet could be compared against.
+	const shellHome = env && env.HOME;
+	const estateHome = passwdHome();
+	if (shellHome && estateHome && shellHome !== estateHome) {
+		process.stderr.write(
+			`warning: $HOME is rewritten: HOME=${shellHome} estate_home=${estateHome}\n` +
+				"  Paths built from `~` resolve into the harness home, which is empty, and an empty read is\n" +
+				"  indistinguishable from a missing one. Resolve the estate home from the account database --\n" +
+				"  bridge/estate_home.py is the one shared answer -- or set UCTM_ESTATE_HOME, before trusting\n" +
+				"  any `~` path in this shell.\n",
+		);
+	}
+
 	if (args.has("where")) {
 		const existingPacket = readPacket(root);
 		const recordedRoot = existingPacket?.machine_local?.workers_root ?? null;

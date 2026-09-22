@@ -3,17 +3,32 @@ package parks
 import (
 	"encoding/json"
 	"os"
+	"os/user"
 	"path/filepath"
 	"sort"
 	"strings"
 )
 
-// ParksDir resolves the parked-idea store. UCTM_PARKS_DIR wins; the default
-// is the UCTM Studio bridge parks directory. Read-only by contract: nothing
-// in this package writes under the directory.
+// ParksDir resolves the parked-idea store. UCTM_PARKS_DIR wins, then
+// UCTM_ESTATE_HOME; the default is the UCTM Studio bridge parks directory.
+// Read-only by contract: nothing in this package writes under the directory.
+//
+// The home is not taken from $HOME alone. The AO worker harness rewrites $HOME to
+// an isolated home, which is right for the session and wrong here: this path then
+// resolves under a directory that does not exist, List() reads a missing
+// directory as an empty one, and the Garden renders "no parked ideas" for a store
+// that is full. The account database answers with the real home whether or not
+// $HOME was rewritten, so it is asked before $HOME, and UCTM_ESTATE_HOME lets a
+// caller or the spawn shim name the estate outright.
 func ParksDir() string {
 	if dir := os.Getenv("UCTM_PARKS_DIR"); dir != "" {
 		return dir
+	}
+	if dir := os.Getenv("UCTM_ESTATE_HOME"); dir != "" {
+		return filepath.Join(dir, "Developer", "UCTM-Studio", "bridge", "parks")
+	}
+	if u, err := user.Current(); err == nil && u.HomeDir != "" {
+		return filepath.Join(u.HomeDir, "Developer", "UCTM-Studio", "bridge", "parks")
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {

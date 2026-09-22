@@ -3,6 +3,7 @@ package parks
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -48,6 +49,45 @@ func TestListProjectsFleetFields(t *testing.T) {
 	}
 	if got[0].Wave != 2 || got[0].Tier != "TIER-2" {
 		t.Fatalf("List() fleet wave/tier = %d/%q, want 2/TIER-2", got[0].Wave, got[0].Tier)
+	}
+}
+
+func TestParksDirDoesNotFollowARewrittenHome(t *testing.T) {
+	t.Setenv("UCTM_PARKS_DIR", "")
+	t.Setenv("UCTM_ESTATE_HOME", "")
+	harness := t.TempDir()
+	t.Setenv("HOME", harness)
+
+	got := ParksDir()
+	if got == "" {
+		t.Fatal("ParksDir returned no directory")
+	}
+	if rewritten := filepath.Join(harness, "Developer", "UCTM-Studio", "bridge", "parks"); got == rewritten {
+		t.Fatalf("ParksDir followed a rewritten $HOME into the harness home: %q", got)
+	}
+	if !strings.HasSuffix(got, filepath.Join("bridge", "parks")) {
+		t.Fatalf("ParksDir does not name a parks directory: %q", got)
+	}
+}
+
+func TestParksDirPrefersTheNamedEstateHome(t *testing.T) {
+	t.Setenv("UCTM_PARKS_DIR", "")
+	estate := t.TempDir()
+	t.Setenv("UCTM_ESTATE_HOME", estate)
+	t.Setenv("HOME", t.TempDir())
+
+	want := filepath.Join(estate, "Developer", "UCTM-Studio", "bridge", "parks")
+	if got := ParksDir(); got != want {
+		t.Fatalf("ParksDir = %q, want %q", got, want)
+	}
+}
+
+func TestParksDirLetsAnExplicitDirOutrankEveryHome(t *testing.T) {
+	explicit := t.TempDir()
+	t.Setenv("UCTM_PARKS_DIR", explicit)
+	t.Setenv("UCTM_ESTATE_HOME", t.TempDir())
+	if got := ParksDir(); got != explicit {
+		t.Fatalf("ParksDir = %q, want the explicit %q", got, explicit)
 	}
 }
 

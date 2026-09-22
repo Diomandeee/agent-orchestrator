@@ -2,14 +2,16 @@
 """Codex host shim for UCTM Studio. Never places the provider key in Codex."""
 import hashlib
 import os
+import shutil
 import sys
 from pathlib import Path
 
 HOST = "/Users/mohameddiomande/.local/bin/codex"
 ISOLATED_HOME = "/Users/mohameddiomande/.ao/uctm-studio/home"
+ISOLATED_SKILLS = Path(ISOLATED_HOME, ".codex", "skills")
 CODEX_HOME = "/Users/mohameddiomande/.ao/uctm-studio/codex"
 PROXY_TOKEN = Path("/Users/mohameddiomande/.ao/uctm-studio/proxy-token")
-EXPECTED_SHA256 = "a1d2f191e70023ed7afd619bc70530f26067a085926e03bae50cf5c0f8298bcf"
+EXPECTED_SHA256 = "9280c0754e8f1f6b72f495d30c8c82a006dbc4995bf0492916fa0901f6bfd1f9"
 
 # hashlib.file_digest below needs >= 3.11. The shebang can resolve to the
 # system 3.9 interpreter whenever /usr/bin precedes Homebrew on PATH, which is
@@ -38,6 +40,91 @@ def ensure_supported_interpreter():
             env = dict(os.environ)
             env[REEXEC_MARKER] = candidate
             os.execve(candidate, [candidate, os.path.abspath(__file__), *sys.argv[1:]], env)
+
+
+def real_home():
+    """The user's home from the account database, ignoring a rewritten $HOME.
+
+    The daemon may launch this shim with $HOME already pointed at the isolated
+    home; only the passwd database still knows the real one.
+    """
+    try:
+        import pwd
+    except ImportError:
+        return None
+    try:
+        return pwd.getpwuid(os.getuid()).pw_dir
+    except (KeyError, OSError):
+        return None
+
+
+def real_skills_dir():
+    home = real_home()
+    if not home:
+        return None
+    candidate = Path(home, ".codex", "skills")
+    return candidate if candidate.is_dir() else None
+
+
+def seed_isolated_skills(dest=ISOLATED_SKILLS, src=None):
+    """Snapshot the user's real skills into the isolated home.
+
+    Sessions run with HOME rewritten to ISOLATED_HOME, so `~/.codex/skills`
+    resolves to a near-empty directory and every chain written with `~` fails
+    silently (the auditor's `--promotion-plan swiftui-pro` missed a skill that
+    exists). A snapshot copy -- not a symlink -- keeps session writes
+    (reports, caches) inside the isolated home instead of polluting the real
+    tree, and overlay semantics never delete anything a session created: a
+    skill deleted from the real home may linger here until the isolated
+    directory is cleared by hand. Non-fatal: on any failure the session still
+    starts, with a named warning on stderr.
+    """
+    if src is None:
+        src = real_skills_dir()
+    if src is None:
+        print("uctm_codex_skills_seed_skipped: no readable real skills directory",
+              file=sys.stderr)
+        return False
+    try:
+        dest.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    except OSError as error:
+        print(f"uctm_codex_skills_seed_failed: {error}"[:300], file=sys.stderr)
+        return False
+    if dest.is_symlink():
+        # A leftover link would redirect the copy into the real tree.
+        try:
+            dest.unlink()
+        except OSError as error:
+            print(f"uctm_codex_skills_seed_failed: {error}"[:300], file=sys.stderr)
+            return False
+    tmp = dest.with_name(f".skills-seed-{os.getpid()}")
+    shutil.rmtree(tmp, ignore_errors=True)
+    try:
+        shutil.copytree(src, tmp, symlinks=True)
+    except OSError as error:
+        print(f"uctm_codex_skills_seed_failed: copy: {error}"[:300], file=sys.stderr)
+        shutil.rmtree(tmp, ignore_errors=True)
+        return False
+    try:
+        if not dest.is_dir() or not any(dest.iterdir()):
+            # Atomic swap: concurrent spawns and readers never see a partial tree.
+            os.replace(tmp, dest)
+        else:
+            # Non-empty destination (a previous session wrote here): overlay the
+            # real skills rather than deleting a tree another live session may
+            # be reading.
+            for entry in tmp.iterdir():
+                target = dest / entry.name
+                if entry.is_dir() and not entry.is_symlink():
+                    shutil.copytree(entry, target, symlinks=True, dirs_exist_ok=True)
+                else:
+                    shutil.copy2(entry, target)
+        shutil.rmtree(tmp, ignore_errors=True)
+    except OSError as error:
+        print(f"uctm_codex_skills_seed_failed: install: {error}"[:300], file=sys.stderr)
+        shutil.rmtree(tmp, ignore_errors=True)
+        return False
+    return True
 
 
 def main():
@@ -79,7 +166,18 @@ def main():
         os.environ.pop("OPENAI_API_KEY", None)
         os.environ["UCTM_PROXY_TOKEN"] = token
     os.makedirs(ISOLATED_HOME, mode=0o700, exist_ok=True)
+    # Non-fatal by design: a failed seed still starts the session, with the
+    # reason on stderr for the launcher log.
+    seed_isolated_skills()
     os.environ["HOME"] = ISOLATED_HOME
+    # Name the real home to everything this shim spawns. The rewrite above is
+    # right for the session and wrong for every `~` path a child builds, and
+    # three separate files had already grown private copies of that reasoning
+    # before any child could simply ask for the answer. Non-fatal by design: a
+    # session without it behaves exactly as before, rather than failing here.
+    estate = real_home()
+    if estate:
+        os.environ["UCTM_ESTATE_HOME"] = estate
     os.execv(HOST, [HOST, *sys.argv[1:]])
 
 
